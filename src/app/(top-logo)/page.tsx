@@ -7,13 +7,13 @@ export default function Home() {
         <div className="flex w-full gap-4 justify-between">
           <MainMenuButton
             className="max-w-1/2 bg-green-500 hover:bg-green-500/80"
-            href={'/'}
+            href={'/inqcn'}
           >
             신차 입고
           </MainMenuButton>
           <MainMenuButton
             className="max-w-1/2 bg-green-500 hover:bg-green-500/80"
-            href={'/'}
+            href={'/inqcr'}
           >
             재렌트 입고
           </MainMenuButton>
@@ -24,10 +24,13 @@ export default function Home() {
         >
           상품화 완료 QC
         </MainMenuButton>
-        <MainMenuButton className="" href={'/'}>
+        <MainMenuButton className="" href={'/resvlist'}>
           회수 대상 리스트
         </MainMenuButton>
-        <MainMenuButton className="bg-red-500 hover:bg-red-500/80" href={'/'}>
+        <MainMenuButton
+          className="bg-red-500 hover:bg-red-500/80"
+          href={'/retvlist'}
+        >
           차량 예약 리스트
         </MainMenuButton>
       </div>
