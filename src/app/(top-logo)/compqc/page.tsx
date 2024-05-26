@@ -21,56 +21,56 @@ const qcdata: QCData[] = [
   {
     ASSETNO: '1',
     GUBUN: '신차',
-    CARNO: '11 하 1111',
+    CARNO: '11하1111',
     MODEL: '쏘렌토',
     STATUS: '상품화',
   },
   {
     ASSETNO: '2',
     GUBUN: '재렌트',
-    CARNO: '222 후 2222',
+    CARNO: '22후2222',
     MODEL: '아반떼',
     STATUS: '상품화',
   },
   {
     ASSETNO: '3',
     GUBUN: '재렌트',
-    CARNO: '222 후 2222',
+    CARNO: '22후2222',
     MODEL: '아반떼',
     STATUS: '상품화',
   },
   {
     ASSETNO: '4',
     GUBUN: '재렌트',
-    CARNO: '222 후 2222',
+    CARNO: '222후2222',
     MODEL: '아반떼',
     STATUS: '상품화',
   },
   {
     ASSETNO: '5',
     GUBUN: '재렌트',
-    CARNO: '222 후 2222',
+    CARNO: '222후2222',
     MODEL: '아반떼',
     STATUS: '상품화',
   },
   {
     ASSETNO: '6',
     GUBUN: '재렌트',
-    CARNO: '222 후 2222',
+    CARNO: '222후2222',
     MODEL: '아반떼',
     STATUS: '상품화',
   },
   {
     ASSETNO: '7',
     GUBUN: '재렌트',
-    CARNO: '222 후 2222',
+    CARNO: '222후2222',
     MODEL: '아반떼',
     STATUS: '상품화',
   },
   {
     ASSETNO: '8',
     GUBUN: '재렌트',
-    CARNO: '222 후 2222',
+    CARNO: '222후2222',
     MODEL: '아반떼',
     STATUS: '상품화',
   },
@@ -98,35 +98,35 @@ const qcdata: QCData[] = [
   {
     ASSETNO: '12',
     GUBUN: '재렌트',
-    CARNO: '222후2222',
+    CARNO: '22후2222',
     MODEL: '펠리세이드',
     STATUS: '상품화',
   },
   {
     ASSETNO: '13',
     GUBUN: '재렌트',
-    CARNO: '222후2222',
+    CARNO: '22후2222',
     MODEL: '펠리세이드',
     STATUS: '상품화',
   },
   {
     ASSETNO: '14',
     GUBUN: '재렌트',
-    CARNO: '222후2222',
+    CARNO: '22후2222',
     MODEL: '펠리세이드',
     STATUS: '상품화',
   },
   {
     ASSETNO: '15',
     GUBUN: '재렌트',
-    CARNO: '222후2222',
+    CARNO: '22후2222',
     MODEL: '펠리세이드',
     STATUS: '상품화',
   },
   {
     ASSETNO: '16',
     GUBUN: '재렌트',
-    CARNO: '222후2222',
+    CARNO: '22후2222',
     MODEL: '펠리세이드',
     STATUS: '상품화',
   },
@@ -154,21 +154,23 @@ const CompQC: React.FC = () => {
         {/* <TableCaption>A list of your recent invoices.</TableCaption> */}
         <TableHeader>
           <TableRow className="bg-primary/30">
-            <TableHead className="w-[70px] text-center">구분</TableHead>
+            <TableHead className="w-[75px] text-center">구분</TableHead>
             <TableHead className="text-center">차량번호</TableHead>
             <TableHead className="text-center">모델</TableHead>
-            <TableHead className="w-[70px] text-center">상태</TableHead>
+            <TableHead className="w-[75px] text-center">상태</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {qcdata.map((data) => (
             <TableRow key={data.ASSETNO} className="">
-              <TableCell className="font-medium text-center">
+              <TableCell className="w-[75px] font-medium text-center">
                 {data.GUBUN}
               </TableCell>
-              <TableCell className="text-center">{data.CARNO}</TableCell>
+              <TableCell className="text-center w-[82px]">
+                {data.CARNO}
+              </TableCell>
               <TableCell className="text-center">{data.MODEL}</TableCell>
-              <TableCell className="w-[70px] text-center">
+              <TableCell className="w-[75px] text-center">
                 {data.STATUS}
               </TableCell>
             </TableRow>
