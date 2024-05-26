@@ -12,7 +12,7 @@ export default function Home() {
             신차 입고
           </MainMenuButton>
           <MainMenuButton
-            className="max-w-1/2 bg-green-600 hover:bg-green-600/80"
+            className="max-w-1/2 bg-green-500 hover:bg-green-500/80"
             href={'/'}
           >
             재렌트 입고
