@@ -149,9 +149,10 @@ const qcdata: QCData[] = [
 const CompQC: React.FC = () => {
   return (
     <div className="px-4 relative">
-      <h1 className="text-center font-semibold text-2xl my-8">CompQC</h1>
+      <h1 className="text-center font-medium text-xl my-8 text-[#1B1B1B]/90">
+        상품화 완료 QC
+      </h1>
       <Table>
-        {/* <TableCaption>A list of your recent invoices.</TableCaption> */}
         <TableHeader>
           <TableRow className="bg-primary/30">
             <TableHead className="w-[70px] text-center">구분</TableHead>
