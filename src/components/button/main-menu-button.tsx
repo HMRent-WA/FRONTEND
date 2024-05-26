@@ -10,10 +10,10 @@ type MainMenuButtonProps = ButtonProps & {
 const MainMenuButton: React.FC<MainMenuButtonProps> = (props) => {
   const { className, href, children, ...rest } = props;
 
-  const mainMenuButtonVariants = 'w-full h-28 rounded-2xl text-3xl font-medium';
+  const mainMenuButtonVariants = 'w-full h-28 rounded-2xl text-2xl font-medium';
 
   return (
-    <Link href={href}>
+    <Link href={href} className="w-full">
       <Button className={cn(mainMenuButtonVariants, className)} {...rest}>
         {children}
       </Button>
