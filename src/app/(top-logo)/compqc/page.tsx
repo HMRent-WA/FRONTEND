@@ -1,4 +1,6 @@
-import React from 'react';
+'use client';
+
+import React, { useState } from 'react';
 import {
   Table,
   TableBody,
@@ -8,6 +10,9 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { RadioGroupButton } from '@/components/button/radio-group-button';
+import { useRouter } from 'next/navigation';
 
 type QCData = {
   ASSETNO: string;
@@ -147,23 +152,81 @@ const qcdata: QCData[] = [
 ];
 
 const CompQC: React.FC = () => {
+  const router = useRouter();
+
+  const [search, setSearch] = useState('');
+  const [selectedValue, setSelectedValue] = useState('전체');
+  const [selectedASSETNO, setSelectedASSETNO] = useState<string>('');
+
+  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearch(e.target.value);
+  };
+
+  const handleRadioChange = (value: string) => {
+    setSelectedValue(value);
+  };
+
+  const handleRowClick = (e: React.MouseEvent<HTMLTableRowElement>) => {
+    const assetno = e.currentTarget.getAttribute('data-assetno');
+    const data = qcdata.find((data) => data.ASSETNO === assetno);
+    setSelectedASSETNO(data?.ASSETNO || '');
+  };
+
+  const handleDetailClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+    if (selectedASSETNO) {
+      router.push(`/compqc/${selectedASSETNO}`);
+    }
+  };
+
+  const filteredData = qcdata.filter((data) => {
+    return (
+      (selectedValue === '전체' || data.GUBUN === selectedValue) &&
+      data.CARNO.includes(search)
+    );
+  });
+
   return (
-    <div className="px-4 relative">
+    <article className="px-4 relative">
       <h1 className="text-center font-medium text-xl my-8 text-[#1B1B1B]/90">
         상품화 완료 QC
       </h1>
+      <div className="flex flex-col my-4 gap-4">
+        <Input
+          placeholder="차량번호로 검색하기"
+          name="search"
+          value={search}
+          onChange={handleSearch}
+        />
+        <RadioGroupButton
+          options={['신차', '전체', '재렌트']}
+          onClick={handleRadioChange}
+          selectedValue={selectedValue}
+          buttonClassName="text-[#1B1B1B]/80 font-medium"
+        />
+      </div>
       <Table>
         <TableHeader>
-          <TableRow className="bg-primary/30">
-            <TableHead className="w-[70px] text-center">구분</TableHead>
+          <TableRow className="bg-orange-400/50 hover:bg-orange-400/35">
+            <TableHead className="w-[70px] text-center rounded-tl-lg">
+              구분
+            </TableHead>
             <TableHead className="text-center">차량번호</TableHead>
             <TableHead className="text-center">모델</TableHead>
-            <TableHead className="w-[70px] text-center">상태</TableHead>
+            <TableHead className="w-[70px] text-center rounded-tr-lg">
+              상태
+            </TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
-          {qcdata.map((data) => (
-            <TableRow key={data.ASSETNO} className="">
+          {filteredData.map((data) => (
+            <TableRow
+              key={data.ASSETNO}
+              data-assetno={data.ASSETNO}
+              onClick={handleRowClick}
+              className={
+                data.ASSETNO === selectedASSETNO ? 'text-primary/80' : ''
+              }
+            >
               <TableCell className="w-[70px] font-medium text-center">
                 {data.GUBUN}
               </TableCell>
@@ -177,10 +240,12 @@ const CompQC: React.FC = () => {
         </TableBody>
       </Table>
       <div className="flex fixed bottom-4 right-4 w-[180px]">
-        <Button className="w-[180px]">입력</Button>
+        <Button className="w-[180px]" onClick={handleDetailClick}>
+          입력
+        </Button>
       </div>
-      <div className="h-14"></div>
-    </div>
+      <div className="h-14" />
+    </article>
   );
 };
 
