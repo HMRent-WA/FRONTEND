@@ -154,23 +154,21 @@ const CompQC: React.FC = () => {
         {/* <TableCaption>A list of your recent invoices.</TableCaption> */}
         <TableHeader>
           <TableRow className="bg-primary/30">
-            <TableHead className="w-[75px] text-center">구분</TableHead>
+            <TableHead className="w-[70px] text-center">구분</TableHead>
             <TableHead className="text-center">차량번호</TableHead>
             <TableHead className="text-center">모델</TableHead>
-            <TableHead className="w-[75px] text-center">상태</TableHead>
+            <TableHead className="w-[70px] text-center">상태</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {qcdata.map((data) => (
             <TableRow key={data.ASSETNO} className="">
-              <TableCell className="w-[75px] font-medium text-center">
+              <TableCell className="w-[70px] font-medium text-center">
                 {data.GUBUN}
               </TableCell>
-              <TableCell className="text-center w-[82px]">
-                {data.CARNO}
-              </TableCell>
+              <TableCell className="text-center">{data.CARNO}</TableCell>
               <TableCell className="text-center">{data.MODEL}</TableCell>
-              <TableCell className="w-[75px] text-center">
+              <TableCell className="w-[70px] text-center">
                 {data.STATUS}
               </TableCell>
             </TableRow>
