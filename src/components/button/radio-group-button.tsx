@@ -25,7 +25,7 @@ const RadioButton = ({
   className,
 }: RadioButtonProps) => {
   const radioVariant =
-    'flex-grow text-center border hover:bg-white bg-white text-primaryDisabled rounded-lg';
+    'flex-grow text-center border hover:bg-white bg-white text-black rounded-lg';
   const firstRadioVariant = isFirst
     ? 'rounded-r-none'
     : 'rounded-l-none border-l-0';
@@ -39,17 +39,12 @@ const RadioButton = ({
         : isRightOfSelected
           ? 'border-l-0'
           : '';
-  // const selectedVariant = selectedValue === value ? 'text-primary border border-primary' : ''
-  // const leftOfSelectedVariant = isLeftOfSelected ? 'border-r-0' : ''
-  // const rightOfSelectedVariant = isRightOfSelected ? 'border-l-0' : ''
 
   const combinedVariant = cn(
     radioVariant,
     firstRadioVariant,
     lastRadioVariant,
     selectedVariant
-    // leftOfSelectedVariant,
-    // rightOfSelectedVariant
   );
 
   return (
