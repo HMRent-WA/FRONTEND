@@ -14,7 +14,7 @@ import { Input } from '@/components/ui/input';
 import { RadioGroupButton } from '@/components/button/radio-group-button';
 import { useRouter } from 'next/navigation';
 
-type QCData = {
+type QCDataType = {
   ASSETNO: string;
   GUBUN: '신차' | '재렌트';
   CARNO: string;
@@ -22,7 +22,7 @@ type QCData = {
   STATUS: '상품화' | 'D' | string;
 };
 
-const qcdata: QCData[] = [
+const qcdata: QCDataType[] = [
   {
     ASSETNO: '1',
     GUBUN: '신차',
@@ -201,18 +201,18 @@ const CompQC: React.FC = () => {
           options={['신차', '전체', '재렌트']}
           onClick={handleRadioChange}
           selectedValue={selectedValue}
-          buttonClassName="text-[#1B1B1B]/80 font-medium"
+          buttonClassName="font-medium"
         />
       </div>
-      <Table>
+      <Table className="mb-20">
         <TableHeader>
           <TableRow className="bg-orange-400/50 hover:bg-orange-400/35">
-            <TableHead className="w-[70px] text-center rounded-tl-lg">
+            <TableHead className="w-[4.375rem] text-center rounded-tl-lg">
               구분
             </TableHead>
             <TableHead className="text-center">차량번호</TableHead>
             <TableHead className="text-center">모델</TableHead>
-            <TableHead className="w-[70px] text-center rounded-tr-lg">
+            <TableHead className="w-[4.375rem] text-center rounded-tr-lg">
               상태
             </TableHead>
           </TableRow>
@@ -227,24 +227,23 @@ const CompQC: React.FC = () => {
                 data.ASSETNO === selectedASSETNO ? 'text-primary/80' : ''
               }
             >
-              <TableCell className="w-[70px] font-medium text-center">
+              <TableCell className="font-medium text-center">
                 {data.GUBUN}
               </TableCell>
               <TableCell className="text-center">{data.CARNO}</TableCell>
               <TableCell className="text-center">{data.MODEL}</TableCell>
-              <TableCell className="w-[70px] text-center">
+              <TableCell className="w-[4.375rem] text-center">
                 {data.STATUS}
               </TableCell>
             </TableRow>
           ))}
         </TableBody>
       </Table>
-      <div className="flex fixed bottom-4 right-4 w-[180px]">
-        <Button className="w-[180px]" onClick={handleDetailClick}>
+      <div className="flex fixed bottom-4 left-0 w-full px-4">
+        <Button className="w-full h-12" onClick={handleDetailClick}>
           입력
         </Button>
       </div>
-      <div className="h-14" />
     </article>
   );
 };
