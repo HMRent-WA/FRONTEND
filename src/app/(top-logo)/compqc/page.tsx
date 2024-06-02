@@ -13,6 +13,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { RadioGroupButton } from '@/components/button/radio-group-button';
 import { useRouter } from 'next/navigation';
+import useFetch from '@/hooks/use-fetch';
 
 type QCDataType = {
   ASSETNO: string;
@@ -24,126 +25,126 @@ type QCDataType = {
 
 const qcdata: QCDataType[] = [
   {
-    ASSETNO: '1',
+    ASSETNO: 'AST20240700301',
     GUBUN: '신차',
     CARNO: '11하1111',
     MODEL: '쏘렌토',
     STATUS: '상품화',
   },
   {
-    ASSETNO: '2',
+    ASSETNO: 'AST20240700302',
     GUBUN: '재렌트',
     CARNO: '22후2222',
     MODEL: '아반떼',
     STATUS: '상품화',
   },
   {
-    ASSETNO: '3',
+    ASSETNO: 'AST20240700303',
     GUBUN: '재렌트',
     CARNO: '22후2222',
     MODEL: '아반떼',
     STATUS: '상품화',
   },
   {
-    ASSETNO: '4',
+    ASSETNO: 'AST20240700304',
     GUBUN: '재렌트',
     CARNO: '222후2222',
     MODEL: '아반떼',
     STATUS: '상품화',
   },
   {
-    ASSETNO: '5',
+    ASSETNO: 'AST20240700305',
     GUBUN: '재렌트',
     CARNO: '222후2222',
     MODEL: '아반떼',
     STATUS: '상품화',
   },
   {
-    ASSETNO: '6',
+    ASSETNO: 'AST20240700306',
     GUBUN: '재렌트',
     CARNO: '222후2222',
     MODEL: '아반떼',
     STATUS: '상품화',
   },
   {
-    ASSETNO: '7',
+    ASSETNO: 'AST20240700307',
     GUBUN: '재렌트',
     CARNO: '222후2222',
     MODEL: '아반떼',
     STATUS: '상품화',
   },
   {
-    ASSETNO: '8',
+    ASSETNO: 'AST20240700308',
     GUBUN: '재렌트',
     CARNO: '222후2222',
     MODEL: '아반떼',
     STATUS: '상품화',
   },
   {
-    ASSETNO: '9',
+    ASSETNO: 'AST20240700309',
     GUBUN: '재렌트',
     CARNO: '22후2222',
     MODEL: '아반떼',
     STATUS: '상품화',
   },
   {
-    ASSETNO: '10',
+    ASSETNO: 'AST202407003010',
     GUBUN: '재렌트',
     CARNO: '222후2222',
     MODEL: '아반떼',
     STATUS: '상품화',
   },
   {
-    ASSETNO: '11',
-    GUBUN: '재렌트',
-    CARNO: '222후2222',
-    MODEL: '펠리세이드',
-    STATUS: '상품화',
-  },
-  {
-    ASSETNO: '12',
-    GUBUN: '재렌트',
-    CARNO: '22후2222',
-    MODEL: '펠리세이드',
-    STATUS: '상품화',
-  },
-  {
-    ASSETNO: '13',
-    GUBUN: '재렌트',
-    CARNO: '22후2222',
-    MODEL: '펠리세이드',
-    STATUS: '상품화',
-  },
-  {
-    ASSETNO: '14',
-    GUBUN: '재렌트',
-    CARNO: '22후2222',
-    MODEL: '펠리세이드',
-    STATUS: '상품화',
-  },
-  {
-    ASSETNO: '15',
-    GUBUN: '재렌트',
-    CARNO: '22후2222',
-    MODEL: '펠리세이드',
-    STATUS: '상품화',
-  },
-  {
-    ASSETNO: '16',
-    GUBUN: '재렌트',
-    CARNO: '22후2222',
-    MODEL: '펠리세이드',
-    STATUS: '상품화',
-  },
-  {
-    ASSETNO: '17',
+    ASSETNO: 'AST202407003011',
     GUBUN: '재렌트',
     CARNO: '222후2222',
     MODEL: '펠리세이드',
     STATUS: '상품화',
   },
   {
-    ASSETNO: '18',
+    ASSETNO: 'AST202407003012',
+    GUBUN: '재렌트',
+    CARNO: '22후2222',
+    MODEL: '펠리세이드',
+    STATUS: '상품화',
+  },
+  {
+    ASSETNO: 'AST202407003013',
+    GUBUN: '재렌트',
+    CARNO: '22후2222',
+    MODEL: '펠리세이드',
+    STATUS: '상품화',
+  },
+  {
+    ASSETNO: 'AST202407003014',
+    GUBUN: '재렌트',
+    CARNO: '22후2222',
+    MODEL: '펠리세이드',
+    STATUS: '상품화',
+  },
+  {
+    ASSETNO: 'AST202407003015',
+    GUBUN: '재렌트',
+    CARNO: '22후2222',
+    MODEL: '펠리세이드',
+    STATUS: '상품화',
+  },
+  {
+    ASSETNO: 'AST202407003016',
+    GUBUN: '재렌트',
+    CARNO: '22후2222',
+    MODEL: '펠리세이드',
+    STATUS: '상품화',
+  },
+  {
+    ASSETNO: 'AST202407003017',
+    GUBUN: '재렌트',
+    CARNO: '222후2222',
+    MODEL: '펠리세이드',
+    STATUS: '상품화',
+  },
+  {
+    ASSETNO: 'AST202407003018',
     GUBUN: '재렌트',
     CARNO: '222후2222',
     MODEL: '펠리세이드',
@@ -157,6 +158,21 @@ const CompQC: React.FC = () => {
   const [search, setSearch] = useState('');
   const [selectedValue, setSelectedValue] = useState('전체');
   const [selectedASSETNO, setSelectedASSETNO] = useState<string>('');
+
+  const {
+    data: qcData,
+    loading,
+    error,
+    revalidate,
+  } = useFetch<QCDataType[]>(
+    `${process.env.NEXT_PUBLIC_API_URL}/com-test/dev/CompQC/D`
+  );
+
+  // if (loading) return <p>Loading...</p>;
+  // if (error) return <p>Error: {error.message}</p>;
+  // if (!qcData) return <p>No data</p>;
+
+  console.log(qcData);
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearch(e.target.value);
@@ -204,7 +220,7 @@ const CompQC: React.FC = () => {
           buttonClassName="font-medium"
         />
       </div>
-      <Table className="mb-20">
+      <Table className="mb-24">
         <TableHeader>
           <TableRow className="bg-orange-400/50 hover:bg-orange-400/35">
             <TableHead className="w-[4.375rem] text-center rounded-tl-lg">

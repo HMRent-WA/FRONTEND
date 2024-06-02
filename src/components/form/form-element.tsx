@@ -24,7 +24,7 @@ interface FormElementProps<T extends FieldValues> {
   formControl: Control<T>;
   name: FieldPath<T>;
   required?: RequiredEnum;
-  label: string;
+  label?: string;
   children: React.ReactNode;
   message?: string;
   description?: string;

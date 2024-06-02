@@ -9,8 +9,19 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import { useRouter } from 'next/navigation';
 
 type RetvlistDataType = {
@@ -118,9 +129,9 @@ const Retvlist: React.FC = () => {
   const [search, setSearch] = useState('');
   const [selectedASSETNO, setSelectedASSETNO] = useState<string>('');
 
-  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearch(e.target.value);
-  };
+  // const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   setSearch(e.target.value);
+  // };
 
   const handleRowClick = (e: React.MouseEvent<HTMLTableRowElement>) => {
     const assetno = e.currentTarget.getAttribute('data-assetno');
@@ -128,7 +139,7 @@ const Retvlist: React.FC = () => {
     setSelectedASSETNO(data?.ASSETNO || '');
   };
 
-  const handleDetailClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+  const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     if (selectedASSETNO) {
       router.push(`/compqc/${selectedASSETNO}`);
     }
@@ -143,15 +154,15 @@ const Retvlist: React.FC = () => {
       <h1 className="text-center font-medium text-xl my-8 text-[#1B1B1B]/90">
         차량 예약 리스트
       </h1>
-      <div className="flex flex-col my-4 gap-4">
+      {/* <div className="flex flex-col my-4 gap-4">
         <Input
           placeholder="차량번호로 검색하기"
           name="search"
           value={search}
           onChange={handleSearch}
         />
-      </div>
-      <Table className="mb-20">
+      </div> */}
+      <Table className="mb-24">
         <TableHeader>
           <TableRow className="bg-red-400/50 hover:bg-red-400/35">
             <TableHead className="text-center rounded-tl-lg">
@@ -180,11 +191,39 @@ const Retvlist: React.FC = () => {
           ))}
         </TableBody>
       </Table>
-      <div className="flex fixed bottom-4 left-0 w-full px-4">
-        <Button className="w-full h-12" onClick={handleDetailClick}>
-          예약 해제
-        </Button>
-      </div>
+      <Dialog>
+        <DialogTrigger asChild>
+          <div className="flex fixed bottom-4 left-0 w-full px-4">
+            <Button className="w-full h-12">예약 해제</Button>
+          </div>
+        </DialogTrigger>
+        <DialogContent className="sm:max-w-[425px] w-full rounded-2xl">
+          <DialogHeader>
+            <DialogTitle>정말 예약을 해제하시겠습니까?</DialogTitle>
+            <DialogDescription>차량 번호 : 175 호 1234</DialogDescription>
+          </DialogHeader>
+          {/* <div className="grid gap-4 py-4">
+            <div className="grid grid-cols-4 items-center gap-4"></div>
+            <div className="grid grid-cols-4 items-center gap-4"></div>
+          </div> */}
+          <DialogFooter>
+            <div className="w-full flex gap-4">
+              <Button type="submit" className="w-full">
+                예약 해제
+              </Button>
+              <DialogClose className="w-full">
+                <Button
+                  type="submit"
+                  className="w-full"
+                  variant={'destructive'}
+                >
+                  취소
+                </Button>
+              </DialogClose>
+            </div>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </article>
   );
 };

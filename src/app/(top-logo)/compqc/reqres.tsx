@@ -204,7 +204,7 @@
 //           buttonClassName="font-medium"
 //         />
 //       </div>
-//       <Table className="mb-20">
+//       <Table className="mb-24">
 //         <TableHeader>
 //           <TableRow className="bg-orange-400/50 hover:bg-orange-400/35">
 //             <TableHead className="w-[4.375rem] text-center rounded-tl-lg">
