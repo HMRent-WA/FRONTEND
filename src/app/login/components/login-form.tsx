@@ -14,19 +14,38 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { cn } from '@/lib/utils';
+import { useRouter } from 'next/navigation';
 
 type LoginData = { id: string; password: string };
 
 const LoginForm = ({ className }: { className?: string }) => {
+  const router = useRouter();
+
   const form = useForm<LoginData>({
     defaultValues: { id: '', password: '' },
   });
 
-  const onSubmit: SubmitHandler<LoginData> = async (data) => {
+  const onSubmit: SubmitHandler<LoginData> = async (data: LoginData) => {
     try {
-      console.log(data);
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/login`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ USERID: data.id, USERPW: data.password }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+
+      const result = await response.json();
+      console.log('Login successful:', result);
+      if (result) router.push('/');
+      // Handle successful login (e.g., store token, redirect, etc.)
     } catch (err) {
-      console.error('로그인 실패:', err);
+      console.error('Login failed:', err);
+      // Handle login failure (e.g., show error message)
     }
   };
 

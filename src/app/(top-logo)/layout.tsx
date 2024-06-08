@@ -1,8 +1,26 @@
-import React from 'react';
+'use client';
+
+import React, { useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
+  const router = useRouter();
+
+  useEffect(() => {
+    fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth`)
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.message === 'FAIL') {
+          router.push('/login');
+        }
+      })
+      .catch((err) => {
+        router.push('/login');
+      });
+  }, []);
+
   return (
     <div className="w-full h-full">
       <header className="flex justify-center">
