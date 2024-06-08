@@ -19,7 +19,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
       .catch(() => {
         router.push('/login');
       });
-  }, []);
+  }, [router]);
 
   return (
     <div className="w-full h-full">
