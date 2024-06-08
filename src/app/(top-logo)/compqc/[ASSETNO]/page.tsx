@@ -67,7 +67,7 @@ const CompQCDetail: React.FC = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch('https://api.example.com/data'); // API 엔드포인트를 적절히 변경하세요.
+        const response = await fetch('https://api.example.com/data');
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }
