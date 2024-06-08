@@ -16,7 +16,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
           router.push('/login');
         }
       })
-      .catch((err) => {
+      .catch(() => {
         router.push('/login');
       });
   }, []);
