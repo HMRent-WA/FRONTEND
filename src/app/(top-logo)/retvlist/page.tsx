@@ -165,11 +165,13 @@ const Retvlist: React.FC = () => {
       <Table className="mb-24">
         <TableHeader>
           <TableRow className="bg-red-400/50 hover:bg-red-400/35">
-            <TableHead className="text-center rounded-tl-lg">
+            <TableHead className="text-center rounded-tl-lg px-1">
               자산 번호
             </TableHead>
-            <TableHead className="text-center">차량번호</TableHead>
-            <TableHead className="text-center rounded-tr-lg">모델</TableHead>
+            <TableHead className="text-center px-1">차량번호</TableHead>
+            <TableHead className="text-center rounded-tr-lg px-1 pr-2">
+              모델
+            </TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -182,11 +184,13 @@ const Retvlist: React.FC = () => {
                 data.ASSETNO === selectedASSETNO ? 'text-primary/80' : ''
               }
             >
-              <TableCell className="font-medium text-center">
+              <TableCell className="font-medium text-center px-1">
                 {data.ASSETNO}
               </TableCell>
-              <TableCell className="text-center">{data.CARNO}</TableCell>
-              <TableCell className="text-center">{data.MODEL}</TableCell>
+              <TableCell className="text-center px-1">{data.CARNO}</TableCell>
+              <TableCell className="text-center px-1 pr-2">
+                {data.MODEL}
+              </TableCell>
             </TableRow>
           ))}
         </TableBody>

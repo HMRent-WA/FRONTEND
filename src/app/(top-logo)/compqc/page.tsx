@@ -223,12 +223,12 @@ const CompQC: React.FC = () => {
       <Table className="mb-24">
         <TableHeader>
           <TableRow className="bg-orange-400/50 hover:bg-orange-400/35">
-            <TableHead className="w-[4.375rem] text-center rounded-tl-lg">
+            <TableHead className="text-center rounded-tl-lg px-1 pl-2">
               구분
             </TableHead>
-            <TableHead className="text-center">차량번호</TableHead>
-            <TableHead className="text-center">모델</TableHead>
-            <TableHead className="w-[4.375rem] text-center rounded-tr-lg">
+            <TableHead className="text-center px-1">차량번호</TableHead>
+            <TableHead className="text-center px-1">모델</TableHead>
+            <TableHead className="text-center rounded-tr-lg px-1 pr-2">
               상태
             </TableHead>
           </TableRow>
@@ -243,12 +243,12 @@ const CompQC: React.FC = () => {
                 data.ASSETNO === selectedASSETNO ? 'text-primary/80' : ''
               }
             >
-              <TableCell className="font-medium text-center">
+              <TableCell className="font-medium text-center px-1 pl-2">
                 {data.GUBUN}
               </TableCell>
-              <TableCell className="text-center">{data.CARNO}</TableCell>
-              <TableCell className="text-center">{data.MODEL}</TableCell>
-              <TableCell className="w-[4.375rem] text-center">
+              <TableCell className="text-center px-1">{data.CARNO}</TableCell>
+              <TableCell className="text-center px-1">{data.MODEL}</TableCell>
+              <TableCell className="text-center px-1 pr-2">
                 {data.STATUS}
               </TableCell>
             </TableRow>

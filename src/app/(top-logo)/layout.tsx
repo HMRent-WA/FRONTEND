@@ -16,8 +16,9 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
           router.push('/login');
         }
       })
-      .catch(() => {
-        router.push('/login');
+      .catch((err) => {
+        // TODO: 아래 주석 해제해야 비로그인 접근 제어 가능
+        // router.push('/login');
       });
   }, [router]);
 
