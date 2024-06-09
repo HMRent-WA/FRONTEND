@@ -24,12 +24,12 @@ export default function Home() {
         >
           상품화 완료 QC
         </MainMenuButton>
-        <MainMenuButton className="" href={'/resvlist'}>
+        <MainMenuButton className="" href={'/retvlist'}>
           회수 대상 리스트
         </MainMenuButton>
         <MainMenuButton
           className="bg-red-500 hover:bg-red-500/80"
-          href={'/retvlist'}
+          href={'/resvlist'}
         >
           차량 예약 리스트
         </MainMenuButton>
