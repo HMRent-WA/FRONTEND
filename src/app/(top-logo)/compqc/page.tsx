@@ -23,6 +23,13 @@ export type QCDataType = {
   STATUS: '상품화' | 'D' | string;
 };
 
+export type QCDataResponse = {
+  data: {
+    result: { MSGE: string; CODE: string };
+    data: { REPT: QCDataType[] };
+  };
+};
+
 const qcdata: QCDataType[] = [
   {
     ASSETNO: 'AST20240700301',
@@ -158,21 +165,22 @@ const CompQC: React.FC = () => {
   const [search, setSearch] = useState('');
   const [selectedValue, setSelectedValue] = useState('전체');
   const [selectedASSETNO, setSelectedASSETNO] = useState<string>('');
+  // const [apiData, setApiData] = useState<any[]>([]);
 
   const {
-    data: qcData,
+    data: response,
     loading,
     error,
     revalidate,
-  } = useFetch<QCDataType[]>(
-    `${process.env.NEXT_PUBLIC_API_URL}/com-test/dev/CompQC/D`
-  );
+  } = useFetch<QCDataResponse>(`${process.env.NEXT_PUBLIC_API_URL}/CompQC/D`);
 
-  // if (loading) return <p>Loading...</p>;
-  // if (error) return <p>Error: {error.message}</p>;
-  // if (!qcData) return <p>No data</p>;
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>Error: {error.message}</p>;
+  if (!response) return <p>No data</p>;
 
-  console.log(qcData);
+  console.log(response);
+
+  const apiData = response.data.data.REPT;
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearch(e.target.value);
@@ -184,7 +192,8 @@ const CompQC: React.FC = () => {
 
   const handleRowClick = (e: React.MouseEvent<HTMLTableRowElement>) => {
     const assetno = e.currentTarget.getAttribute('data-assetno');
-    const data = qcdata.find((data) => data.ASSETNO === assetno);
+    // const data = qcdata.find((data) => data.ASSETNO === assetno);
+    const data = apiData.find((datum) => datum.ASSETNO === assetno);
     setSelectedASSETNO(data?.ASSETNO || '');
   };
 
@@ -194,10 +203,11 @@ const CompQC: React.FC = () => {
     }
   };
 
-  const filteredData = qcdata.filter((data) => {
+  // const filteredData = qcdata.filter((data) => {
+  const filteredData = apiData.filter((datum) => {
     return (
-      (selectedValue === '전체' || data.GUBUN === selectedValue) &&
-      data.CARNO.includes(search)
+      (selectedValue === '전체' || datum.GUBUN === selectedValue) &&
+      datum.CARNO.includes(search)
     );
   });
 

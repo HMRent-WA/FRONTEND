@@ -72,7 +72,7 @@ const CompQCDetail: React.FC = () => {
     const fetchData = async () => {
       try {
         const response = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL}/com-test/dev/CompQC/D`
+          `${process.env.NEXT_PUBLIC_API_URL}/CompQC/D`
         );
         if (!response.ok) {
           throw new Error('Network response was not ok');
@@ -112,7 +112,7 @@ const CompQCDetail: React.FC = () => {
 
     try {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/com-test/dev/CompQC/${params.ASSETNO}`,
+        `${process.env.NEXT_PUBLIC_API_URL}/CompQC/${params.ASSETNO}`,
         {
           method: 'POST',
           body: formData,
