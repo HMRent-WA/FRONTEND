@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm, Controller } from 'react-hook-form';
@@ -26,7 +26,8 @@ import {
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useParams, useRouter } from 'next/navigation';
-import { QCDataType } from '../page';
+import { QCDataResponse, QCDataType } from '../page';
+import useFetch from '@/hooks/use-fetch';
 
 const CompQCSchema = z.object({
   MILEAGE: z.string().refine((val) => !isNaN(Number(val)), {
@@ -41,15 +42,13 @@ const CompQCSchema = z.object({
     message: '총 키 개수는 숫자만 입력할 수 있습니다.',
   }),
   KEYLOCATION: z.string().nonempty('차 키의 보관 위치를 입력해 주세요.'),
-  IMAGES: z.array(z.any()).optional(),
+  IMGLIST: z.array(z.any()).optional(),
 });
 
 type CompQCSchemaType = z.infer<typeof CompQCSchema>;
 
 const CompQCDetail: React.FC = () => {
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
-  const [apiData, setApiData] = useState<any | null>(null);
-
   const params = useParams();
   const router = useRouter();
 
@@ -58,38 +57,33 @@ const CompQCDetail: React.FC = () => {
     defaultValues: {
       MILEAGE: '',
       ENTRYLOCATION: '',
-      DETAILLOCATION: '',
       KEYQUANT: '',
       KEYTOTAL: '',
       KEYLOCATION: '',
-      IMAGES: [],
     },
     mode: 'onChange',
   });
 
-  // GET 요청 예시
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL}/CompQC/D`
-        );
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
-        const data = await response.json();
-        setApiData(
-          data.filter((item: QCDataType) => item.ASSETNO === params.ASSETNO)
-        );
-      } catch (error) {
-        console.error('Fetch error:', error);
-        // TODO: 토스트 메시지 추가
-        router.push('/compqc');
-      }
-    };
+  const {
+    data: fetchedData,
+    loading,
+    error,
+    revalidate,
+  } = useFetch<QCDataResponse>(`${process.env.NEXT_PUBLIC_API_URL}/CompQC/D`);
 
-    fetchData();
-  }, [params.ASSETNO]);
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>Error: {error.message}</p>;
+  if (!fetchedData) return <p>No data</p>;
+
+  console.log(fetchedData);
+
+  const entryLocationList = fetchedData.reqCode[0].HR58;
+  const apiData: QCDataType[] = fetchedData.data.data.REPT;
+  const selectedData = apiData.find((data) => data.ASSETNO === params.ASSETNO);
+
+  if (!selectedData || !entryLocationList) {
+    return <p>해당 데이터가 없습니다.</p>;
+  }
 
   const onFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
@@ -106,8 +100,9 @@ const CompQCDetail: React.FC = () => {
     formData.append('KEYQUANT', data.KEYQUANT);
     formData.append('KEYTOTAL', data.KEYTOTAL);
     formData.append('KEYLOCATION', data.KEYLOCATION);
-    selectedFiles.forEach((file, index) => {
-      formData.append(`IMAGES[${index}]`, file);
+
+    selectedFiles.forEach((file) => {
+      formData.append('IMGLIST', file);
     });
 
     try {
@@ -121,9 +116,11 @@ const CompQCDetail: React.FC = () => {
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
+      console.log('요청 완료');
       const result = await response.json();
       // TODO: 토스트 메시지 추가, router.push('/compqc')
       console.log('Success:', result);
+      // revalidate();
     } catch (error) {
       console.error('Fetch error:', error);
     }
@@ -144,11 +141,11 @@ const CompQCDetail: React.FC = () => {
             <div className="flex flex-col gap-4">
               <div className="flex items-center justify-between h-10">
                 <Label className="font-semibold">차량 번호</Label>
-                <p>177호5232</p>
+                <p>{selectedData.CARNO}</p>
               </div>
               <div className="flex items-center justify-between h-10">
                 <Label className="font-semibold">모델명</Label>
-                <p>K5</p>
+                <p>{selectedData.MODEL}</p>
               </div>
             </div>
             <div className="w-full flex flex-col gap-4 mt-6">
@@ -180,7 +177,11 @@ const CompQCDetail: React.FC = () => {
                       </SelectTrigger>
                       <SelectContent>
                         <SelectGroup>
-                          {<SelectItem value="apple">Apple</SelectItem>}
+                          {entryLocationList.map((item) => (
+                            <SelectItem key={item} value={item}>
+                              {item}
+                            </SelectItem>
+                          ))}
                         </SelectGroup>
                       </SelectContent>
                     </Select>
@@ -226,7 +227,7 @@ const CompQCDetail: React.FC = () => {
               </FormElement>
               <FormElement
                 formControl={compQCForm.control}
-                name="IMAGES"
+                name="IMGLIST"
                 label="차량 사진"
               >
                 <Input type="file" multiple onChange={onFileChange} />
@@ -249,12 +250,6 @@ const CompQCDetail: React.FC = () => {
             </Button>
           </CardFooter>
         </FormWrapper>
-        {apiData && (
-          <div>
-            <h2>Fetched Data:</h2>
-            <pre>{JSON.stringify(apiData, null, 2)}</pre>
-          </div>
-        )}
       </Card>
     </div>
   );

@@ -28,6 +28,7 @@ export type QCDataResponse = {
     result: { MSGE: string; CODE: string };
     data: { REPT: QCDataType[] };
   };
+  reqCode: [{ HR58: string[] }, any[]];
 };
 
 const qcdata: QCDataType[] = [
