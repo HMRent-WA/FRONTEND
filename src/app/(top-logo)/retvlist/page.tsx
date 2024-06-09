@@ -9,175 +9,154 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import {
-  Dialog,
-  DialogClose,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
+import { RadioGroupButton } from '@/components/button/radio-group-button';
 import { useRouter } from 'next/navigation';
+import { DatePickerWithRange } from '@/components/date-picker-with-range';
+import useFetch from '@/hooks/use-fetch';
+import { DateRange } from 'react-day-picker';
 
-type RetvlistDataType = {
+export type ResvDataType = {
   ASSETNO: string;
   CARNO: string;
+  CNAME: string;
   MODEL: string;
+  PHONE: string;
+  RCOMPDATE: string;
+  RQDATE: string;
+  RQDDAY: string;
+  RQNAME: string;
+  RRSON: string;
+  RRSONDTL: string;
+  STATUS: string;
+  RTLMTHD?: string;
 };
 
-const retvlistData: RetvlistDataType[] = [
-  {
-    ASSETNO: 'AST2024070011',
-    CARNO: '11하1111',
-    MODEL: '쏘렌토',
-  },
-  {
-    ASSETNO: 'AST2024070012',
-    CARNO: '22후2222',
-    MODEL: '아반떼',
-  },
-  {
-    ASSETNO: 'AST2024070013',
-    CARNO: '22후2222',
-    MODEL: '아반떼',
-  },
-  {
-    ASSETNO: 'AST2024070014',
-    CARNO: '222후2222',
-    MODEL: '아반떼',
-  },
-  {
-    ASSETNO: 'AST2024070015',
-    CARNO: '222후2222',
-    MODEL: '아반떼',
-  },
-  {
-    ASSETNO: 'AST2024070016',
-    CARNO: '222후2222',
-    MODEL: '아반떼',
-  },
-  {
-    ASSETNO: 'AST2024070017',
-    CARNO: '222후2222',
-    MODEL: '아반떼',
-  },
-  {
-    ASSETNO: 'AST2024070018',
-    CARNO: '222후2222',
-    MODEL: '아반떼',
-  },
-  {
-    ASSETNO: 'AST2024070019',
-    CARNO: '22후2222',
-    MODEL: '아반떼',
-  },
-  {
-    ASSETNO: 'AST20240700110',
-    CARNO: '222후2222',
-    MODEL: '아반떼',
-  },
-  {
-    ASSETNO: 'AST20240700111',
-    CARNO: '222후2222',
-    MODEL: '펠리세이드',
-  },
-  {
-    ASSETNO: 'AST20240700112',
-    CARNO: '22후2222',
-    MODEL: '펠리세이드',
-  },
-  {
-    ASSETNO: 'AST20240700113',
-    CARNO: '22후2222',
-    MODEL: '펠리세이드',
-  },
-  {
-    ASSETNO: 'AST20240700114',
-    CARNO: '22후2222',
-    MODEL: '펠리세이드',
-  },
-  {
-    ASSETNO: 'AST20240700115',
-    CARNO: '22후2222',
-    MODEL: '펠리세이드',
-  },
-  {
-    ASSETNO: 'AST20240700116',
-    CARNO: '22후2222',
-    MODEL: '펠리세이드',
-  },
-  {
-    ASSETNO: 'AST20240700117',
-    CARNO: '222후2222',
-    MODEL: '펠리세이드',
-  },
-  {
-    ASSETNO: 'AST20240700118',
-    CARNO: '222후2222',
-    MODEL: '펠리세이드',
-  },
-];
+export type ResvDataResponse = {
+  data: {
+    result: { MSGE: string; CODE: string };
+    data: { REPT: ResvDataType[] };
+  };
+};
 
-const Retvlist: React.FC = () => {
+const Resvlist: React.FC = () => {
   const router = useRouter();
 
   const [search, setSearch] = useState('');
+  const [selectedValue, setSelectedValue] = useState('전체');
   const [selectedASSETNO, setSelectedASSETNO] = useState<string>('');
+  const [dateRange, setDateRange] = useState<DateRange | undefined>({
+    from: new Date(),
+    to: new Date(),
+  });
 
-  // const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
-  //   setSearch(e.target.value);
-  // };
+  const {
+    data: response,
+    loading,
+    error,
+    revalidate,
+  } = useFetch<ResvDataResponse>(
+    `${process.env.NEXT_PUBLIC_API_URL}/retrieval`
+  );
+
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>Error: {error.message}</p>;
+  if (!response) return <p>No data</p>;
+
+  console.log(response);
+
+  const resvdata = response.data.data.REPT;
+
+  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearch(e.target.value);
+  };
+
+  const handleRadioChange = (value: string) => {
+    setSelectedValue(value);
+  };
+
+  console.log(resvdata);
 
   const handleRowClick = (e: React.MouseEvent<HTMLTableRowElement>) => {
     const assetno = e.currentTarget.getAttribute('data-assetno');
-    const data = retvlistData.find((data) => data.ASSETNO === assetno);
+    const data = resvdata.find((data) => data.ASSETNO === assetno);
     setSelectedASSETNO(data?.ASSETNO || '');
   };
 
-  const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+  const handleDetailClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     if (selectedASSETNO) {
-      router.push(`/compqc/${selectedASSETNO}`);
+      router.push(`/resvlist/${selectedASSETNO}`);
     }
   };
 
-  const filteredData = retvlistData.filter((data) => {
-    return data.CARNO.includes(search);
+  const handleDateChange = (range: DateRange | undefined) => {
+    setDateRange(range);
+  };
+
+  const parseDate = (dateString: string): Date => {
+    const year = dateString.substring(0, 4);
+    const month = dateString.substring(4, 6);
+    const day = dateString.substring(6, 8);
+    return new Date(`${year}-${month}-${day}`);
+  };
+
+  const isWithinDateRange = (
+    dateString: Date,
+    datePickerRange: DateRange | undefined
+  ) => {
+    if (!datePickerRange?.from || !datePickerRange?.to) return true;
+    const date = new Date(dateString);
+    return date >= datePickerRange.from && date <= datePickerRange.to;
+  };
+
+  const filteredData = resvdata.filter((data) => {
+    if (search && !data.CARNO.includes(search)) return false;
+    if (selectedValue !== '전체' && data.STATUS !== selectedValue) return false;
+    if (!isWithinDateRange(parseDate(data.RQDATE), dateRange)) return false;
+    return true;
   });
+
+  console.log('필터한 데이터 -> ', filteredData);
 
   return (
     <article className="px-4 relative">
       <h1 className="text-center font-medium text-xl my-8 text-[#1B1B1B]/90">
-        차량 예약 리스트
+        회수 대상 리스트
       </h1>
-      {/* <div className="flex flex-col my-4 gap-4">
+      <div className="flex flex-col my-4 gap-4">
+        <RadioGroupButton
+          options={['회수요청', '전체', '회수완료']}
+          onClick={handleRadioChange}
+          selectedValue={selectedValue}
+          buttonClassName="font-medium"
+        />
+        <DatePickerWithRange onChange={handleDateChange} />
         <Input
           placeholder="차량번호로 검색하기"
           name="search"
           value={search}
           onChange={handleSearch}
         />
-      </div> */}
+      </div>
       <Table className="mb-24">
         <TableHeader>
-          <TableRow className="bg-red-400/50 hover:bg-red-400/35">
-            <TableHead className="text-center rounded-tl-lg px-1">
-              자산 번호
+          <TableRow className="bg-primary/35 hover:bg-primary/20">
+            <TableHead className="w-[4.375rem] text-center rounded-tl-lg px-1">
+              차량 번호
             </TableHead>
-            <TableHead className="text-center px-1">차량번호</TableHead>
-            <TableHead className="text-center rounded-tr-lg px-1 pr-2">
-              모델
+            <TableHead className="text-center px-1">모델</TableHead>
+            <TableHead className="text-center px-1">고객</TableHead>
+            <TableHead className="text-center px-1">회수사유</TableHead>
+            <TableHead className="w-[4.375rem] text-center rounded-tr-lg px-1">
+              진행상태
             </TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
-          {filteredData.map((data) => (
+          {filteredData.map((data, idx) => (
             <TableRow
-              key={data.ASSETNO}
+              key={data.ASSETNO + idx}
               data-assetno={data.ASSETNO}
               onClick={handleRowClick}
               className={
@@ -185,51 +164,25 @@ const Retvlist: React.FC = () => {
               }
             >
               <TableCell className="font-medium text-center px-1">
-                {data.ASSETNO}
+                {data.CARNO}
               </TableCell>
-              <TableCell className="text-center px-1">{data.CARNO}</TableCell>
-              <TableCell className="text-center px-1 pr-2">
-                {data.MODEL}
+              <TableCell className="text-center px-1">{data.MODEL}</TableCell>
+              <TableCell className="text-center px-1">{data.CNAME}</TableCell>
+              <TableCell className="text-center px-1">{data.RRSON}</TableCell>
+              <TableCell className="w-[4.375rem] text-center px-1">
+                {data.STATUS}
               </TableCell>
             </TableRow>
           ))}
         </TableBody>
       </Table>
-      <Dialog>
-        <DialogTrigger asChild>
-          <div className="flex fixed bottom-4 left-0 w-full px-4">
-            <Button className="w-full h-12">예약 해제</Button>
-          </div>
-        </DialogTrigger>
-        <DialogContent className="sm:max-w-[425px] w-full rounded-2xl">
-          <DialogHeader>
-            <DialogTitle>정말 예약을 해제하시겠습니까?</DialogTitle>
-            <DialogDescription>차량 번호 : 175 호 1234</DialogDescription>
-          </DialogHeader>
-          {/* <div className="grid gap-4 py-4">
-            <div className="grid grid-cols-4 items-center gap-4"></div>
-            <div className="grid grid-cols-4 items-center gap-4"></div>
-          </div> */}
-          <DialogFooter>
-            <div className="w-full flex gap-4">
-              <Button type="submit" className="w-full">
-                예약 해제
-              </Button>
-              <DialogClose className="w-full">
-                <Button
-                  type="submit"
-                  className="w-full"
-                  variant={'destructive'}
-                >
-                  취소
-                </Button>
-              </DialogClose>
-            </div>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+      <div className="flex fixed bottom-4 left-0 w-full px-4">
+        <Button className="w-full h-12" onClick={handleDetailClick}>
+          상세 조회
+        </Button>
+      </div>
     </article>
   );
 };
 
-export default Retvlist;
+export default Resvlist;
