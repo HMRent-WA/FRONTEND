@@ -14,164 +14,31 @@ import { Input } from '@/components/ui/input';
 import { RadioGroupButton } from '@/components/button/radio-group-button';
 import { useRouter } from 'next/navigation';
 import { DatePickerWithRange } from '@/components/date-picker-with-range';
+import useFetch from '@/hooks/use-fetch';
+import { DateRange } from 'react-day-picker';
 
-// CARNO에 search validation이 필요함 -> r'^\d{2,3}[가-힣]\d{4}$' -> 가-힣 ? 하-힣 ?
-
-type ResvDataType = {
+export type ResvDataType = {
   ASSETNO: string;
   CARNO: string;
+  CNAME: string;
   MODEL: string;
-  CLIENT: string;
-  ghltntkdb: string;
-  wlsgodtkdxo: string;
+  PHONE: string;
+  RCOMPDATE: string;
+  RQDATE: string;
+  RQDDAY: string;
+  RQNAME: string;
+  RRSON: string;
+  RRSONDTL: string;
+  STATUS: string;
+  RTLMTHD?: string;
 };
 
-const resvdata: ResvDataType[] = [
-  {
-    ASSETNO: 'AST20240700301',
-    CARNO: '11하1111',
-    MODEL: '쏘렌토',
-    CLIENT: '홍길동',
-    ghltntkdb: '중도반납',
-    wlsgodtkdxo: '회수요청',
-  },
-  {
-    ASSETNO: 'AST20240700302',
-    CARNO: '22후2222',
-    MODEL: '아반떼',
-    CLIENT: '홍길동',
-    ghltntkdb: '중도반납',
-    wlsgodtkdxo: '회수요청',
-  },
-  {
-    ASSETNO: 'AST20240700303',
-    CARNO: '22후2222',
-    MODEL: '아반떼',
-    CLIENT: '홍길동',
-    ghltntkdb: '중도반납',
-    wlsgodtkdxo: '회수요청',
-  },
-  {
-    ASSETNO: 'AST20240700304',
-    CARNO: '222후2222',
-    MODEL: '아반떼',
-    CLIENT: '홍길동',
-    ghltntkdb: '중도반납',
-    wlsgodtkdxo: '회수요청',
-  },
-  {
-    ASSETNO: 'AST20240700305',
-    CARNO: '222후2222',
-    MODEL: '아반떼',
-    CLIENT: '홍길동',
-    ghltntkdb: '중도반납',
-    wlsgodtkdxo: '회수요청',
-  },
-  {
-    ASSETNO: 'AST20240700306',
-    CARNO: '222후2222',
-    MODEL: '아반떼',
-    CLIENT: '홍길동',
-    ghltntkdb: '중도반납',
-    wlsgodtkdxo: '회수요청',
-  },
-  {
-    ASSETNO: 'AST20240700307',
-    CARNO: '222후2222',
-    MODEL: '아반떼',
-    CLIENT: '홍길동',
-    ghltntkdb: '중도반납',
-    wlsgodtkdxo: '회수요청',
-  },
-  {
-    ASSETNO: 'AST20240700308',
-    CARNO: '222후2222',
-    MODEL: '아반떼',
-    CLIENT: '홍길동',
-    ghltntkdb: '중도반납',
-    wlsgodtkdxo: '회수요청',
-  },
-  {
-    ASSETNO: 'AST20240700309',
-    CARNO: '22후2222',
-    MODEL: '아반떼',
-    CLIENT: '홍길동',
-    ghltntkdb: '중도반납',
-    wlsgodtkdxo: '회수요청',
-  },
-  {
-    ASSETNO: 'AST202407003010',
-    CARNO: '222후2222',
-    MODEL: '아반떼',
-    CLIENT: '홍길동',
-    ghltntkdb: '중도반납',
-    wlsgodtkdxo: '회수요청',
-  },
-  {
-    ASSETNO: 'AST202407003011',
-    CARNO: '222후2222',
-    MODEL: '펠리세이드',
-    CLIENT: '홍길동',
-    ghltntkdb: '중도반납',
-    wlsgodtkdxo: '회수요청',
-  },
-  {
-    ASSETNO: 'AST202407003012',
-    CARNO: '22후2222',
-    MODEL: '펠리세이드',
-    CLIENT: '홍길동',
-    ghltntkdb: '중도반납',
-    wlsgodtkdxo: '회수요청',
-  },
-  {
-    ASSETNO: 'AST202407003013',
-    CARNO: '22후2222',
-    MODEL: '펠리세이드',
-    CLIENT: '홍길동',
-    ghltntkdb: '중도반납',
-    wlsgodtkdxo: '회수요청',
-  },
-  {
-    ASSETNO: 'AST202407003014',
-    CARNO: '22후2222',
-    MODEL: '펠리세이드',
-    CLIENT: '홍길동',
-    ghltntkdb: '중도반납',
-    wlsgodtkdxo: '회수요청',
-  },
-  {
-    ASSETNO: 'AST202407003015',
-    CARNO: '22후2222',
-    MODEL: '펠리세이드',
-    CLIENT: '홍길동',
-    ghltntkdb: '중도반납',
-    wlsgodtkdxo: '회수요청',
-  },
-  {
-    ASSETNO: 'AST202407003016',
-    CARNO: '22후2222',
-    MODEL: '펠리세이드',
-    CLIENT: '홍길동',
-    ghltntkdb: '중도반납',
-    wlsgodtkdxo: '회수요청',
-  },
-  {
-    ASSETNO: 'AST202407003017',
-    CARNO: '222후2222',
-    MODEL: '펠리세이드',
-    CLIENT: '홍길동',
-    ghltntkdb: '중도반납',
-    wlsgodtkdxo: '회수요청',
-  },
-  {
-    ASSETNO: 'AST202407003018',
-    CARNO: '222후2222',
-    MODEL: '펠리세이드',
-    CLIENT: '홍길동',
-    ghltntkdb: '중도반납',
-    wlsgodtkdxo: '회수요청',
-  },
-];
+export type ResvDataResponse = {
+  data: {
+    result: { MSGE: string; CODE: string };
+    data: { REPT: ResvDataType[] };
+  };
+};
 
 const Resvlist: React.FC = () => {
   const router = useRouter();
@@ -179,6 +46,27 @@ const Resvlist: React.FC = () => {
   const [search, setSearch] = useState('');
   const [selectedValue, setSelectedValue] = useState('전체');
   const [selectedASSETNO, setSelectedASSETNO] = useState<string>('');
+  const [dateRange, setDateRange] = useState<DateRange | undefined>({
+    from: new Date(),
+    to: new Date(),
+  });
+
+  const {
+    data: response,
+    loading,
+    error,
+    revalidate,
+  } = useFetch<ResvDataResponse>(
+    `${process.env.NEXT_PUBLIC_API_URL}/retrieval`
+  );
+
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>Error: {error.message}</p>;
+  if (!response) return <p>No data</p>;
+
+  console.log(response);
+
+  const resvdata = response.data.data.REPT;
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearch(e.target.value);
@@ -187,6 +75,8 @@ const Resvlist: React.FC = () => {
   const handleRadioChange = (value: string) => {
     setSelectedValue(value);
   };
+
+  console.log(resvdata);
 
   const handleRowClick = (e: React.MouseEvent<HTMLTableRowElement>) => {
     const assetno = e.currentTarget.getAttribute('data-assetno');
@@ -200,12 +90,34 @@ const Resvlist: React.FC = () => {
     }
   };
 
+  const handleDateChange = (range: DateRange | undefined) => {
+    setDateRange(range);
+  };
+
+  const parseDate = (dateString: string): Date => {
+    const year = dateString.substring(0, 4);
+    const month = dateString.substring(4, 6);
+    const day = dateString.substring(6, 8);
+    return new Date(`${year}-${month}-${day}`);
+  };
+
+  const isWithinDateRange = (
+    dateString: Date,
+    datePickerRange: DateRange | undefined
+  ) => {
+    if (!datePickerRange?.from || !datePickerRange?.to) return true;
+    const date = new Date(dateString);
+    return date >= datePickerRange.from && date <= datePickerRange.to;
+  };
+
   const filteredData = resvdata.filter((data) => {
-    return (
-      (selectedValue === '전체' || data.wlsgodtkdxo === selectedValue) &&
-      data.CARNO.includes(search)
-    );
+    if (search && !data.CARNO.includes(search)) return false;
+    if (selectedValue !== '전체' && data.STATUS !== selectedValue) return false;
+    if (!isWithinDateRange(parseDate(data.RQDATE), dateRange)) return false;
+    return true;
   });
+
+  console.log('필터한 데이터 -> ', filteredData);
 
   return (
     <article className="px-4 relative">
@@ -219,7 +131,7 @@ const Resvlist: React.FC = () => {
           selectedValue={selectedValue}
           buttonClassName="font-medium"
         />
-        <DatePickerWithRange />
+        <DatePickerWithRange onChange={handleDateChange} />
         <Input
           placeholder="차량번호로 검색하기"
           name="search"
@@ -230,21 +142,21 @@ const Resvlist: React.FC = () => {
       <Table className="mb-24">
         <TableHeader>
           <TableRow className="bg-primary/35 hover:bg-primary/20">
-            <TableHead className="w-[4.375rem] text-center rounded-tl-lg px-1 pl-2">
+            <TableHead className="w-[4.375rem] text-center rounded-tl-lg px-1">
               차량 번호
             </TableHead>
-            <TableHead className="text-center">모델</TableHead>
-            <TableHead className="text-center">고객</TableHead>
+            <TableHead className="text-center px-1">모델</TableHead>
+            <TableHead className="text-center px-1">고객</TableHead>
             <TableHead className="text-center px-1">회수사유</TableHead>
-            <TableHead className="w-[4.375rem] text-center rounded-tr-lg px-1 pr-2">
+            <TableHead className="w-[4.375rem] text-center rounded-tr-lg px-1">
               진행상태
             </TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
-          {filteredData.map((data) => (
+          {filteredData.map((data, idx) => (
             <TableRow
-              key={data.ASSETNO}
+              key={data.ASSETNO + idx}
               data-assetno={data.ASSETNO}
               onClick={handleRowClick}
               className={
@@ -255,12 +167,10 @@ const Resvlist: React.FC = () => {
                 {data.CARNO}
               </TableCell>
               <TableCell className="text-center px-1">{data.MODEL}</TableCell>
-              <TableCell className="text-center px-1">{data.CLIENT}</TableCell>
-              <TableCell className="text-center px-1">
-                {data.ghltntkdb}
-              </TableCell>
-              <TableCell className="w-[4.375rem] text-center px-1 pr-2">
-                {data.wlsgodtkdxo}
+              <TableCell className="text-center px-1">{data.CNAME}</TableCell>
+              <TableCell className="text-center px-1">{data.RRSON}</TableCell>
+              <TableCell className="w-[4.375rem] text-center px-1">
+                {data.STATUS}
               </TableCell>
             </TableRow>
           ))}

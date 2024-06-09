@@ -10,29 +10,49 @@ import {
 } from '@/components/ui/card';
 
 import { Label } from '@/components/ui/label';
+import useFetch from '@/hooks/use-fetch';
+import { ResvDataResponse, ResvDataType } from '../page';
+import { useParams } from 'next/navigation';
 
 const ResvlistDetail: React.FC = () => {
-  const [apiData, setApiData] = useState<any | null>(null);
-  const [error, setError] = useState<string | null>(null);
+  const params = useParams();
 
-  // GET 요청 예시
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetch('https://api.example.com/data'); // API 엔드포인트를 적절히 변경하세요.
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
-        const data = await response.json();
-        setApiData(data);
-      } catch (error) {
-        setError('There was a problem with the fetch operation.');
-        console.error('Fetch error:', error);
-      }
-    };
+  const {
+    data: response,
+    loading,
+    error,
+    revalidate,
+  } = useFetch<ResvDataResponse>(
+    `${process.env.NEXT_PUBLIC_API_URL}/retrieval`
+  );
 
-    fetchData();
-  }, []);
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>Error: {error.message}</p>;
+  if (!response) return <p>No data</p>;
+
+  // console.log(response);
+
+  const resvdata: ResvDataType[] = response.data.data.REPT;
+  const selectedData = resvdata.find((data) => data.ASSETNO === params.ASSETNO);
+
+  if (!selectedData) {
+    return <p>해당 데이터가 없습니다.</p>;
+  }
+
+  console.log(selectedData);
+
+  // ASSETNO: 'AST2020060043';
+  // CARNO: '01호2685';
+  // CNAME: '윤명옥';
+  // MODEL: '컨버전시리즈';
+  // PHONE: '01052455796';
+  // RCOMPDATE: '20221214';
+  // RQDATE: '20221214';
+  // RQDDAY: '';
+  // RQNAME: '';
+  // RRSON: '중도회수';
+  // RRSONDTL: '기타';
+  // STATUS: '회수완료';
 
   return (
     <div className="px-4 flex justify-center items-center">
@@ -47,47 +67,47 @@ const ResvlistDetail: React.FC = () => {
           <div className="flex flex-col gap-4 mt-4">
             <div className="flex items-center justify-between h-10">
               <Label className="font-semibold">자산 상태</Label>
-              <p>출고(실행)</p>
+              <p>{selectedData.STATUS}</p>
             </div>
             <div className="flex items-center justify-between h-10">
               <Label className="font-semibold">차량 번호</Label>
-              <p>175호1234</p>
+              <p>{selectedData.CARNO}</p>
             </div>
             <div className="flex items-center justify-between h-10">
               <Label className="font-semibold">고객명</Label>
-              <p>김철수</p>
+              <p>{selectedData.CNAME}</p>
             </div>
             <div className="flex items-center justify-between h-10">
               <Label className="font-semibold">연락처</Label>
-              <p>01012341234</p>
+              <p>{selectedData.PHONE}</p>
             </div>
             <div className="flex items-center justify-between h-10">
               <Label className="font-semibold">회수 사유</Label>
-              <p>중도회수</p>
+              <p>{selectedData.RRSON}</p>
             </div>
             <div className="flex items-center justify-between h-10">
               <Label className="font-semibold">회수 상세 사유</Label>
-              <p>연체</p>
+              <p>{selectedData.RRSONDTL}</p>
             </div>
             <div className="flex items-center justify-between h-10">
               <Label className="font-semibold">요청자</Label>
-              <p>이연수</p>
+              <p>{selectedData.RQNAME}</p>
             </div>
             <div className="flex items-center justify-between h-10">
               <Label className="font-semibold">요청 일시</Label>
-              <p>2024. 05. 15.</p>
+              <p>{selectedData.RQDATE}</p>
             </div>
             <div className="flex items-center justify-between h-10">
               <Label className="font-semibold">회수 요청 경과일</Label>
-              <p>+1</p>
+              <p>{selectedData.RQDDAY}</p>
             </div>
             <div className="flex items-center justify-between h-10">
               <Label className="font-semibold">회수 완료 일시</Label>
-              <p></p>
+              <p>{selectedData.RCOMPDATE}</p>
             </div>
             <div className="flex items-center justify-between h-10">
               <Label className="font-semibold">렌탈 방식</Label>
-              <p>장기렌트</p>
+              <p>{selectedData?.RTLMTHD}</p>
             </div>
           </div>
         </CardContent>
