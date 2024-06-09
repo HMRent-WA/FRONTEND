@@ -25,6 +25,8 @@ import {
 } from '@/components/ui/select';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { useParams, useRouter } from 'next/navigation';
+import { QCDataType } from '../page';
 
 const CompQCSchema = z.object({
   MILEAGE: z.string().refine((val) => !isNaN(Number(val)), {
@@ -47,7 +49,9 @@ type CompQCSchemaType = z.infer<typeof CompQCSchema>;
 const CompQCDetail: React.FC = () => {
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
   const [apiData, setApiData] = useState<any | null>(null);
-  const [error, setError] = useState<string | null>(null);
+
+  const params = useParams();
+  const router = useRouter();
 
   const compQCForm = useForm<CompQCSchemaType>({
     resolver: zodResolver(CompQCSchema),
@@ -67,20 +71,25 @@ const CompQCDetail: React.FC = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch('https://api.example.com/data');
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/com-test/dev/CompQC/D`
+        );
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }
         const data = await response.json();
-        setApiData(data);
+        setApiData(
+          data.filter((item: QCDataType) => item.ASSETNO === params.ASSETNO)
+        );
       } catch (error) {
-        setError('There was a problem with the fetch operation.');
         console.error('Fetch error:', error);
+        // TODO: 토스트 메시지 추가
+        router.push('/compqc');
       }
     };
 
     fetchData();
-  }, []);
+  }, [params.ASSETNO]);
 
   const onFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
@@ -102,18 +111,20 @@ const CompQCDetail: React.FC = () => {
     });
 
     try {
-      const response = await fetch('https://api.example.com/submit', {
-        // API 엔드포인트를 적절히 변경하세요.
-        method: 'POST',
-        body: formData,
-      });
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/com-test/dev/CompQC/${params.ASSETNO}`,
+        {
+          method: 'POST',
+          body: formData,
+        }
+      );
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
       const result = await response.json();
+      // TODO: 토스트 메시지 추가, router.push('/compqc')
       console.log('Success:', result);
     } catch (error) {
-      setError('There was a problem with the fetch operation.');
       console.error('Fetch error:', error);
     }
   };
@@ -169,9 +180,7 @@ const CompQCDetail: React.FC = () => {
                       </SelectTrigger>
                       <SelectContent>
                         <SelectGroup>
-                          <SelectItem value="apple">Apple</SelectItem>
-                          <SelectItem value="banana">Banana</SelectItem>
-                          <SelectItem value="blueberry">Blueberry</SelectItem>
+                          {<SelectItem value="apple">Apple</SelectItem>}
                         </SelectGroup>
                       </SelectContent>
                     </Select>

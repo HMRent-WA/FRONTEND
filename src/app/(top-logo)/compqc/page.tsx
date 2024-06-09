@@ -15,7 +15,7 @@ import { RadioGroupButton } from '@/components/button/radio-group-button';
 import { useRouter } from 'next/navigation';
 import useFetch from '@/hooks/use-fetch';
 
-type QCDataType = {
+export type QCDataType = {
   ASSETNO: string;
   GUBUN: '신차' | '재렌트';
   CARNO: string;
