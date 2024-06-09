@@ -17,7 +17,7 @@ import { DatePickerWithRange } from '@/components/date-picker-with-range';
 import useFetch from '@/hooks/use-fetch';
 import { DateRange } from 'react-day-picker';
 
-export type ResvDataType = {
+export type RetvDataType = {
   ASSETNO: string;
   CARNO: string;
   CNAME: string;
@@ -33,19 +33,20 @@ export type ResvDataType = {
   RTLMTHD?: string;
 };
 
-export type ResvDataResponse = {
+export type RetvDataResponse = {
   data: {
     result: { MSGE: string; CODE: string };
-    data: { REPT: ResvDataType[] };
+    data: { REPT: RetvDataType[] };
   };
 };
 
-const Resvlist: React.FC = () => {
+const Retvlist: React.FC = () => {
   const router = useRouter();
 
   const [search, setSearch] = useState('');
   const [selectedValue, setSelectedValue] = useState('전체');
   const [selectedASSETNO, setSelectedASSETNO] = useState<string>('');
+  const [selectedRQDATE, setSelectedRQDATE] = useState<string>('');
   const [dateRange, setDateRange] = useState<DateRange | undefined>({
     from: new Date(),
     to: new Date(),
@@ -56,7 +57,7 @@ const Resvlist: React.FC = () => {
     loading,
     error,
     revalidate,
-  } = useFetch<ResvDataResponse>(
+  } = useFetch<RetvDataResponse>(
     `${process.env.NEXT_PUBLIC_API_URL}/retrieval`
   );
 
@@ -66,7 +67,7 @@ const Resvlist: React.FC = () => {
 
   console.log(response);
 
-  const resvdata = response.data.data.REPT;
+  const retvdata = response.data.data.REPT;
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearch(e.target.value);
@@ -76,17 +77,18 @@ const Resvlist: React.FC = () => {
     setSelectedValue(value);
   };
 
-  console.log(resvdata);
+  console.log(retvdata);
 
   const handleRowClick = (e: React.MouseEvent<HTMLTableRowElement>) => {
     const assetno = e.currentTarget.getAttribute('data-assetno');
-    const data = resvdata.find((data) => data.ASSETNO === assetno);
+    const data = retvdata.find((data) => data.ASSETNO === assetno);
     setSelectedASSETNO(data?.ASSETNO || '');
+    setSelectedRQDATE(data?.RQDATE || '');
   };
 
   const handleDetailClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     if (selectedASSETNO) {
-      router.push(`/resvlist/${selectedASSETNO}`);
+      router.push(`/retvlist/${selectedASSETNO}/${selectedRQDATE}`);
     }
   };
 
@@ -110,7 +112,7 @@ const Resvlist: React.FC = () => {
     return date >= datePickerRange.from && date <= datePickerRange.to;
   };
 
-  const filteredData = resvdata.filter((data) => {
+  const filteredData = retvdata.filter((data) => {
     if (search && !data.CARNO.includes(search)) return false;
     if (selectedValue !== '전체' && data.STATUS !== selectedValue) return false;
     if (!isWithinDateRange(parseDate(data.RQDATE), dateRange)) return false;
@@ -185,4 +187,4 @@ const Resvlist: React.FC = () => {
   );
 };
 
-export default Resvlist;
+export default Retvlist;

@@ -20,17 +20,23 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import { useRouter } from 'next/navigation';
+import useFetch from '@/hooks/use-fetch';
 
-type RetvlistDataType = {
+type ResvlistDataType = {
   ASSETNO: string;
   CARNO: string;
   MODEL: string;
 };
 
-const retvlistData: RetvlistDataType[] = [
+type ResvlistDataResponse = {
+  data: {
+    result: { MSGE: string; CODE: string };
+    data: { REPT: ResvlistDataType[] };
+  };
+};
+
+const resvlistData: ResvlistDataType[] = [
   {
     ASSETNO: 'AST2024070011',
     CARNO: '11하1111',
@@ -43,12 +49,12 @@ const retvlistData: RetvlistDataType[] = [
   },
   {
     ASSETNO: 'AST2024070013',
-    CARNO: '22후2222',
+    CARNO: '10하2992',
     MODEL: '아반떼',
   },
   {
     ASSETNO: 'AST2024070014',
-    CARNO: '222후2222',
+    CARNO: '127하2320',
     MODEL: '아반떼',
   },
   {
@@ -123,11 +129,33 @@ const retvlistData: RetvlistDataType[] = [
   },
 ];
 
-const Retvlist: React.FC = () => {
+const Resvlist: React.FC = () => {
   const router = useRouter();
 
   const [search, setSearch] = useState('');
   const [selectedASSETNO, setSelectedASSETNO] = useState<string>('');
+  const [selectedCARNO, setSelectedCARNO] = useState<string>('');
+
+  const {
+    data: response,
+    loading,
+    error,
+    revalidate,
+  } = useFetch<ResvlistDataResponse>(
+    `${process.env.NEXT_PUBLIC_API_URL}/reservation`
+  );
+
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>Error: {error.message}</p>;
+  if (!response) return <p>No data</p>;
+
+  console.log(response);
+
+  // const resvdata = response.data.data.REPT;
+
+  // if (!resvdata) {
+  //   return <p>해당 데이터가 없습니다.</p>;
+  // }
 
   // const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
   //   setSearch(e.target.value);
@@ -135,17 +163,12 @@ const Retvlist: React.FC = () => {
 
   const handleRowClick = (e: React.MouseEvent<HTMLTableRowElement>) => {
     const assetno = e.currentTarget.getAttribute('data-assetno');
-    const data = retvlistData.find((data) => data.ASSETNO === assetno);
+    const data = resvlistData.find((data) => data.ASSETNO === assetno);
     setSelectedASSETNO(data?.ASSETNO || '');
+    setSelectedCARNO(data?.CARNO || '');
   };
 
-  const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
-    if (selectedASSETNO) {
-      router.push(`/compqc/${selectedASSETNO}`);
-    }
-  };
-
-  const filteredData = retvlistData.filter((data) => {
+  const filteredData = resvlistData.filter((data) => {
     return data.CARNO.includes(search);
   });
 
@@ -198,18 +221,16 @@ const Retvlist: React.FC = () => {
       <Dialog>
         <DialogTrigger asChild>
           <div className="flex fixed bottom-4 left-0 w-full px-4">
-            <Button className="w-full h-12">예약 해제</Button>
+            <Button className="w-full h-12" disabled={!selectedASSETNO}>
+              예약 해제
+            </Button>
           </div>
         </DialogTrigger>
-        <DialogContent className="sm:max-w-[425px] w-full rounded-2xl">
-          <DialogHeader>
+        <DialogContent className="w-[90%] rounded-2xl">
+          <DialogHeader className="py-4 gap-2">
             <DialogTitle>정말 예약을 해제하시겠습니까?</DialogTitle>
-            <DialogDescription>차량 번호 : 175 호 1234</DialogDescription>
+            <DialogDescription>{selectedCARNO}</DialogDescription>
           </DialogHeader>
-          {/* <div className="grid gap-4 py-4">
-            <div className="grid grid-cols-4 items-center gap-4"></div>
-            <div className="grid grid-cols-4 items-center gap-4"></div>
-          </div> */}
           <DialogFooter>
             <div className="w-full flex gap-4">
               <Button type="submit" className="w-full">
@@ -232,4 +253,4 @@ const Retvlist: React.FC = () => {
   );
 };
 
-export default Retvlist;
+export default Resvlist;

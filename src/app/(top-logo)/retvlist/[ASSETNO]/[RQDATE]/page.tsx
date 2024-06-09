@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import {
   Card,
   CardContent,
@@ -11,10 +11,10 @@ import {
 
 import { Label } from '@/components/ui/label';
 import useFetch from '@/hooks/use-fetch';
-import { ResvDataResponse, ResvDataType } from '../page';
+import { RetvDataResponse, RetvDataType } from '../../page';
 import { useParams } from 'next/navigation';
 
-const ResvlistDetail: React.FC = () => {
+const RetvlistDetail: React.FC = () => {
   const params = useParams();
 
   const {
@@ -22,7 +22,7 @@ const ResvlistDetail: React.FC = () => {
     loading,
     error,
     revalidate,
-  } = useFetch<ResvDataResponse>(
+  } = useFetch<RetvDataResponse>(
     `${process.env.NEXT_PUBLIC_API_URL}/retrieval`
   );
 
@@ -32,8 +32,10 @@ const ResvlistDetail: React.FC = () => {
 
   // console.log(response);
 
-  const resvdata: ResvDataType[] = response.data.data.REPT;
-  const selectedData = resvdata.find((data) => data.ASSETNO === params.ASSETNO);
+  const retvdata: RetvDataType[] = response.data.data.REPT;
+  const selectedData = retvdata.find(
+    (data) => data.ASSETNO === params.ASSETNO && data.RQDATE === params.RQDATE
+  );
 
   if (!selectedData) {
     return <p>해당 데이터가 없습니다.</p>;
@@ -116,4 +118,4 @@ const ResvlistDetail: React.FC = () => {
   );
 };
 
-export default ResvlistDetail;
+export default RetvlistDetail;
