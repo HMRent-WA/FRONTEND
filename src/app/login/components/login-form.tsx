@@ -15,8 +15,14 @@ import { Input } from '@/components/ui/input';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { cn } from '@/lib/utils';
 import { useRouter } from 'next/navigation';
+import { z } from 'zod';
 
-type LoginData = { id: string; password: string };
+const loginSchema = z.object({
+  id: z.string().trim().min(1),
+  password: z.string().min(1),
+});
+
+type LoginData = z.infer<typeof loginSchema>;
 
 const LoginForm = ({ className }: { className?: string }) => {
   const router = useRouter();
@@ -102,6 +108,7 @@ const LoginForm = ({ className }: { className?: string }) => {
               type="submit"
               size="lg"
               className="font-semibold w-full h-12"
+              disabled={!form.formState.isValid}
             >
               로그인
             </Button>
