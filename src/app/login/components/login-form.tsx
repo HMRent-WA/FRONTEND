@@ -98,7 +98,11 @@ const LoginForm = ({ className }: { className?: string }) => {
             </div>
           </CardContent>
           <CardFooter className="items-center justify-center my-3 pt-3">
-            <Button type="submit" size="lg" className="font-semibold w-full">
+            <Button
+              type="submit"
+              size="lg"
+              className="font-semibold w-full h-12"
+            >
               로그인
             </Button>
           </CardFooter>
