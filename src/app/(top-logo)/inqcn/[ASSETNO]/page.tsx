@@ -186,7 +186,7 @@ const InQCNDetail: React.FC = () => {
           </CardContent>
           <CardFooter className="fixed bottom-0 left-0 w-full p-4">
             <Button className="w-full h-12 rounded-lg" type="submit">
-              입고 (QC)
+              입력 완료
             </Button>
           </CardFooter>
         </FormWrapper>
