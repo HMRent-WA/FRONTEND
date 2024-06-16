@@ -16,6 +16,7 @@ import { useForm, SubmitHandler } from 'react-hook-form';
 import { cn } from '@/lib/utils';
 import { useRouter } from 'next/navigation';
 import { z } from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
 
 const loginSchema = z.object({
   id: z.string().trim().min(1),
@@ -28,6 +29,7 @@ const LoginForm = ({ className }: { className?: string }) => {
   const router = useRouter();
 
   const form = useForm<LoginData>({
+    resolver: zodResolver(loginSchema),
     defaultValues: { id: '', password: '' },
   });
 
@@ -107,7 +109,7 @@ const LoginForm = ({ className }: { className?: string }) => {
             <Button
               type="submit"
               size="lg"
-              className="font-semibold w-full h-12"
+              className="font-semibold w-full h-12 rounded-lg"
               disabled={!form.formState.isValid}
             >
               로그인
