@@ -43,9 +43,9 @@ const Resvlist: React.FC = () => {
     `${process.env.NEXT_PUBLIC_API_URL}/reservation`
   );
 
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p>Error: {error.message}</p>;
-  if (!response) return <p>No data</p>;
+  if (loading) return <p className="px-4">Loading...</p>;
+  if (error) return <p className="px-4">Error: {error.message}</p>;
+  if (!response) return <p className="px-4">No data</p>;
 
   console.log(response);
 
@@ -53,7 +53,7 @@ const Resvlist: React.FC = () => {
   // const resvdata = response.data.data.REPT;
 
   // if (!resvdata) {
-  //   return <p>해당 데이터가 없습니다.</p>;
+  //   return <p className="px-4">해당 데이터가 없습니다.</p>;
   // }
 
   // FIXME: 검색이 필요하다면 사용

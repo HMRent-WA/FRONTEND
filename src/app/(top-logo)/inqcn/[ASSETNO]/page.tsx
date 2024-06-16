@@ -55,7 +55,7 @@ const InQCNDetail: React.FC = () => {
   const selectedData = qcdata.find((data) => data.ASSETNO === params.ASSETNO);
 
   if (!selectedData) {
-    return <p>해당 데이터가 없습니다.</p>;
+    return <p className="px-4">해당 데이터가 없습니다.</p>;
   }
 
   //   FIXME: useFetch 사용 시 주석 해제
@@ -66,9 +66,9 @@ const InQCNDetail: React.FC = () => {
   //     revalidate,
   //   } = useFetch<QCDataResponse>(`${process.env.NEXT_PUBLIC_API_URL}/InQCN/D`);
 
-  //   if (loading) return <p>Loading...</p>;
-  //   if (error) return <p>Error: {error.message}</p>;
-  //   if (!fetchedData) return <p>No data</p>;
+  //   if (loading) return <p className="px-4">Loading...</p>;
+  //   if (error) return <p className="px-4">Error: {error.message}</p>;
+  //   if (!fetchedData) return <p className="px-4">No data</p>;
 
   //   console.log(fetchedData);
 
@@ -77,7 +77,7 @@ const InQCNDetail: React.FC = () => {
   //   const selectedData = apiData.find((data) => data.ASSETNO === params.ASSETNO);
 
   //   if (!selectedData || !entryLocationList) {
-  //     return <p>해당 데이터가 없습니다.</p>;
+  //     return <p className="px-4">해당 데이터가 없습니다.</p>;
   //   }
 
   // POST 요청 예시

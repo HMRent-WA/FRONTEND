@@ -26,9 +26,9 @@ const RetvlistDetail: React.FC = () => {
     `${process.env.NEXT_PUBLIC_API_URL}/retrieval`
   );
 
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p>Error: {error.message}</p>;
-  if (!response) return <p>No data</p>;
+  if (loading) return <p className="px-4">Loading...</p>;
+  if (error) return <p className="px-4">Error: {error.message}</p>;
+  if (!response) return <p className="px-4">No data</p>;
 
   // console.log(response);
 
@@ -38,7 +38,7 @@ const RetvlistDetail: React.FC = () => {
   );
 
   if (!selectedData) {
-    return <p>해당 데이터가 없습니다.</p>;
+    return <p className="px-4">해당 데이터가 없습니다.</p>;
   }
 
   console.log(selectedData);
