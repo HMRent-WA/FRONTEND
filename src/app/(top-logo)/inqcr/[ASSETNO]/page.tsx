@@ -30,6 +30,7 @@ import useFetch from '@/hooks/use-fetch';
 
 // FIXME: 더미데이터, useFetch 사용 시 주석 처리
 import { qcdata } from '../mock-data';
+import { showErrorToast, showSuccessToast } from '@/lib/toast';
 
 const InQCRSchema = z.object({
   MILEAGE: z.string().refine((val) => !isNaN(Number(val)), {
@@ -105,11 +106,15 @@ const InQCRDetail: React.FC = () => {
       }
       console.log('요청 완료');
       const result = await response.json();
-      // TODO: 토스트 메시지 추가, router.push('/inqcr')
       console.log('Success:', result);
+      // FIXME: 성공 토스트 메시지 수정 필요
+      showSuccessToast('완료되었습니다.');
       // revalidate();
+      router.push('/inqcr');
     } catch (error) {
       console.error('Fetch error:', error);
+      // FIXME: 실패 토스트 메시지 수정 필요
+      showErrorToast('요청에 실패하였습니다.');
     }
   };
 

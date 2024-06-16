@@ -4,9 +4,11 @@ import React, { useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import { showErrorToast } from '@/lib/toast';
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
   const router = useRouter();
+  // const [isLoading, setIsLoading] = React.useState<boolean>(true);
 
   useEffect(() => {
     fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth`)
@@ -19,8 +21,13 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
       .catch((err) => {
         // TODO: 아래 주석 해제해야 비로그인 접근 제어 가능
         // router.push('/login');
+        // showErrorToast('로그인 후 이용해주세요.');
       });
   }, [router]);
+
+  // if (isLoading) {
+  //   return <div>Loading...</div>;
+  // }
 
   return (
     <div className="w-full h-full">

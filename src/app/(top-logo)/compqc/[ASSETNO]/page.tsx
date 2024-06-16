@@ -28,6 +28,7 @@ import { Label } from '@/components/ui/label';
 import { useParams, useRouter } from 'next/navigation';
 import useFetch from '@/hooks/use-fetch';
 import { QCDataResponse, QCDataType } from '../types';
+import { showErrorToast, showSuccessToast } from '@/lib/toast';
 
 const CompQCSchema = z.object({
   MILEAGE: z.string().refine((val) => !isNaN(Number(val)), {
@@ -118,11 +119,15 @@ const CompQCDetail: React.FC = () => {
       }
       console.log('요청 완료');
       const result = await response.json();
-      // TODO: 토스트 메시지 추가, router.push('/compqc')
       console.log('Success:', result);
-      // revalidate();
+      // FIXME: 성공 토스트 메시지 수정 필요
+      showSuccessToast('완료되었습니다.');
+      revalidate();
+      router.push('/compqc');
     } catch (error) {
       console.error('Fetch error:', error);
+      // FIXME: 실패 토스트 메시지 수정 필요
+      showErrorToast('요청에 실패하였습니다.');
     }
   };
 

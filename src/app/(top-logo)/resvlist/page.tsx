@@ -26,6 +26,7 @@ import { ResvlistDataResponse } from './types';
 
 // FIXME: 더미데이터, useFetch 사용 시 주석 처리
 import { resvlistData } from './mock-data';
+import { showErrorToast, showSuccessToast } from '@/lib/toast';
 
 const Resvlist: React.FC = () => {
   const router = useRouter();
@@ -71,6 +72,35 @@ const Resvlist: React.FC = () => {
   const filteredData = resvlistData.filter((data) => {
     return data.CARNO.includes(search);
   });
+
+  const handleClick = async () => {
+    try {
+      // FIXME: 실제 API call 시, 엔드포인트와 body 데이터 수정 필요
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/RESVLIST/${selectedASSETNO}`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({}),
+        }
+      );
+
+      if (!response.ok) {
+        // showErrorToast('예약 해제에 실패했습니다.');
+        throw new Error('Network response was not ok');
+      }
+
+      const result = await response.json();
+      console.log('Reservation delete successful:', result);
+      revalidate();
+      showSuccessToast('예약이 해제되었습니다.');
+    } catch (err) {
+      console.error('Reservation delete failed:', err);
+      showErrorToast('예약 해제에 실패했습니다.');
+    }
+  };
 
   return (
     <article className="px-4 relative">
@@ -137,6 +167,7 @@ const Resvlist: React.FC = () => {
                 type="submit"
                 className="w-full"
                 disabled={!selectedASSETNO}
+                onClick={handleClick}
               >
                 예약 해제
               </Button>
