@@ -11,8 +11,8 @@ import {
 
 import { Label } from '@/components/ui/label';
 import useFetch from '@/hooks/use-fetch';
-import { RetvDataResponse, RetvDataType } from '../../page';
 import { useParams } from 'next/navigation';
+import { RetvDataResponse, RetvDataType } from '../../types';
 
 const RetvlistDetail: React.FC = () => {
   const params = useParams();

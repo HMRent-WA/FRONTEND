@@ -26,8 +26,8 @@ import {
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useParams, useRouter } from 'next/navigation';
-import { QCDataResponse, QCDataType } from '../page';
 import useFetch from '@/hooks/use-fetch';
+import { QCDataResponse, QCDataType } from '../types';
 
 const CompQCSchema = z.object({
   MILEAGE: z.string().refine((val) => !isNaN(Number(val)), {

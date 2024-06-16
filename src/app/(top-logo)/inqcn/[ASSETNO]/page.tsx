@@ -26,8 +26,10 @@ import {
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useParams, useRouter } from 'next/navigation';
-import { qcdata } from '../page';
 import useFetch from '@/hooks/use-fetch';
+
+// FIXME: 더미데이터, useFetch 사용 시 주석 처리
+import { qcdata } from '../mock-data';
 
 const InQCNSchema = z.object({
   ENTRYLOCATION: z.string().nonempty('차량 입고 위치를 선택해 주세요.'),

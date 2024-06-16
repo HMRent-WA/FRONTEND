@@ -22,112 +22,10 @@ import {
 import { Button } from '@/components/ui/button';
 import { useRouter } from 'next/navigation';
 import useFetch from '@/hooks/use-fetch';
+import { ResvlistDataResponse } from './types';
 
-type ResvlistDataType = {
-  ASSETNO: string;
-  CARNO: string;
-  MODEL: string;
-};
-
-type ResvlistDataResponse = {
-  data: {
-    result: { MSGE: string; CODE: string };
-    data: { REPT: ResvlistDataType[] };
-  };
-};
-
-const resvlistData: ResvlistDataType[] = [
-  {
-    ASSETNO: 'AST2024070011',
-    CARNO: '11하1111',
-    MODEL: '쏘렌토',
-  },
-  {
-    ASSETNO: 'AST2024070012',
-    CARNO: '22후2222',
-    MODEL: '아반떼',
-  },
-  {
-    ASSETNO: 'AST2024070013',
-    CARNO: '10하2992',
-    MODEL: '아반떼',
-  },
-  {
-    ASSETNO: 'AST2024070014',
-    CARNO: '127하2320',
-    MODEL: '아반떼',
-  },
-  {
-    ASSETNO: 'AST2024070015',
-    CARNO: '222후2222',
-    MODEL: '아반떼',
-  },
-  {
-    ASSETNO: 'AST2024070016',
-    CARNO: '222후2222',
-    MODEL: '아반떼',
-  },
-  {
-    ASSETNO: 'AST2024070017',
-    CARNO: '222후2222',
-    MODEL: '아반떼',
-  },
-  {
-    ASSETNO: 'AST2024070018',
-    CARNO: '222후2222',
-    MODEL: '아반떼',
-  },
-  {
-    ASSETNO: 'AST2024070019',
-    CARNO: '22후2222',
-    MODEL: '아반떼',
-  },
-  {
-    ASSETNO: 'AST20240700110',
-    CARNO: '222후2222',
-    MODEL: '아반떼',
-  },
-  {
-    ASSETNO: 'AST20240700111',
-    CARNO: '222후2222',
-    MODEL: '펠리세이드',
-  },
-  {
-    ASSETNO: 'AST20240700112',
-    CARNO: '22후2222',
-    MODEL: '펠리세이드',
-  },
-  {
-    ASSETNO: 'AST20240700113',
-    CARNO: '22후2222',
-    MODEL: '펠리세이드',
-  },
-  {
-    ASSETNO: 'AST20240700114',
-    CARNO: '22후2222',
-    MODEL: '펠리세이드',
-  },
-  {
-    ASSETNO: 'AST20240700115',
-    CARNO: '22후2222',
-    MODEL: '펠리세이드',
-  },
-  {
-    ASSETNO: 'AST20240700116',
-    CARNO: '22후2222',
-    MODEL: '펠리세이드',
-  },
-  {
-    ASSETNO: 'AST20240700117',
-    CARNO: '222후2222',
-    MODEL: '펠리세이드',
-  },
-  {
-    ASSETNO: 'AST20240700118',
-    CARNO: '222후2222',
-    MODEL: '펠리세이드',
-  },
-];
+// FIXME: 더미데이터, useFetch 사용 시 주석 처리
+import { resvlistData } from './mock-data';
 
 const Resvlist: React.FC = () => {
   const router = useRouter();
@@ -158,6 +56,7 @@ const Resvlist: React.FC = () => {
   //   return <p>해당 데이터가 없습니다.</p>;
   // }
 
+  // FIXME: 검색이 필요하다면 사용
   // const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
   //   setSearch(e.target.value);
   // };

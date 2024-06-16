@@ -16,29 +16,7 @@ import { useRouter } from 'next/navigation';
 import { DatePickerWithRange } from '@/components/date-picker-with-range';
 import useFetch from '@/hooks/use-fetch';
 import { DateRange } from 'react-day-picker';
-
-export type RetvDataType = {
-  ASSETNO: string;
-  CARNO: string;
-  CNAME: string;
-  MODEL: string;
-  PHONE: string;
-  RCOMPDATE: string;
-  RQDATE: string;
-  RQDDAY: string;
-  RQNAME: string;
-  RRSON: string;
-  RRSONDTL: string;
-  STATUS: string;
-  RTLMTHD?: string;
-};
-
-export type RetvDataResponse = {
-  data: {
-    result: { MSGE: string; CODE: string };
-    data: { REPT: RetvDataType[] };
-  };
-};
+import { RetvDataResponse } from './types';
 
 const Retvlist: React.FC = () => {
   const router = useRouter();
