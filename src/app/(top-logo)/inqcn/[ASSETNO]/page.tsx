@@ -185,7 +185,11 @@ const InQCNDetail: React.FC = () => {
             </div>
           </CardContent>
           <CardFooter className="fixed bottom-0 left-0 w-full p-4">
-            <Button className="w-full h-12 rounded-lg" type="submit">
+            <Button
+              className="w-full h-12 rounded-lg"
+              type="submit"
+              disabled={!inQCNForm.formState.isValid}
+            >
               입력 완료
             </Button>
           </CardFooter>

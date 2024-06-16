@@ -151,6 +151,7 @@ const Resvlist: React.FC = () => {
 
   console.log(response);
 
+  // FIXME: 실제 API call 시 주석 해제, 현재 데이터가 없어서 테스트용 dummydata 사용
   // const resvdata = response.data.data.REPT;
 
   // if (!resvdata) {
@@ -233,7 +234,11 @@ const Resvlist: React.FC = () => {
           </DialogHeader>
           <DialogFooter>
             <div className="w-full flex gap-4">
-              <Button type="submit" className="w-full">
+              <Button
+                type="submit"
+                className="w-full"
+                disabled={!selectedASSETNO}
+              >
                 예약 해제
               </Button>
               <DialogClose className="w-full">

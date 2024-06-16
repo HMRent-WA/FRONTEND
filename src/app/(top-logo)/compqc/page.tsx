@@ -267,7 +267,11 @@ const CompQC: React.FC = () => {
         </TableBody>
       </Table>
       <div className="flex fixed bottom-4 left-0 w-full px-4">
-        <Button className="w-full h-12 rounded-lg" onClick={handleDetailClick}>
+        <Button
+          className="w-full h-12 rounded-lg"
+          onClick={handleDetailClick}
+          disabled={!selectedASSETNO}
+        >
           입력
         </Button>
       </div>
