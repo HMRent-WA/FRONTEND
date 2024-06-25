@@ -20,20 +20,17 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
-import { useRouter } from 'next/navigation';
 import useFetch from '@/hooks/use-fetch';
-import { ResvlistDataResponse } from './types';
+import { ResvlistDataResponse, ResvlistDataType } from './types';
 
 // FIXME: 더미데이터, useFetch 사용 시 주석 처리
-import { resvlistData } from './mock-data';
+// import { resvlistData } from './mock-data';
 import { showErrorToast, showSuccessToast } from '@/lib/toast';
 
 const Resvlist: React.FC = () => {
-  const router = useRouter();
-
   const [search, setSearch] = useState('');
   const [selectedASSETNO, setSelectedASSETNO] = useState<string>('');
-  const [selectedCARNO, setSelectedCARNO] = useState<string>('');
+  const [selectedData, setSelectedData] = useState<ResvlistDataType>('');
 
   const {
     data: response,
@@ -51,11 +48,11 @@ const Resvlist: React.FC = () => {
   console.log(response);
 
   // FIXME: 실제 API call 시 주석 해제, 현재 데이터가 없어서 테스트용 dummydata 사용
-  // const resvdata = response.data.data.REPT;
+  const resvlistData = response.data.data.REPT;
 
-  // if (!resvdata) {
-  //   return <p className="px-4">해당 데이터가 없습니다.</p>;
-  // }
+  if (!resvlistData) {
+    return <p className="px-4">해당 데이터가 없습니다.</p>;
+  }
 
   // FIXME: 검색이 필요하다면 사용
   // const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -65,8 +62,10 @@ const Resvlist: React.FC = () => {
   const handleRowClick = (e: React.MouseEvent<HTMLTableRowElement>) => {
     const assetno = e.currentTarget.getAttribute('data-assetno');
     const data = resvlistData.find((data) => data.ASSETNO === assetno);
-    setSelectedASSETNO(data?.ASSETNO || '');
-    setSelectedCARNO(data?.CARNO || '');
+    if (!data) return;
+
+    setSelectedASSETNO(data.ASSETNO);
+    setSelectedData(data);
   };
 
   const filteredData = resvlistData.filter((data) => {
@@ -159,7 +158,10 @@ const Resvlist: React.FC = () => {
         <DialogContent className="w-[90%] rounded-2xl">
           <DialogHeader className="py-4 gap-2">
             <DialogTitle>정말 예약을 해제하시겠습니까?</DialogTitle>
-            <DialogDescription>{selectedCARNO}</DialogDescription>
+            <DialogDescription className="flex gap-2">
+              <span>{selectedData.CARNO}</span>
+              <span>{selectedData.MODEL}</span>
+            </DialogDescription>
           </DialogHeader>
           <DialogFooter>
             <div className="w-full flex gap-4">
