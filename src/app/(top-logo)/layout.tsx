@@ -12,11 +12,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
 
   useEffect(() => {
     fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      credentials: 'include',
+      // credentials: 'include',
     })
       .then((response) => response.json())
       .then((data) => {
