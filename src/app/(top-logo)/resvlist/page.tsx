@@ -30,7 +30,7 @@ import { showErrorToast, showSuccessToast } from '@/lib/toast';
 const Resvlist: React.FC = () => {
   const [search, setSearch] = useState('');
   const [selectedASSETNO, setSelectedASSETNO] = useState<string>('');
-  const [selectedData, setSelectedData] = useState<ResvlistDataType>('');
+  const [selectedData, setSelectedData] = useState<ResvlistDataType>();
 
   const {
     data: response,
@@ -159,8 +159,8 @@ const Resvlist: React.FC = () => {
           <DialogHeader className="py-4 gap-2">
             <DialogTitle>정말 예약을 해제하시겠습니까?</DialogTitle>
             <DialogDescription className="flex gap-2">
-              <span>{selectedData.CARNO}</span>
-              <span>{selectedData.MODEL}</span>
+              <span>{selectedData?.CARNO}</span>
+              <span>{selectedData?.MODEL}</span>
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
