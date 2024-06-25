@@ -18,6 +18,7 @@ import { useRouter } from 'next/navigation';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { showErrorToast, showSuccessToast } from '@/lib/toast';
+import { useEffect } from 'react';
 
 const loginSchema = z.object({
   id: z.string().trim().min(1),
@@ -33,6 +34,12 @@ const LoginForm = ({ className }: { className?: string }) => {
     resolver: zodResolver(loginSchema),
     defaultValues: { id: '', password: '' },
   });
+
+  useEffect(() => {
+    if (localStorage.getItem('hmrId')) {
+      form.setValue('id', localStorage.getItem('hmrId') || '');
+    }
+  }, []);
 
   const onSubmit: SubmitHandler<LoginData> = async (data: LoginData) => {
     try {
@@ -50,8 +57,12 @@ const LoginForm = ({ className }: { className?: string }) => {
       }
 
       const result = await response.json();
+
+      localStorage.setItem('hmrId', data.id);
+
       console.log('Login successful:', result);
       showSuccessToast('로그인 되었습니다.');
+
       if (result) router.push('/');
       // Handle successful login (e.g., store token, redirect, etc.)
     } catch (err) {
