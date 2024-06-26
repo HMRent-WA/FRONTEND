@@ -165,14 +165,16 @@ const Resvlist: React.FC = () => {
           </DialogHeader>
           <DialogFooter>
             <div className="w-full flex gap-4">
-              <Button
-                type="submit"
-                className="w-full"
-                disabled={!selectedASSETNO}
-                onClick={handleClick}
-              >
-                예약 해제
-              </Button>
+              <DialogClose className="w-full">
+                <Button
+                  type="submit"
+                  className="w-full"
+                  disabled={!selectedASSETNO}
+                  onClick={handleClick}
+                >
+                  예약 해제
+                </Button>
+              </DialogClose>
               <DialogClose className="w-full">
                 <Button
                   type="submit"
