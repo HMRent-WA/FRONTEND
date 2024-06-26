@@ -76,7 +76,7 @@ const Resvlist: React.FC = () => {
     try {
       // FIXME: 실제 API call 시, 엔드포인트와 body 데이터 수정 필요
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/RESVLIST/${selectedASSETNO}`,
+        `${process.env.NEXT_PUBLIC_API_URL}/reservation/${selectedASSETNO}`,
         {
           method: 'POST',
           headers: {
@@ -158,7 +158,7 @@ const Resvlist: React.FC = () => {
         <DialogContent className="w-[90%] rounded-2xl">
           <DialogHeader className="py-4 gap-2">
             <DialogTitle>정말 예약을 해제하시겠습니까?</DialogTitle>
-            <DialogDescription className="flex gap-2">
+            <DialogDescription className="flex justify-center items-center gap-2">
               <span>{selectedData?.CARNO}</span>
               <span>{selectedData?.MODEL}</span>
             </DialogDescription>
