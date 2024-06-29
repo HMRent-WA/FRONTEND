@@ -26,59 +26,66 @@ function useFetch<T>(
   const [error, setError] = useState<Error | null>(null);
   const { getCache, setCache } = useCacheStore();
 
-  const fetchData = useCallback(async () => {
-    setLoading(true);
-    setError(null);
+  const fetchData = useCallback(
+    async (ignoreCache = false) => {
+      setLoading(true);
+      setError(null);
 
-    try {
-      const urlWithParams = new URL(url, window.location.origin);
-      if (params) {
-        Object.keys(params).forEach((key) =>
-          urlWithParams.searchParams.append(key, params[key])
-        );
-      }
-
-      const finalUrl = urlWithParams.toString();
-      const fetchOptions: RequestInit = {
-        method: options?.method || 'GET',
-        headers: options?.headers,
-        body: options?.body ? JSON.stringify(options.body) : undefined,
-      };
-
-      // 캐시 처리 (GET 요청일 때만)
-      if (fetchOptions.method === 'GET') {
-        const cached = getCache(finalUrl);
-        const now = new Date().getTime();
-        if (cached && cached.expiry > now) {
-          setData(cached.data);
-          setLoading(false);
-          return;
+      try {
+        const urlWithParams = new URL(url, window.location.origin);
+        if (params) {
+          Object.keys(params).forEach((key) =>
+            urlWithParams.searchParams.append(key, params[key])
+          );
         }
-      }
 
-      const response = await fetch(finalUrl, fetchOptions);
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
-      }
-      const data: T = await response.json();
+        const finalUrl = urlWithParams.toString();
+        const fetchOptions: RequestInit = {
+          method: options?.method || 'GET',
+          headers: options?.headers,
+          body: options?.body ? JSON.stringify(options.body) : undefined,
+        };
 
-      // 캐시에 데이터 저장 (GET 요청일 때만)
-      if (fetchOptions.method === 'GET') {
-        setCache(finalUrl, data, new Date().getTime() + CACHE_DURATION);
+        // 캐시 처리 (GET 요청일 때만)
+        if (!ignoreCache && fetchOptions.method === 'GET') {
+          const cached = getCache(finalUrl);
+          const now = new Date().getTime();
+          if (cached && cached.expiry > now) {
+            setData(cached.data);
+            setLoading(false);
+            return;
+          }
+        }
+
+        const response = await fetch(finalUrl, fetchOptions);
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        const data: T = await response.json();
+
+        // 캐시에 데이터 저장 (GET 요청일 때만)
+        if (fetchOptions.method === 'GET') {
+          setCache(finalUrl, data, new Date().getTime() + CACHE_DURATION);
+        }
+        setData(data);
+      } catch (error) {
+        setError(error as Error);
+      } finally {
+        setLoading(false);
       }
-      setData(data);
-    } catch (error) {
-      setError(error as Error);
-    } finally {
-      setLoading(false);
-    }
-  }, [url, params, options, getCache, setCache]);
+    },
+    [url, params, options, getCache, setCache]
+  );
 
   useEffect(() => {
     fetchData();
   }, [fetchData]);
 
-  return { data, loading, error, revalidate: fetchData };
+  const revalidate = useCallback(() => {
+    fetchData(true); // 캐시를 무시하고 데이터 다시 가져오기
+  }, [fetchData]);
+
+  return { data, loading, error, revalidate };
 }
 
 export default useFetch;
