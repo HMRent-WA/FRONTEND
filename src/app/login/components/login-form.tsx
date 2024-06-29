@@ -39,7 +39,7 @@ const LoginForm = ({ className }: { className?: string }) => {
     if (localStorage.getItem('hmrId')) {
       form.setValue('id', localStorage.getItem('hmrId') || '');
     }
-  }, []);
+  }, [form]);
 
   const onSubmit: SubmitHandler<LoginData> = async (data: LoginData) => {
     try {
