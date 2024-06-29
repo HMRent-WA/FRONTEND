@@ -27,7 +27,7 @@ interface FormElementProps<T extends FieldValues> {
   children: React.ReactNode;
   message?: string;
   description?: string;
-  //   FIXME: required label, placeholder, message,
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
 function FormElement<T extends FieldValues>({
@@ -38,6 +38,7 @@ function FormElement<T extends FieldValues>({
   children,
   message,
   description,
+  onChange,
 }: FormElementProps<T>) {
   const isRequired = useCallback(() => {
     if (required === 'none') return null;
@@ -64,9 +65,12 @@ function FormElement<T extends FieldValues>({
             {isRequired()}
           </div>
           <FormControl>
-            <div className="flex w-full  items-center space-x-2">
+            <div className="flex w-full items-center space-x-2">
               {React.cloneElement(children as React.ReactElement, {
                 ...field,
+                onChange: (e: React.ChangeEvent<HTMLInputElement>) => {
+                  onChange ? onChange(e) : field.onChange(e); // react-hook-form's onChange
+                },
               })}
             </div>
           </FormControl>

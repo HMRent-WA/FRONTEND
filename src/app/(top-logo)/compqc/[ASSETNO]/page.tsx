@@ -55,13 +55,6 @@ const CompQCDetail: React.FC = () => {
 
   const compQCForm = useForm<CompQCSchemaType>({
     resolver: zodResolver(CompQCSchema),
-    defaultValues: {
-      MILEAGE: '',
-      ENTRYLOCATION: '',
-      KEYQUANT: '',
-      KEYTOTAL: '',
-      KEYLOCATION: '',
-    },
     mode: 'onChange',
   });
 
@@ -87,14 +80,17 @@ const CompQCDetail: React.FC = () => {
   }
 
   const onFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    console.log('File change event triggered');
     if (e.target.files) {
+      console.log('Files selected: ', e.target.files);
       setSelectedFiles(Array.from(e.target.files));
+      console.log('Selected files: ', selectedFiles);
     }
   };
 
-  // POST 요청 예시
   const onCompQCFormSubmit = async (data: CompQCSchemaType) => {
     const formData = new FormData();
+
     formData.append('MILEAGE', data.MILEAGE);
     formData.append('ENTRYLOCATION', data.ENTRYLOCATION);
     formData.append('DETAILLOCATION', data.DETAILLOCATION || '');
@@ -102,9 +98,15 @@ const CompQCDetail: React.FC = () => {
     formData.append('KEYTOTAL', data.KEYTOTAL);
     formData.append('KEYLOCATION', data.KEYLOCATION);
 
-    selectedFiles.forEach((file) => {
-      formData.append('IMGLIST', file);
+    selectedFiles.forEach((image) => {
+      formData.append('IMGLIST', image);
     });
+
+    console.log(data);
+    console.log(data.IMGLIST);
+    console.log(typeof data.IMGLIST);
+
+    console.log('FormData IMGLIST: ', formData.getAll('IMGLIST'));
 
     try {
       const response = await fetch(
@@ -117,16 +119,14 @@ const CompQCDetail: React.FC = () => {
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
-      console.log('요청 완료');
+      console.log('Request completed');
       const result = await response.json();
       console.log('Success:', result);
-      // FIXME: 성공 토스트 메시지 수정 필요
       showSuccessToast('완료되었습니다.');
       revalidate();
       router.push('/compqc');
     } catch (error) {
       console.error('Fetch error:', error);
-      // FIXME: 실패 토스트 메시지 수정 필요
       showErrorToast('요청에 실패하였습니다.');
     }
   };
@@ -234,8 +234,9 @@ const CompQCDetail: React.FC = () => {
                 formControl={compQCForm.control}
                 name="IMGLIST"
                 label="차량 사진"
+                onChange={onFileChange}
               >
-                <Input type="file" multiple onChange={onFileChange} />
+                <Input type="file" multiple />
               </FormElement>
               {selectedFiles.length > 0 && (
                 <div className="mt-4">
