@@ -7,6 +7,6 @@ export type ResvlistDataType = {
 export type ResvlistDataResponse = {
   data: {
     result: { MSGE: string; CODE: string };
-    data: { REPT: ResvlistDataType[] };
+    data: { REPT: ResvlistDataType[] } | undefined;
   };
 };

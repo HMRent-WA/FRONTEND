@@ -47,12 +47,12 @@ const Resvlist: React.FC = () => {
 
   console.log(response);
 
-  // FIXME: 실제 API call 시 주석 해제, 현재 데이터가 없어서 테스트용 dummydata 사용
-  const resvlistData = response.data.data.REPT;
-
-  if (!resvlistData) {
+  if (!response.data.data || !response.data.data.REPT) {
     return <p className="px-4">해당 데이터가 없습니다.</p>;
   }
+
+  // FIXME: 실제 API call 시 주석 해제, 현재 데이터가 없어서 테스트용 dummydata 사용
+  const resvlistData = response.data.data.REPT;
 
   // FIXME: 검색이 필요하다면 사용
   // const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
