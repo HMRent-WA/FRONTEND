@@ -9,6 +9,7 @@ interface CacheState {
   cache: { [url: string]: CacheItem<any> };
   setCache: (url: string, data: any, expiry: number) => void;
   getCache: (url: string) => CacheItem<any> | undefined;
+  removeCache: (url: string) => void;
 }
 
 export const useCacheStore = create<CacheState>((set, get) => ({
@@ -21,4 +22,10 @@ export const useCacheStore = create<CacheState>((set, get) => ({
       },
     })),
   getCache: (url) => get().cache[url],
+  removeCache: (url) =>
+    set((state) => {
+      const newCache = { ...state.cache };
+      delete newCache[url];
+      return { cache: newCache };
+    }),
 }));

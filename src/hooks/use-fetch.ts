@@ -24,7 +24,7 @@ function useFetch<T>(
   const [data, setData] = useState<T | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<Error | null>(null);
-  const { getCache, setCache } = useCacheStore();
+  const { getCache, setCache, removeCache } = useCacheStore();
 
   const fetchData = useCallback(
     async (ignoreCache = false) => {
@@ -82,8 +82,16 @@ function useFetch<T>(
   }, [fetchData]);
 
   const revalidate = useCallback(() => {
+    const urlWithParams = new URL(url, window.location.origin);
+    if (params) {
+      Object.keys(params).forEach((key) =>
+        urlWithParams.searchParams.append(key, params[key])
+      );
+    }
+    const finalUrl = urlWithParams.toString();
+    removeCache(finalUrl); // 캐시 무효화
     fetchData(true); // 캐시를 무시하고 데이터 다시 가져오기
-  }, [fetchData]);
+  }, [url, params, fetchData, removeCache]);
 
   return { data, loading, error, revalidate };
 }
