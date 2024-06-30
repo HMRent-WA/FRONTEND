@@ -44,6 +44,7 @@ function useFetch<T>(
           method: options?.method || 'GET',
           headers: options?.headers,
           body: options?.body ? JSON.stringify(options.body) : undefined,
+          credentials: 'include',
         };
 
         // 캐시 처리 (GET 요청일 때만)
