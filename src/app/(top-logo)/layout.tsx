@@ -16,9 +16,9 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
       try {
         const response = await fetch(
           `${process.env.NEXT_PUBLIC_API_URL}/auth`,
-          {
-            credentials: 'include',
-          }
+          // {
+          //   credentials: 'include',
+          // }
         );
         const data = await response.json();
         console.log('auth -> ', data, data.message);
