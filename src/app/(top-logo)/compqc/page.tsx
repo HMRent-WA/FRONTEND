@@ -37,7 +37,8 @@ const CompQC: React.FC = () => {
 
   console.log(response);
 
-  const apiData = response.data.data.REPT;
+  // const apiData = response.data.data.REPT;
+  const apiData = response.data.data;
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearch(e.target.value);
@@ -60,7 +61,6 @@ const CompQC: React.FC = () => {
     }
   };
 
-  // const filteredData = qcdata.filter((data) => {
   const filteredData = apiData.filter((datum) => {
     return (
       (selectedValue === '전체' || datum.GUBUN === selectedValue) &&

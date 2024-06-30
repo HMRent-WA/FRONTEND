@@ -73,7 +73,8 @@ const CompQCDetail: React.FC = () => {
   console.log(fetchedData);
 
   const entryLocationList = fetchedData.reqCode[0].HR58;
-  const apiData: QCDataType[] = fetchedData.data.data.REPT;
+  // const apiData: QCDataType[] = fetchedData.data.data.REPT;
+  const apiData: QCDataType[] = fetchedData.data.data;
   const selectedData = apiData.find((data) => data.ASSETNO === params.ASSETNO);
 
   if (!selectedData || !entryLocationList) {

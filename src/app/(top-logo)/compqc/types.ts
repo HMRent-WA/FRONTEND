@@ -9,7 +9,8 @@ export type QCDataType = {
 export type QCDataResponse = {
   data: {
     result: { MSGE: string; CODE: string };
-    data: { REPT: QCDataType[] };
+    // data: { REPT: QCDataType[] };
+    data: QCDataType[];
   };
   reqCode: [{ HR58: string[] }, any[]];
 };
