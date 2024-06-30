@@ -29,6 +29,7 @@ import { useParams, useRouter } from 'next/navigation';
 import useFetch from '@/hooks/use-fetch';
 import { QCDataResponse, QCDataType } from '../types';
 import { showErrorToast, showSuccessToast } from '@/lib/toast';
+import LoadingPage from '@/components/loading-page';
 
 const CompQCSchema = z.object({
   MILEAGE: z.string().refine((val) => !isNaN(Number(val)), {
@@ -65,7 +66,7 @@ const CompQCDetail: React.FC = () => {
     revalidate,
   } = useFetch<QCDataResponse>(`${process.env.NEXT_PUBLIC_API_URL}/CompQC/D`);
 
-  if (loading) return <p className="px-4">Loading...</p>;
+  if (loading) return <LoadingPage />;
   if (error) return <p className="px-4">Error: {error.message}</p>;
   if (!fetchedData) return <p className="px-4">No data</p>;
 

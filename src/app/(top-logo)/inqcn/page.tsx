@@ -31,7 +31,7 @@ const InQCN: React.FC = () => {
   //   revalidate,
   // } = useFetch<QCDataResponse>(`${process.env.NEXT_PUBLIC_API_URL}/InQCN/D`);
 
-  // if (loading) return <p className="px-4">Loading...</p>;
+  // if (loading) return <LoadingPage />;
   // if (error) return <p className="px-4">Error: {error.message}</p>;
   // if (!response) return <p className="px-4">No data</p>;
 

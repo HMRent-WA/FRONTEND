@@ -15,6 +15,7 @@ import { RadioGroupButton } from '@/components/button/radio-group-button';
 import { useRouter } from 'next/navigation';
 import useFetch from '@/hooks/use-fetch';
 import { QCDataResponse } from './types';
+import LoadingPage from '@/components/loading-page';
 
 const CompQC: React.FC = () => {
   const router = useRouter();
@@ -30,7 +31,7 @@ const CompQC: React.FC = () => {
     revalidate,
   } = useFetch<QCDataResponse>(`${process.env.NEXT_PUBLIC_API_URL}/CompQC/D`);
 
-  if (loading) return <p className="px-4">Loading...</p>;
+  if (loading) return <LoadingPage />;
   if (error) return <p className="px-4">Error: {error.message}</p>;
   if (!response) return <p className="px-4">No data</p>;
 

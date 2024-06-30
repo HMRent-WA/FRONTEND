@@ -5,34 +5,41 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { showErrorToast } from '@/lib/toast';
+import LoadingPage from '@/components/loading-page';
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
   const router = useRouter();
-  // const [isLoading, setIsLoading] = React.useState<boolean>(true);
+  const [isLoading, setIsLoading] = React.useState<boolean>(true);
 
   useEffect(() => {
-    fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth`, {
-      // credentials: 'include',
-    })
-      .then((response) => response.json())
-      .then((data) => {
+    const fetchAuth = async () => {
+      try {
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/auth`,
+          {
+            credentials: 'include',
+          }
+        );
+        const data = await response.json();
         console.log('auth -> ', data, data.message);
         if (data.message === 'FAIL') {
-          // showErrorToast('로그인 후 이용해주세요.');
-          // router.push('/login');
+          showErrorToast('로그인 후 이용해주세요.');
+          router.push('/login');
         }
-      })
-      .catch((err) => {
-        // TODO: 아래 주석 해제해야 비로그인 접근 제어 가능
-        // showErrorToast('로그인 후 이용해주세요.');
+      } catch (error) {
+        showErrorToast('로그인 후 이용해주세요.');
         // router.push('/login');
-        console.error('Auth failed:', err);
-      });
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchAuth();
   }, [router]);
 
-  // if (isLoading) {
-  //   return <div>Loading...</div>;
-  // }
+  if (isLoading) {
+    return <LoadingPage />;
+  }
 
   return (
     <div className="w-full h-full">

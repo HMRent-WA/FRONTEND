@@ -26,6 +26,7 @@ import { ResvlistDataResponse, ResvlistDataType } from './types';
 // FIXME: 더미데이터, useFetch 사용 시 주석 처리
 // import { resvlistData } from './mock-data';
 import { showErrorToast, showSuccessToast } from '@/lib/toast';
+import LoadingPage from '@/components/loading-page';
 
 const Resvlist: React.FC = () => {
   const [search, setSearch] = useState('');
@@ -41,7 +42,7 @@ const Resvlist: React.FC = () => {
     `${process.env.NEXT_PUBLIC_API_URL}/reservation`
   );
 
-  if (loading) return <p className="px-4">Loading...</p>;
+  if (loading) return <LoadingPage />;
   if (error) return <p className="px-4">Error: {error.message}</p>;
   if (!response) return <p className="px-4">No data</p>;
 

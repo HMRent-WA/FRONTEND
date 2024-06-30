@@ -13,6 +13,7 @@ import { Label } from '@/components/ui/label';
 import useFetch from '@/hooks/use-fetch';
 import { useParams } from 'next/navigation';
 import { RetvDataResponse, RetvDataType } from '../../types';
+import LoadingPage from '@/components/loading-page';
 
 const RetvlistDetail: React.FC = () => {
   const params = useParams();
@@ -26,7 +27,7 @@ const RetvlistDetail: React.FC = () => {
     `${process.env.NEXT_PUBLIC_API_URL}/retrieval`
   );
 
-  if (loading) return <p className="px-4">Loading...</p>;
+  if (loading) return <LoadingPage />;
   if (error) return <p className="px-4">Error: {error.message}</p>;
   if (!response) return <p className="px-4">No data</p>;
 

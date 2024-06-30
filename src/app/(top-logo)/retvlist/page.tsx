@@ -17,6 +17,7 @@ import { DatePickerWithRange } from '@/components/date-picker-with-range';
 import useFetch from '@/hooks/use-fetch';
 import { DateRange } from 'react-day-picker';
 import { RetvDataResponse } from './types';
+import LoadingPage from '@/components/loading-page';
 
 const Retvlist: React.FC = () => {
   const router = useRouter();
@@ -39,7 +40,7 @@ const Retvlist: React.FC = () => {
     `${process.env.NEXT_PUBLIC_API_URL}/retrieval`
   );
 
-  if (loading) return <p className="px-4">Loading...</p>;
+  if (loading) return <LoadingPage />;
   if (error) return <p className="px-4">Error: {error.message}</p>;
   if (!response) return <p className="px-4">No data</p>;
 
