@@ -15,10 +15,10 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
     const fetchAuth = async () => {
       try {
         const response = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL}/auth`
-          // {
-          //   credentials: 'include',
-          // }
+          `${process.env.NEXT_PUBLIC_API_URL}/auth`,
+          {
+            credentials: 'include',
+          }
         );
         const data = await response.json();
         console.log('auth -> ', data, data.message);

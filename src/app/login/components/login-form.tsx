@@ -49,7 +49,7 @@ const LoginForm = ({ className }: { className?: string }) => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ USERID: data.id, USERPW: data.password }),
-        // credentials: 'include',
+        credentials: 'include',
       });
 
       if (!response.ok) {
