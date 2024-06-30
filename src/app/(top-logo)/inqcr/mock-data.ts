@@ -1,6 +1,6 @@
-import { QCDataType } from './types';
+import { INQCRDataType } from '@/model/types';
 
-export const qcdata: QCDataType[] = [
+export const qcdata: INQCRDataType[] = [
   {
     ASSETNO: 'AST20240700301',
     CARNO: '177호5232',

@@ -1,12 +1,12 @@
-export type ResvlistDataType = {
-  ASSETNO: string;
-  CARNO: string;
-  MODEL: string;
-};
+// export type ResvlistDataType = {
+//   ASSETNO: string;
+//   CARNO: string;
+//   MODEL: string;
+// };
 
-export type ResvlistDataResponse = {
-  data: {
-    result: { MSGE: string; CODE: string };
-    data: { REPT: ResvlistDataType[] } | undefined;
-  };
-};
+// export type ResvlistDataResponse = {
+//   data: {
+//     result: { MSGE: string; CODE: string };
+//     data?: { REPT: ResvlistDataType[] } | ResvlistDataType;
+//   };
+// };

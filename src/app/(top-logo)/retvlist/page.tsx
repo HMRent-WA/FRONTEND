@@ -16,8 +16,9 @@ import { useRouter } from 'next/navigation';
 import { DatePickerWithRange } from '@/components/date-picker-with-range';
 import useFetch from '@/hooks/use-fetch';
 import { DateRange } from 'react-day-picker';
-import { RetvDataResponse } from './types';
+import { RetvDataResponse } from '@/model/types';
 import LoadingPage from '@/components/loading-page';
+import { handleResponse } from '@/model/types';
 
 const Retvlist: React.FC = () => {
   const router = useRouter();
@@ -46,7 +47,8 @@ const Retvlist: React.FC = () => {
 
   console.log(response);
 
-  const retvdata = response.data.data.REPT;
+  const retvdata: any[] = [];
+  handleResponse(response, retvdata);
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearch(e.target.value);

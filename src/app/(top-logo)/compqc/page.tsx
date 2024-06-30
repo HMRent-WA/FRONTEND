@@ -14,7 +14,7 @@ import { Input } from '@/components/ui/input';
 import { RadioGroupButton } from '@/components/button/radio-group-button';
 import { useRouter } from 'next/navigation';
 import useFetch from '@/hooks/use-fetch';
-import { QCDataResponse } from './types';
+import { COMPQCDataResponse, handleResponse } from '@/model/types';
 import LoadingPage from '@/components/loading-page';
 
 const CompQC: React.FC = () => {
@@ -29,7 +29,9 @@ const CompQC: React.FC = () => {
     loading,
     error,
     revalidate,
-  } = useFetch<QCDataResponse>(`${process.env.NEXT_PUBLIC_API_URL}/CompQC/D`);
+  } = useFetch<COMPQCDataResponse>(
+    `${process.env.NEXT_PUBLIC_API_URL}/CompQC/D`
+  );
 
   if (loading) return <LoadingPage />;
   if (error) return <p className="px-4">Error: {error.message}</p>;
@@ -37,8 +39,9 @@ const CompQC: React.FC = () => {
 
   console.log(response);
 
-  // const apiData = response.data.data.REPT;
-  const apiData = response.data.data;
+  // FIXME: any 타입 수정 필요
+  const apiData: any[] = [];
+  handleResponse(response, apiData);
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearch(e.target.value);

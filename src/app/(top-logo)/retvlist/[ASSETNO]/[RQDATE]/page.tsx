@@ -12,7 +12,7 @@ import {
 import { Label } from '@/components/ui/label';
 import useFetch from '@/hooks/use-fetch';
 import { useParams } from 'next/navigation';
-import { RetvDataResponse, RetvDataType } from '../../types';
+import { RetvDataResponse, handleResponse } from '@/model/types';
 import LoadingPage from '@/components/loading-page';
 
 const RetvlistDetail: React.FC = () => {
@@ -33,7 +33,9 @@ const RetvlistDetail: React.FC = () => {
 
   // console.log(response);
 
-  const retvdata: RetvDataType[] = response.data.data.REPT;
+  const retvdata: any[] = [];
+  handleResponse(response, retvdata);
+
   const selectedData = retvdata.find(
     (data) => data.ASSETNO === params.ASSETNO && data.RQDATE === params.RQDATE
   );

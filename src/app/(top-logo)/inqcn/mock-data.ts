@@ -1,6 +1,6 @@
-import { QCDataType } from './types';
+import { INQCNDataType } from '@/model/types';
 
-export const qcdata: QCDataType[] = [
+export const qcdata: INQCNDataType[] = [
   {
     ASSETNO: 'AST20240700301',
     차대번호: 'KNAPU81BGRK318499',

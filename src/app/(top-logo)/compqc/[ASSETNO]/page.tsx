@@ -27,7 +27,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useParams, useRouter } from 'next/navigation';
 import useFetch from '@/hooks/use-fetch';
-import { QCDataResponse, QCDataType } from '../types';
+import { COMPQCDataResponse, handleResponse } from '@/model/types';
 import { showErrorToast, showSuccessToast } from '@/lib/toast';
 import LoadingPage from '@/components/loading-page';
 
@@ -64,7 +64,9 @@ const CompQCDetail: React.FC = () => {
     loading,
     error,
     revalidate,
-  } = useFetch<QCDataResponse>(`${process.env.NEXT_PUBLIC_API_URL}/CompQC/D`);
+  } = useFetch<COMPQCDataResponse>(
+    `${process.env.NEXT_PUBLIC_API_URL}/CompQC/D`
+  );
 
   if (loading) return <LoadingPage />;
   if (error) return <p className="px-4">Error: {error.message}</p>;
@@ -74,7 +76,10 @@ const CompQCDetail: React.FC = () => {
 
   const entryLocationList = fetchedData.reqCode[0].HR58;
   // const apiData: QCDataType[] = fetchedData.data.data.REPT;
-  const apiData: QCDataType[] = fetchedData.data.data;
+  const apiData: any[] = [];
+
+  handleResponse(fetchedData, apiData);
+
   const selectedData = apiData.find((data) => data.ASSETNO === params.ASSETNO);
 
   if (!selectedData || !entryLocationList) {

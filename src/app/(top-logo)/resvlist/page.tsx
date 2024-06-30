@@ -21,12 +21,13 @@ import {
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import useFetch from '@/hooks/use-fetch';
-import { ResvlistDataResponse, ResvlistDataType } from './types';
+import { ResvlistDataResponse, ResvlistDataType } from '@/model/types';
 
 // FIXME: 더미데이터, useFetch 사용 시 주석 처리
 // import { resvlistData } from './mock-data';
 import { showErrorToast, showSuccessToast } from '@/lib/toast';
 import LoadingPage from '@/components/loading-page';
+import { handleResponse } from '@/model/types';
 
 const Resvlist: React.FC = () => {
   const [search, setSearch] = useState('');
@@ -48,12 +49,13 @@ const Resvlist: React.FC = () => {
 
   console.log(response);
 
-  if (!response.data.data || !response.data.data.REPT) {
+  const resvlistData: any[] = [];
+
+  handleResponse(response, resvlistData);
+
+  if (!resvlistData || resvlistData.length === 0) {
     return <p className="px-4">해당 데이터가 없습니다.</p>;
   }
-
-  // FIXME: 실제 API call 시 주석 해제, 현재 데이터가 없어서 테스트용 dummydata 사용
-  const resvlistData = response.data.data.REPT;
 
   // FIXME: 검색이 필요하다면 사용
   // const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
