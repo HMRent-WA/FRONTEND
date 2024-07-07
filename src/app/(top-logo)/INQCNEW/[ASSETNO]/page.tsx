@@ -26,50 +26,80 @@ import {
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useParams, useRouter } from 'next/navigation';
+import { showErrorToast, showSuccessToast } from '@/lib/toast';
 import useFetch from '@/hooks/use-fetch';
+
 import {
-  COMPQCDataResponse,
-  COMPQCDataType,
+  INQCNEWDataResponse,
+  INQCNEWDataType,
   handleResponse,
 } from '@/model/types';
-import { showErrorToast, showSuccessToast } from '@/lib/toast';
 import LoadingPage from '@/components/loading-page';
 
-const CompQCSchema = z.object({
+const INQCNEWSchema = z.object({
   MILEAGE: z.string().refine((val) => !isNaN(Number(val)), {
     message: '주행 거리는 숫자만 입력할 수 있습니다.',
   }),
+  DEPARTLOCATION: z.string().nonempty('차량 출고 위치를 선택해 주세요.'),
   ENTRYLOCATION: z.string().nonempty('차량 입고 위치를 선택해 주세요.'),
   DETAILLOCATION: z.string().optional(),
-  KEYQUANT: z.string().refine((val) => !isNaN(Number(val)), {
-    message: '키 개수는 숫자만 입력할 수 있습니다.',
-  }),
-  KEYTOTAL: z.string().refine((val) => !isNaN(Number(val)), {
-    message: '총 키 개수는 숫자만 입력할 수 있습니다.',
-  }),
-  KEYLOCATION: z.string().nonempty('차 키의 보관 위치를 입력해 주세요.'),
-  IMGLIST: z.array(z.instanceof(File)).optional(),
+  // FIXME: any는 개선할 수 있으면 좋을 듯.
+  IMGLIST: z.any(),
 });
 
-type CompQCSchemaType = z.infer<typeof CompQCSchema>;
+type INQCNEWSchemaType = z.infer<typeof INQCNEWSchema>;
 
-const CompQCDetail: React.FC = () => {
+const INQCNEWDetail: React.FC = () => {
   const params = useParams();
   const router = useRouter();
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
 
-  const compQCForm = useForm<CompQCSchemaType>({
-    resolver: zodResolver(CompQCSchema),
+  const INQCNEWForm = useForm<INQCNEWSchemaType>({
+    resolver: zodResolver(INQCNEWSchema),
     mode: 'onChange',
   });
+
+  // FIXME: 아래는 더미데이터
+  // const fetchedData: INQCNEWDataResponse = {
+  //   data: {
+  //     result: {
+  //       MSGE: 'Request successful',
+  //       CODE: '200',
+  //     },
+  //     data: {
+  //       REPT: [
+  //         {
+  //           COLOR: 'Red',
+  //           ASSETNO: '12345',
+  //           MODEL: 'ModelX',
+  //           VIDNO: 'VID123456',
+  //         },
+  //         {
+  //           COLOR: 'Blue',
+  //           ASSETNO: '67890',
+  //           MODEL: 'ModelY',
+  //           VIDNO: 'VID789012',
+  //         },
+  //       ],
+  //     },
+  //   },
+  //   reqCode: [
+  //     {
+  //       HR58: ['item1', 'item2', 'item3'],
+  //     },
+  //     {
+  //       HR65: ['item4', 'item5', 'item6'],
+  //     },
+  //   ],
+  // };
 
   const {
     data: fetchedData,
     loading,
     error,
     revalidate,
-  } = useFetch<COMPQCDataResponse>(
-    `${process.env.NEXT_PUBLIC_API_URL}/CompQC/D`
+  } = useFetch<INQCNEWDataResponse>(
+    `${process.env.NEXT_PUBLIC_API_URL}/INQCNEW`
   );
 
   if (loading) return <LoadingPage />;
@@ -79,7 +109,9 @@ const CompQCDetail: React.FC = () => {
   console.log(fetchedData);
 
   const entryLocationList = fetchedData.reqCode[0].HR58;
-  const apiData: COMPQCDataType[] = [];
+  const departLocationList = fetchedData.reqCode[1].HR65;
+
+  const apiData: INQCNEWDataType[] = [];
 
   handleResponse(fetchedData, apiData);
 
@@ -88,6 +120,16 @@ const CompQCDetail: React.FC = () => {
   if (!selectedData || !entryLocationList) {
     return <p className="px-4">해당 데이터가 없습니다.</p>;
   }
+
+  // FIXME: POST 요청, API 명세서 (swagger) 나온 대로 수정 해야 함. + 스키마도
+
+  // FIXME: INQCNEW POST req
+  // ASSETNO
+  // MILEAGE
+  // DEPARTLOCATION
+  // ENTRYLOCATION
+  // DETAILLOCATION
+  // IMGLIST: string[]
 
   const onFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     console.log('File change event triggered');
@@ -98,15 +140,14 @@ const CompQCDetail: React.FC = () => {
     }
   };
 
-  const onCompQCFormSubmit = async (data: CompQCSchemaType) => {
+  const onINQCNEWFormSubmit = async (data: INQCNEWSchemaType) => {
     const formData = new FormData();
 
+    formData.append('ASSETNO', params.ASSETNO.toString());
     formData.append('MILEAGE', data.MILEAGE);
+    formData.append('DEPARTLOCATION', data.DEPARTLOCATION);
     formData.append('ENTRYLOCATION', data.ENTRYLOCATION);
     formData.append('DETAILLOCATION', data.DETAILLOCATION || '');
-    formData.append('KEYQUANT', data.KEYQUANT);
-    formData.append('KEYTOTAL', data.KEYTOTAL);
-    formData.append('KEYLOCATION', data.KEYLOCATION);
 
     selectedFiles.forEach((image) => {
       formData.append('IMGLIST', image);
@@ -120,24 +161,25 @@ const CompQCDetail: React.FC = () => {
 
     try {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/CompQC/${params.ASSETNO}`,
+        `${process.env.NEXT_PUBLIC_API_URL}/INQCNEW`,
         {
           method: 'POST',
           body: formData,
         }
       );
+
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
 
-      console.log('Request completed');
+      console.log('요청 완료');
       const result = await response.json();
 
       console.log('Success:', result);
       showSuccessToast('완료되었습니다.');
 
-      revalidate();
-      router.push('/compqc');
+      // revalidate();
+      router.push('/INQCNEW');
     } catch (error) {
       console.error('Fetch error:', error);
       showErrorToast('요청에 실패하였습니다.');
@@ -148,46 +190,77 @@ const CompQCDetail: React.FC = () => {
     <div className="px-4 flex justify-center items-center">
       <Card className="w-full rounded-xl border-slate-200 border-2 mb-24">
         <CardHeader>
-          <CardTitle>상품화 완료 QC 상세 조회</CardTitle>
+          <CardTitle>신차 입고 상세 조회</CardTitle>
           <CardDescription>
             <span className="ml-0.5 text-[#F31515] text-sm font-medium">*</span>
             {' 표시된 곳은 반드시 입력해 주셔야 합니다.'}
           </CardDescription>
         </CardHeader>
-        <FormWrapper form={compQCForm} onSubmit={onCompQCFormSubmit}>
+        <FormWrapper form={INQCNEWForm} onSubmit={onINQCNEWFormSubmit}>
           <CardContent>
             <div className="flex flex-col gap-4">
               <div className="flex items-center justify-between h-10">
-                <Label className="font-semibold">차량 번호</Label>
-                <p>{selectedData.CARNO}</p>
+                <Label className="font-semibold">차대번호</Label>
+                <p>{selectedData.VIDNO}</p>
+              </div>
+              <div className="flex items-center justify-between h-10">
+                <Label className="font-semibold">자산번호</Label>
+                <p>{selectedData.ASSETNO}</p>
               </div>
               <div className="flex items-center justify-between h-10">
                 <Label className="font-semibold">모델명</Label>
                 <p>{selectedData.MODEL}</p>
               </div>
+              <div className="flex items-center justify-between h-10">
+                <Label className="font-semibold">색상</Label>
+                <p>{selectedData.COLOR}</p>
+              </div>
             </div>
             <div className="w-full flex flex-col gap-4 mt-6">
               <FormElement
-                formControl={compQCForm.control}
+                formControl={INQCNEWForm.control}
                 name="MILEAGE"
                 label="주행 거리 (km)"
                 required
               >
-                <Input
-                  type="number"
-                  placeholder="주행거리를 입력해주세요."
-                  className="h-10"
+                <Input placeholder="" className="h-10" />
+              </FormElement>
+              <FormElement
+                formControl={INQCNEWForm.control}
+                name="DEPARTLOCATION"
+                label="차량 출고 위치"
+                required
+              >
+                <Controller
+                  name="DEPARTLOCATION"
+                  control={INQCNEWForm.control}
+                  render={({ field }) => (
+                    <Select onValueChange={field.onChange} value={field.value}>
+                      <SelectTrigger className="w-full">
+                        <SelectValue placeholder="차량 출고 위치를 선택해 주세요." />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectGroup>
+                          {departLocationList.map((item) => (
+                            <SelectItem key={item} value={item}>
+                              {item}
+                            </SelectItem>
+                          ))}
+                        </SelectGroup>
+                      </SelectContent>
+                    </Select>
+                  )}
                 />
               </FormElement>
               <FormElement
-                formControl={compQCForm.control}
+                formControl={INQCNEWForm.control}
                 name="ENTRYLOCATION"
                 label="차량 입고 위치"
                 required
               >
                 <Controller
                   name="ENTRYLOCATION"
-                  control={compQCForm.control}
+                  control={INQCNEWForm.control}
                   render={({ field }) => (
                     <Select onValueChange={field.onChange} value={field.value}>
                       <SelectTrigger className="w-full">
@@ -207,46 +280,17 @@ const CompQCDetail: React.FC = () => {
                 />
               </FormElement>
               <FormElement
-                formControl={compQCForm.control}
+                formControl={INQCNEWForm.control}
                 name="DETAILLOCATION"
                 label="차량 상세 위치"
               >
                 <Input placeholder="" className="h-10" />
               </FormElement>
-              <div className="w-full flex gap-4">
-                <FormElement
-                  formControl={compQCForm.control}
-                  name="KEYQUANT"
-                  label="차 키 보유 수량"
-                  required
-                >
-                  <Input
-                    type="number"
-                    placeholder="보유 수량"
-                    className="h-10"
-                  />
-                </FormElement>
-                <FormElement
-                  formControl={compQCForm.control}
-                  name="KEYTOTAL"
-                  label="총 수량"
-                  required
-                >
-                  <Input type="number" placeholder="총 수량" className="h-10" />
-                </FormElement>
-              </div>
               <FormElement
-                formControl={compQCForm.control}
-                name="KEYLOCATION"
-                label="차 키 보관 위치"
-                required
-              >
-                <Input placeholder="차 키의 보관 위치" className="h-10" />
-              </FormElement>
-              <FormElement
-                formControl={compQCForm.control}
+                formControl={INQCNEWForm.control}
                 name="IMGLIST"
                 label="차량 사진"
+                required
                 onChange={onFileChange}
               >
                 <Input type="file" multiple />
@@ -267,9 +311,9 @@ const CompQCDetail: React.FC = () => {
             <Button
               className="w-full h-12 rounded-lg"
               type="submit"
-              disabled={!compQCForm.formState.isValid}
+              disabled={!INQCNEWForm.formState.isValid || !selectedFiles.length}
             >
-              상품화 완료 (QC)
+              입력 완료
             </Button>
           </CardFooter>
         </FormWrapper>
@@ -278,4 +322,4 @@ const CompQCDetail: React.FC = () => {
   );
 };
 
-export default CompQCDetail;
+export default INQCNEWDetail;

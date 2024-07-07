@@ -14,7 +14,11 @@ import { Input } from '@/components/ui/input';
 import { RadioGroupButton } from '@/components/button/radio-group-button';
 import { useRouter } from 'next/navigation';
 import useFetch from '@/hooks/use-fetch';
-import { COMPQCDataResponse, handleResponse } from '@/model/types';
+import {
+  COMPQCDataResponse,
+  COMPQCDataType,
+  handleResponse,
+} from '@/model/types';
 import LoadingPage from '@/components/loading-page';
 
 const CompQC: React.FC = () => {
@@ -39,8 +43,7 @@ const CompQC: React.FC = () => {
 
   console.log(response);
 
-  // FIXME: any 타입 수정 필요
-  const apiData: any[] = [];
+  const apiData: COMPQCDataType[] = [];
   handleResponse(response, apiData);
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -53,7 +56,6 @@ const CompQC: React.FC = () => {
 
   const handleRowClick = (e: React.MouseEvent<HTMLTableRowElement>) => {
     const assetno = e.currentTarget.getAttribute('data-assetno');
-    // const data = qcdata.find((data) => data.ASSETNO === assetno);
     const data = apiData.find((datum) => datum.ASSETNO === assetno);
     setSelectedASSETNO(data?.ASSETNO || '');
   };

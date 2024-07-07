@@ -7,20 +7,21 @@ export type COMPQCDataType = {
   STATUS: '상품화' | 'D' | string;
 };
 
-export type INQCNDataType = {
+export type INQCNEWDataType = {
+  COLOR: string;
   ASSETNO: string;
-  차대번호: string;
   MODEL: string;
-  색상: string;
+  VIDNO: string;
 };
 
-export type INQCRDataType = {
+export type INQCOLDDataType = {
+  SEQNO: string;
+  EXENO: string;
+  INRSON: string;
   ASSETNO: string;
+  CNAME: string;
   CARNO: string;
   MODEL: string;
-  CNAME: string;
-  실행번호: string;
-  입고사유: '만기종료' | '중도반납' | '중도회수' | '기타' | string;
 };
 
 export type ResvlistDataType = {
@@ -51,21 +52,20 @@ export type BaseResponseType<T> = {
     result: { MSGE: string; CODE: string };
     data?: { REPT?: T[] } | T;
   };
-  // FIXME: any 타입 수정 필요
-  reqCode: [{ HR58: string[] }, any[]];
+  reqCode: [{ HR58: string[] }, { HR65: string[] }];
 };
 
 // 제네릭 응답 타입 정의
 export type COMPQCDataResponse = BaseResponseType<COMPQCDataType>;
-export type INQCNDataResponse = BaseResponseType<INQCNDataType>;
-export type INQCRDataResponse = BaseResponseType<INQCRDataType>;
+export type INQCNEWDataResponse = BaseResponseType<INQCNEWDataType>;
+export type INQCOLDDataResponse = BaseResponseType<INQCOLDDataType>;
 export type ResvlistDataResponse = BaseResponseType<ResvlistDataType>;
 export type RetvDataResponse = BaseResponseType<RetvDataType>;
 
 export type AllResponses =
   | COMPQCDataResponse
-  | INQCNDataResponse
-  | INQCRDataResponse
+  | INQCNEWDataResponse
+  | INQCOLDDataResponse
   | ResvlistDataResponse
   | RetvDataResponse;
 
@@ -76,7 +76,6 @@ export function isArrayResponse<T>(
   return (data as { REPT: T[] })?.REPT !== undefined;
 }
 
-// 함수 예제 사용
 // FIXME: any 타입 수정 필요
 export function handleResponse<T>(response: BaseResponseType<T>, array: any[]) {
   const { data } = response;
@@ -91,16 +90,24 @@ export function handleResponse<T>(response: BaseResponseType<T>, array: any[]) {
 }
 
 // 사용 예제
-const exampleResponse: INQCNDataResponse = {
+const exampleResponse: INQCOLDDataResponse = {
   data: {
     result: { MSGE: 'Success', CODE: '200' },
     data: {
       REPT: [
-        { ASSETNO: '123', 차대번호: 'ABC123', MODEL: 'ModelX', 색상: 'Red' },
+        {
+          SEQNO: 'string',
+          EXENO: 'string',
+          INRSON: 'string',
+          ASSETNO: 'string',
+          CNAME: 'string',
+          CARNO: 'string',
+          MODEL: 'string',
+        },
       ],
     },
   },
-  reqCode: [{ HR58: ['code1'] }, []],
+  reqCode: [{ HR58: ['code1'] }, { HR65: ['code2'] }],
 };
 
 // FIXME: any 타입 수정 필요

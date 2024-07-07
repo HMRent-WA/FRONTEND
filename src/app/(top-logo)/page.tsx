@@ -8,13 +8,13 @@ export default function Home() {
           <div className="flex flew-wrap w-full gap-3">
             <MainMenuButton
               className="basis-1/2 w-full bg-green-500 hover:bg-green-500/80"
-              href={'/inqcn'}
+              href={'/INQCNEW'}
             >
               신차 입고
             </MainMenuButton>
             <MainMenuButton
               className="basis-1/2 w-full bg-green-500 hover:bg-green-500/80"
-              href={'/inqcr'}
+              href={'/INQCOLD'}
             >
               재렌트 입고
             </MainMenuButton>

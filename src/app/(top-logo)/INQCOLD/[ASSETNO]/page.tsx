@@ -27,93 +27,157 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useParams, useRouter } from 'next/navigation';
 import useFetch from '@/hooks/use-fetch';
-
-// FIXME: 더미데이터, useFetch 사용 시 주석 처리
-import { qcdata } from '../mock-data';
 import { showErrorToast, showSuccessToast } from '@/lib/toast';
+import {
+  INQCOLDDataResponse,
+  INQCOLDDataType,
+  handleResponse,
+} from '@/model/types';
+import LoadingPage from '@/components/loading-page';
 
-const InQCRSchema = z.object({
+const INQCOLDSchema = z.object({
   MILEAGE: z.string().refine((val) => !isNaN(Number(val)), {
     message: '주행 거리는 숫자만 입력할 수 있습니다.',
   }),
   ENTRYLOCATION: z.string().nonempty('차량 입고 위치를 선택해 주세요.'),
   DETAILLOCATION: z.string().optional(),
-  비고: z.string().optional(),
+  // FIXME: any는 개선할 수 있으면 좋을 듯.
+  IMGLIST: z.any(),
 });
 
-type InQCRSchemaType = z.infer<typeof InQCRSchema>;
+type INQCOLDSchemaType = z.infer<typeof INQCOLDSchema>;
 
-const InQCRDetail: React.FC = () => {
+const INQCOLDDetail: React.FC = () => {
   const params = useParams();
   const router = useRouter();
+  const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
 
-  const inQCRForm = useForm<InQCRSchemaType>({
-    resolver: zodResolver(InQCRSchema),
-    defaultValues: {
-      MILEAGE: '',
-      ENTRYLOCATION: '',
-    },
+  const INQCOLDForm = useForm<INQCOLDSchemaType>({
+    resolver: zodResolver(INQCOLDSchema),
     mode: 'onChange',
   });
 
-  //   FIXME: 더미데이터, useFetch GET 사용 시 주석 처리
-  const selectedData = qcdata.find((data) => data.ASSETNO === params.ASSETNO);
+  // FIXME: 아래는 dummy data
+  // const fetchedData: INQCOLDDataResponse = {
+  //   data: {
+  //     result: {
+  //       MSGE: 'Request successful',
+  //       CODE: '200',
+  //     },
+  //     data: {
+  //       REPT: [
+  //         {
+  //           SEQNO: '001',
+  //           EXENO: 'EX12345',
+  //           INRSON: 'John Doe',
+  //           ASSETNO: '12345',
+  //           CNAME: 'Company A',
+  //           CARNO: 'CAR123',
+  //           MODEL: 'ModelX',
+  //         },
+  //         {
+  //           SEQNO: '002',
+  //           EXENO: 'EX67890',
+  //           INRSON: 'Jane Smith',
+  //           ASSETNO: '67890',
+  //           CNAME: 'Company B',
+  //           CARNO: 'CAR456',
+  //           MODEL: 'ModelY',
+  //         },
+  //       ],
+  //     },
+  //   },
+  //   reqCode: [
+  //     {
+  //       HR58: ['item1', 'item2', 'item3'],
+  //     },
+  //     {
+  //       HR65: ['item4', 'item5', 'item6'],
+  //     },
+  //   ],
+  // };
 
-  if (!selectedData) {
+  const {
+    data: fetchedData,
+    loading,
+    error,
+    revalidate,
+  } = useFetch<INQCOLDDataResponse>(`${process.env.NEXT_PUBLIC_API_URL}/INQCOLD`);
+
+  if (loading) return <LoadingPage />;
+  if (error) return <p className="px-4">Error: {error.message}</p>;
+  if (!fetchedData) return <p className="px-4">No data</p>;
+
+  console.log(fetchedData);
+
+  const entryLocationList = fetchedData.reqCode[0].HR58;
+
+  const apiData: INQCOLDDataType[] = [];
+
+  handleResponse(fetchedData, apiData);
+
+  const selectedData = apiData.find((data) => data.ASSETNO === params.ASSETNO);
+
+  if (!selectedData || !entryLocationList) {
     return <p className="px-4">해당 데이터가 없습니다.</p>;
   }
 
-  //   FIXME: useFetch GET 사용 시 주석 해제
-  //   const {
-  //     data: fetchedData,
-  //     loading,
-  //     error,
-  //     revalidate,
-  //   } = useFetch<QCDataResponse>(`${process.env.NEXT_PUBLIC_API_URL}/InQCR/D`);
+  // FIXME: POST 요청, API 명세서 (swagger) 나온 대로 수정 해야 함. + 스키마도
 
-  //   if (loading) return <LoadingPage />;
-  //   if (error) return <p className="px-4">Error: {error.message}</p>;
-  //   if (!fetchedData) return <p className="px-4">No data</p>;
+  // FIXME: INQCOLD POST req
+  // ASSETNO
+  // SEQNO: string (렌트 횟수 같은 거)
+  // MILEAGE
+  // ENTRYLOCATION
+  // DETAILLOCATION (optional)
+  // IMGLIST : string[]
 
-  //   console.log(fetchedData);
+  const onFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    console.log('File change event triggered');
+    if (e.target.files) {
+      console.log('Files selected: ', e.target.files);
+      setSelectedFiles(Array.from(e.target.files));
+      console.log('Selected files: ', selectedFiles);
+    }
+  };
 
-  //   const entryLocationList = fetchedData.reqCode[0].HR58;
-  //   const apiData: QCDataType[] = fetchedData.data.data.REPT;
-  //   const selectedData = apiData.find((data) => data.ASSETNO === params.ASSETNO);
-
-  //   if (!selectedData || !entryLocationList) {
-  //     return <p className="px-4">해당 데이터가 없습니다.</p>;
-  //   }
-
-  // POST 요청 예시
-  const onInQCRFormSubmit = async (data: InQCRSchemaType) => {
+  // FIXME: POST 요청 예시
+  const onINQCOLDFormSubmit = async (data: INQCOLDSchemaType) => {
     const formData = new FormData();
+
+    formData.append('ASSETNO', params.ASSETNO.toString());
+    formData.append('SEQNO', selectedData.SEQNO);
     formData.append('MILEAGE', data.MILEAGE);
     formData.append('ENTRYLOCATION', data.ENTRYLOCATION);
     formData.append('DETAILLOCATION', data.DETAILLOCATION || '');
-    formData.append('비고', data.비고 || '');
+
+    selectedFiles.forEach((image) => {
+      formData.append('IMGLIST', image);
+    });
 
     try {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/InQCR/${params.ASSETNO}`,
+        `${process.env.NEXT_PUBLIC_API_URL}/INQCOLD`,
         {
           method: 'POST',
           body: formData,
         }
       );
+
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
+
       console.log('요청 완료');
       const result = await response.json();
+
       console.log('Success:', result);
-      // FIXME: 성공 토스트 메시지 수정 필요
       showSuccessToast('완료되었습니다.');
-      // revalidate();
-      router.push('/inqcr');
+
+      revalidate();
+      router.push('/INQCOLD');
     } catch (error) {
       console.error('Fetch error:', error);
-      // FIXME: 실패 토스트 메시지 수정 필요
       showErrorToast('요청에 실패하였습니다.');
     }
   };
@@ -128,7 +192,7 @@ const InQCRDetail: React.FC = () => {
             {' 표시된 곳은 반드시 입력해 주셔야 합니다.'}
           </CardDescription>
         </CardHeader>
-        <FormWrapper form={inQCRForm} onSubmit={onInQCRFormSubmit}>
+        <FormWrapper form={INQCOLDForm} onSubmit={onINQCOLDFormSubmit}>
           <CardContent>
             <div className="flex flex-col gap-4">
               <div className="flex items-center justify-between h-10">
@@ -141,7 +205,7 @@ const InQCRDetail: React.FC = () => {
               </div>
               <div className="flex items-center justify-between h-10">
                 <Label className="font-semibold">실행번호</Label>
-                <p>{selectedData.실행번호}</p>
+                <p>{selectedData.EXENO}</p>
               </div>
               <div className="flex items-center justify-between h-10">
                 <Label className="font-semibold">고객명</Label>
@@ -149,12 +213,12 @@ const InQCRDetail: React.FC = () => {
               </div>
               <div className="flex items-center justify-between h-10">
                 <Label className="font-semibold">입고사유</Label>
-                <p>{selectedData.입고사유}</p>
+                <p>{selectedData.INRSON}</p>
               </div>
             </div>
             <div className="w-full flex flex-col gap-4 mt-6">
               <FormElement
-                formControl={inQCRForm.control}
+                formControl={INQCOLDForm.control}
                 name="MILEAGE"
                 label="주행 거리 (km)"
                 required
@@ -166,14 +230,14 @@ const InQCRDetail: React.FC = () => {
                 />
               </FormElement>
               <FormElement
-                formControl={inQCRForm.control}
+                formControl={INQCOLDForm.control}
                 name="ENTRYLOCATION"
                 label="차량 입고 위치"
                 required
               >
                 <Controller
                   name="ENTRYLOCATION"
-                  control={inQCRForm.control}
+                  control={INQCOLDForm.control}
                   render={({ field }) => (
                     <Select onValueChange={field.onChange} value={field.value}>
                       <SelectTrigger className="w-full">
@@ -181,15 +245,11 @@ const InQCRDetail: React.FC = () => {
                       </SelectTrigger>
                       <SelectContent>
                         <SelectGroup>
-                          <SelectItem key={'apple'} value={'apple'}>
-                            apple
-                          </SelectItem>
-                          {/* FIXME: useFetch API call */}
-                          {/* {entryLocationList.map((item) => (
+                          {entryLocationList.map((item) => (
                             <SelectItem key={item} value={item}>
                               {item}
                             </SelectItem>
-                          ))} */}
+                          ))}
                         </SelectGroup>
                       </SelectContent>
                     </Select>
@@ -197,26 +257,38 @@ const InQCRDetail: React.FC = () => {
                 />
               </FormElement>
               <FormElement
-                formControl={inQCRForm.control}
+                formControl={INQCOLDForm.control}
                 name="DETAILLOCATION"
                 label="차량 상세 위치"
               >
                 <Input placeholder="" className="h-10" />
               </FormElement>
               <FormElement
-                formControl={inQCRForm.control}
-                name="비고"
-                label="비고"
+                formControl={INQCOLDForm.control}
+                name="IMGLIST"
+                label="차량 사진"
+                required
+                onChange={onFileChange}
               >
-                <Input placeholder="" className="h-10" />
+                <Input type="file" multiple />
               </FormElement>
+              {selectedFiles.length > 0 && (
+                <div className="mt-4">
+                  <Label className="font-semibold">업로드된 이미지:</Label>
+                  <ul className="list-disc list-inside">
+                    {selectedFiles.map((file, index) => (
+                      <li key={index}>{file.name}</li>
+                    ))}
+                  </ul>
+                </div>
+              )}
             </div>
           </CardContent>
           <CardFooter className="fixed bottom-0 left-0 w-full p-4">
             <Button
               className="w-full h-12 rounded-lg"
               type="submit"
-              disabled={!inQCRForm.formState.isValid}
+              disabled={!INQCOLDForm.formState.isValid || !selectedFiles.length}
             >
               입력 완료
             </Button>
@@ -227,4 +299,4 @@ const InQCRDetail: React.FC = () => {
   );
 };
 
-export default InQCRDetail;
+export default INQCOLDDetail;

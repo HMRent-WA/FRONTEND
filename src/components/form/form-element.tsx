@@ -69,7 +69,8 @@ function FormElement<T extends FieldValues>({
               {React.cloneElement(children as React.ReactElement, {
                 ...field,
                 onChange: (e: React.ChangeEvent<HTMLInputElement>) => {
-                  onChange ? onChange(e) : field.onChange(e); // react-hook-form's onChange
+                  field.onChange(e); // react-hook-form's onChange
+                  onChange && onChange(e);
                 },
               })}
             </div>
