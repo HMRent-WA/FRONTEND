@@ -178,7 +178,7 @@ const INQCNEWDetail: React.FC = () => {
       console.log('Success:', result);
       showSuccessToast('완료되었습니다.');
 
-      // revalidate();
+      revalidate();
       router.push('/INQCNEW');
     } catch (error) {
       console.error('Fetch error:', error);
