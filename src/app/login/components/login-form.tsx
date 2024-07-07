@@ -39,7 +39,10 @@ const LoginForm = ({ className }: { className?: string }) => {
     if (localStorage.getItem('hmrId')) {
       form.setValue('id', localStorage.getItem('hmrId') || '');
     }
-  }, [form]);
+    if (localStorage.getItem('hmrPw')) {
+      form.setValue('password', localStorage.getItem('hmrPw') || '');
+    }
+  }, []);
 
   const onSubmit: SubmitHandler<LoginData> = async (data: LoginData) => {
     try {
@@ -60,6 +63,7 @@ const LoginForm = ({ className }: { className?: string }) => {
       const result = await response.json();
 
       localStorage.setItem('hmrId', data.id);
+      localStorage.setItem('hmrPw', data.password);
 
       console.log('Login successful:', result);
       showSuccessToast('로그인 되었습니다.');
