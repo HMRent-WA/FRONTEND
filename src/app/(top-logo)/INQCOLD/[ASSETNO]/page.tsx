@@ -102,7 +102,9 @@ const INQCOLDDetail: React.FC = () => {
     loading,
     error,
     revalidate,
-  } = useFetch<INQCOLDDataResponse>(`${process.env.NEXT_PUBLIC_API_URL}/INQCOLD`);
+  } = useFetch<INQCOLDDataResponse>(
+    `${process.env.NEXT_PUBLIC_API_URL}/INQCOLD`
+  );
 
   if (loading) return <LoadingPage />;
   if (error) return <p className="px-4">Error: {error.message}</p>;
