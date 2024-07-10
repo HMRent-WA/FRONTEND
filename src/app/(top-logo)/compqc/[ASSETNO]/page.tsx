@@ -48,7 +48,8 @@ const CompQCSchema = z.object({
     message: '총 키 개수는 숫자만 입력할 수 있습니다.',
   }),
   KEYLOCATION: z.string().nonempty('차 키의 보관 위치를 입력해 주세요.'),
-  IMGLIST: z.array(z.instanceof(File)).optional(),
+  // FIXME: any는 개선할 수 있으면 좋을 듯.
+  IMGLIST: z.any(),
 });
 
 type CompQCSchemaType = z.infer<typeof CompQCSchema>;

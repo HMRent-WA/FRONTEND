@@ -83,11 +83,11 @@ const INQCNEW: React.FC = () => {
         <TableHeader>
           <TableRow className="bg-green-500/50 hover:bg-green-500/35">
             <TableHead className="text-center rounded-tl-lg px-1">
-              차량번호
+              차대번호
             </TableHead>
-            <TableHead className="text-center px-1">고객명</TableHead>
+            <TableHead className="text-center px-1">모델명</TableHead>
             <TableHead className="text-center rounded-tr-lg px-1">
-              입고사유
+              색상
             </TableHead>
           </TableRow>
         </TableHeader>
