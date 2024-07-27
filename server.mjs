@@ -15,14 +15,14 @@ app.prepare().then(() => {
   const server = express();
 
   server.use(
-    '/api',
+    '*',
     createProxyMiddleware({
       target: process.env.NEXT_PUBLIC_API_URL,
       changeOrigin: true,
       logLevel: 'error',
-      //   pathRewrite: {
-      //     '^/api/': '/',
-      //   },
+      pathRewrite: {
+        '^/': '/',
+      },
       cookieDomainRewrite: {
         '*': 'localhost',
       },
