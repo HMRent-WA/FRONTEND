@@ -69,8 +69,12 @@ const LoginForm = ({ className }: { className?: string }) => {
       console.log('Login successful:', result);
       showSuccessToast('로그인 되었습니다.');
 
-      if (result) router.push('/');
-      // Handle successful login (e.g., store token, redirect, etc.)
+      if (result) {
+        localStorage.setItem('accessToken', result.accessToken);
+        console.log;
+        router.push('/');
+        // Handle successful login (e.g., store token, redirect, etc.)
+      }
     } catch (err) {
       console.error('Login failed:', err);
       showErrorToast('아이디와 비밀번호를 확인해주세요.');

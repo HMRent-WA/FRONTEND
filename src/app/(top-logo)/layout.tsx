@@ -17,14 +17,18 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
         const response = await fetch(
           `${process.env.NEXT_PUBLIC_API_URL}/auth`,
           {
-            credentials: 'include',
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${localStorage.getItem('token') ? localStorage.getItem('token') : ' '}`,
+            },
+            // credentials: 'include',
           }
         );
         const data = await response.json();
         console.log('auth -> ', data, data.message);
         if (data.message === 'FAIL') {
           showErrorToast('로그인 후 이용해주세요.');
-          router.push('/login');
+          // router.push('/login');
         }
       } catch (error) {
         showErrorToast('로그인 후 이용해주세요.');
