@@ -18,24 +18,21 @@ export const LoadingModal = (props: LoadingModalProps) => {
   const { open } = props;
 
   return (
-    <Dialog open={open ? open : false}>
-      <DialogContent className="w-[90%] rounded-2xl">
-        <DialogHeader className="py-[1.1875rem] px-4">
-          <DialogTitle>업로드 중입니다.</DialogTitle>
+    <Dialog open={open ? open : false} defaultOpen>
+      <DialogContent className="w-[70%] rounded-2xl max-w-[300px]">
+        <DialogHeader className="py-[1.1875rem] px-4 flex flex-col gap-4">
+          <DialogTitle className="text-center">업로드 중입니다.</DialogTitle>
           <DialogDescription
             className={
               'text-pretty text-[0.8125rem]/[1.3rem] -tracking-[1%] text-center text-black'
             }
           >
-            2분가량 소요될 수 있습니다.
+            <span className={'mb-1'}>2분가량 소요될 수 있습니다.</span>
             <br />
-            창을 닫지 말고 기다려주세요.
+            <span>창을 닫지 말고 기다려주세요.</span>
           </DialogDescription>
-        </DialogHeader>
-        <hr className={'stroke-stroke w-full h-[1px]'} />
-        <DialogFooter>
           <LoadingSpinner />
-        </DialogFooter>
+        </DialogHeader>
       </DialogContent>
     </Dialog>
   );
