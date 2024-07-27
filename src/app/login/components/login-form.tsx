@@ -71,7 +71,7 @@ const LoginForm = ({ className }: { className?: string }) => {
 
       if (result) {
         localStorage.setItem('accessToken', result.accessToken);
-        console.log;
+        console.log('accessToken:', result.accessToken);
         router.push('/');
         // Handle successful login (e.g., store token, redirect, etc.)
       }

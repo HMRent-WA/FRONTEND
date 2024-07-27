@@ -19,7 +19,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
           {
             headers: {
               'Content-Type': 'application/json',
-              Authorization: `Bearer ${localStorage.getItem('token') ? localStorage.getItem('token') : ' '}`,
+              Authorization: `Bearer ${localStorage.getItem('accessToken') ? localStorage.getItem('accessToken') : ' '}`,
             },
             // credentials: 'include',
           }
