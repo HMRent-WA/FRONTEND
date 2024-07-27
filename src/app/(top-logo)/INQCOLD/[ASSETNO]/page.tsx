@@ -290,7 +290,11 @@ const INQCOLDDetail: React.FC = () => {
             <Button
               className="w-full h-12 rounded-lg"
               type="submit"
-              disabled={!INQCOLDForm.formState.isValid || !selectedFiles.length}
+              disabled={
+                !INQCOLDForm.formState.isValid ||
+                !selectedFiles.length ||
+                INQCOLDForm.formState.isSubmitting
+              }
             >
               입력 완료
             </Button>

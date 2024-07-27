@@ -311,7 +311,11 @@ const INQCNEWDetail: React.FC = () => {
             <Button
               className="w-full h-12 rounded-lg"
               type="submit"
-              disabled={!INQCNEWForm.formState.isValid || !selectedFiles.length}
+              disabled={
+                !INQCNEWForm.formState.isValid ||
+                !selectedFiles.length ||
+                INQCNEWForm.formState.isSubmitting
+              }
             >
               입력 완료
             </Button>

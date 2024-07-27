@@ -268,7 +268,10 @@ const CompQCDetail: React.FC = () => {
             <Button
               className="w-full h-12 rounded-lg"
               type="submit"
-              disabled={!compQCForm.formState.isValid}
+              disabled={
+                !compQCForm.formState.isValid ||
+                compQCForm.formState.isSubmitting
+              }
             >
               상품화 완료 (QC)
             </Button>

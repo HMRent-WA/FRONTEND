@@ -130,7 +130,7 @@ const LoginForm = ({ className }: { className?: string }) => {
               type="submit"
               size="lg"
               className="font-semibold w-full h-12 rounded-lg"
-              disabled={!form.formState.isValid}
+              disabled={!form.formState.isValid || form.formState.isSubmitting}
             >
               로그인
             </Button>
