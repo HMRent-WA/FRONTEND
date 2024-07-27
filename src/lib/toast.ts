@@ -10,7 +10,7 @@ export const showSuccessToast = (description: string, delay?: number) => {
     () => {
       newToast.dismiss();
     },
-    delay ? delay : 2500
+    delay ? delay : 4000
   );
 };
 
@@ -23,6 +23,6 @@ export const showErrorToast = (description: string, delay?: number): void => {
     () => {
       newToast.dismiss();
     },
-    delay ? delay : 2500
+    delay ? delay : 4000
   );
 };
