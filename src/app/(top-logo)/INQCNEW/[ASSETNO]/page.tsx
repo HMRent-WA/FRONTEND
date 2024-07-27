@@ -35,6 +35,7 @@ import {
   handleResponse,
 } from '@/model/types';
 import LoadingPage from '@/components/loading-page';
+import { LoadingModal } from '@/components/modal/loading-modal';
 
 const INQCNEWSchema = z.object({
   MILEAGE: z.string().refine((val) => !isNaN(Number(val)), {
@@ -322,6 +323,7 @@ const INQCNEWDetail: React.FC = () => {
           </CardFooter>
         </FormWrapper>
       </Card>
+      <LoadingModal open={INQCNEWForm.formState.isSubmitting} />
     </div>
   );
 };

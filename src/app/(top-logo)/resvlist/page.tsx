@@ -172,7 +172,7 @@ const Resvlist: React.FC = () => {
                 <Button
                   type="submit"
                   className="w-full"
-                  disabled={!selectedASSETNO}
+                  disabled={!selectedASSETNO || loading}
                   onClick={handleClick}
                 >
                   예약 해제

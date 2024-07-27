@@ -34,6 +34,7 @@ import {
 } from '@/model/types';
 import { showErrorToast, showSuccessToast } from '@/lib/toast';
 import LoadingPage from '@/components/loading-page';
+import { LoadingModal } from '@/components/modal/loading-modal';
 
 const CompQCSchema = z.object({
   MILEAGE: z.string().refine((val) => !isNaN(Number(val)), {
@@ -278,6 +279,7 @@ const CompQCDetail: React.FC = () => {
           </CardFooter>
         </FormWrapper>
       </Card>
+      <LoadingModal open={compQCForm.formState.isSubmitting} />
     </div>
   );
 };

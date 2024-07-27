@@ -34,6 +34,7 @@ import {
   handleResponse,
 } from '@/model/types';
 import LoadingPage from '@/components/loading-page';
+import { LoadingModal } from '@/components/modal/loading-modal';
 
 const INQCOLDSchema = z.object({
   MILEAGE: z.string().refine((val) => !isNaN(Number(val)), {
@@ -301,6 +302,7 @@ const INQCOLDDetail: React.FC = () => {
           </CardFooter>
         </FormWrapper>
       </Card>
+      <LoadingModal open={INQCOLDForm.formState.isSubmitting} />
     </div>
   );
 };
