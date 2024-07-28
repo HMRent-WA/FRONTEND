@@ -90,6 +90,10 @@ const Retvlist: React.FC = () => {
   ) => {
     if (!datePickerRange?.from || !datePickerRange?.to) return true;
     const date = new Date(dateString);
+    console.log('date -> ', date);
+    console.log('datePickerRange -> ', datePickerRange);
+    if (datePickerRange.from === datePickerRange.to)
+      return date === datePickerRange.from;
     return date >= datePickerRange.from && date <= datePickerRange.to;
   };
 
