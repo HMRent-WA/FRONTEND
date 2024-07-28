@@ -82,6 +82,7 @@ const Retvlist: React.FC = () => {
     const year = dateString.substring(0, 4);
     const month = dateString.substring(4, 6);
     const day = dateString.substring(6, 8);
+    console.log(new Date(`${year}-${month}-${day}`));
     return new Date(`${year}-${month}-${day}`);
   };
 
@@ -109,7 +110,7 @@ const Retvlist: React.FC = () => {
 
   console.log('필터한 데이터 -> ', filteredData);
   console.log('dateRange -> ', dateRange);
-  // console.log('dateRange -> ', dateRange);
+  console.log('dateRange -> ', dateRange);
 
   return (
     <article className="px-4 relative">
