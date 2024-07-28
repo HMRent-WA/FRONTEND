@@ -109,11 +109,11 @@ const Retvlist: React.FC = () => {
   console.log('dateRange -> ', dateRange);
 
   return (
-    <article className="px-4 relative">
-      <h1 className="text-center font-medium text-xl my-8 text-[#1B1B1B]/90">
+    <article className="relative">
+      <h1 className="px-4 text-center font-medium text-xl my-8 text-[#1B1B1B]/90">
         회수 대상 리스트
       </h1>
-      <div className="flex flex-col my-4 gap-4">
+      <div className="px-4 flex flex-col my-4 gap-4">
         <RadioGroupButton
           options={['회수요청', '전체', '회수완료']}
           onClick={handleRadioChange}
@@ -128,7 +128,7 @@ const Retvlist: React.FC = () => {
           onChange={handleSearch}
         />
       </div>
-      <Table className="mb-24">
+      <Table className="px-4 mb-24">
         <TableHeader>
           <TableRow className="bg-primary/35 hover:bg-primary/20">
             <TableHead className="w-[4.375rem] text-center rounded-tl-lg px-1">
@@ -166,7 +166,7 @@ const Retvlist: React.FC = () => {
         </TableBody>
       </Table>
       {(filteredData.length === 0 || !filteredData) && (
-        <div className={'w-screen h-40 flex items-center text-center'}>
+        <div className={'w-screen h-40 flex items-center justify-center'}>
           조건에 해당하는 데이터가 없습니다.
         </div>
       )}
