@@ -37,9 +37,15 @@ import LoadingPage from '@/components/loading-page';
 import { LoadingModal } from '@/components/modal/loading-modal';
 
 const CompQCSchema = z.object({
-  MILEAGE: z.string().refine((val) => !isNaN(Number(val)), {
-    message: '주행 거리는 숫자만 입력할 수 있습니다.',
-  }),
+  MILEAGE: z.string().refine(
+    (val) => {
+      const parsed = Number(val);
+      return !isNaN(parsed) && parsed >= 0 && Number.isInteger(parsed);
+    },
+    {
+      message: '주행 거리는 0 이상의 정수만 입력할 수 있습니다.',
+    }
+  ),
   ENTRYLOCATION: z.string().nonempty('차량 입고 위치를 선택해 주세요.'),
   DETAILLOCATION: z.string().optional(),
   KEYQUANT: z.string().refine((val) => !isNaN(Number(val)), {
