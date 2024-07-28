@@ -19,6 +19,7 @@ import { DateRange } from 'react-day-picker';
 import { RetvDataResponse } from '@/model/types';
 import LoadingPage from '@/components/loading-page';
 import { handleResponse } from '@/model/types';
+import { date } from 'zod';
 
 const Retvlist: React.FC = () => {
   const router = useRouter();
@@ -88,13 +89,15 @@ const Retvlist: React.FC = () => {
     dateString: Date,
     datePickerRange: DateRange | undefined
   ) => {
-    if (!datePickerRange?.from || !datePickerRange?.to) return true;
+    // if (!datePickerRange?.from || !datePickerRange?.to) return true;
     const date = new Date(dateString);
-    console.log('date -> ', date);
-    console.log('datePickerRange -> ', datePickerRange);
-    if (datePickerRange.from === datePickerRange.to)
+    if (!!datePickerRange?.from && !datePickerRange?.to)
       return date === datePickerRange.from;
-    return date >= datePickerRange.from && date <= datePickerRange.to;
+    if (!!datePickerRange?.from && !!datePickerRange?.to) {
+      if (datePickerRange.from === datePickerRange.to)
+        return date === datePickerRange.from;
+      return date >= datePickerRange.from && date <= datePickerRange.to;
+    }
   };
 
   const filteredData = retvdata.filter((data) => {
@@ -105,6 +108,8 @@ const Retvlist: React.FC = () => {
   });
 
   console.log('필터한 데이터 -> ', filteredData);
+  console.log('dateRange -> ', dateRange);
+  // console.log('dateRange -> ', dateRange);
 
   return (
     <article className="px-4 relative">
