@@ -36,7 +36,6 @@ function FormElement<T extends FieldValues>({
   required = 'none',
   label,
   children,
-  message,
   description,
   onChange,
 }: FormElementProps<T>) {
