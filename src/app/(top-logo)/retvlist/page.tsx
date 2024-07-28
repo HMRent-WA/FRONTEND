@@ -164,7 +164,7 @@ const Retvlist: React.FC = () => {
             </TableRow>
           ))}
           {(filteredData.length === 0 || !filteredData) && (
-            <div className={'w-full h-40 flex items-center text-center'}>
+            <div className={'w-screen h-40 flex items-center text-center'}>
               조건에 해당하는 데이터가 없습니다.
             </div>
           )}
