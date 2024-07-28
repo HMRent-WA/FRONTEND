@@ -87,24 +87,20 @@ const Retvlist: React.FC = () => {
   };
 
   const isWithinDateRange = (
-    dateString: Date,
+    dateString: string,
     datePickerRange: DateRange | undefined
   ) => {
-    // if (!datePickerRange?.from || !datePickerRange?.to) return true;
-    const date = new Date(dateString);
-    if (!!datePickerRange?.from && !datePickerRange?.to)
-      return date === datePickerRange.from;
-    if (!!datePickerRange?.from && !!datePickerRange?.to) {
-      if (datePickerRange.from === datePickerRange.to)
-        return date === datePickerRange.from;
-      return date >= datePickerRange.from && date <= datePickerRange.to;
-    }
+    const date = parseDate(dateString).toDateString(); // 날짜 문자열로 변환하여 연월일만 비교
+    if (!datePickerRange?.from || !datePickerRange?.to) return true;
+    const fromDate = datePickerRange.from.toDateString();
+    const toDate = datePickerRange.to.toDateString();
+    return date >= fromDate && date <= toDate;
   };
 
   const filteredData = retvdata.filter((data) => {
     if (search && !data.CARNO.includes(search)) return false;
     if (selectedValue !== '전체' && data.STATUS !== selectedValue) return false;
-    if (!isWithinDateRange(parseDate(data.RQDATE), dateRange)) return false;
+    if (!isWithinDateRange(data.RQDATE, dateRange)) return false;
     return true;
   });
 
@@ -167,6 +163,11 @@ const Retvlist: React.FC = () => {
               </TableCell>
             </TableRow>
           ))}
+          {(filteredData.length === 0 || !filteredData) && (
+            <div className={'w-full h-40 flex items-center text-center'}>
+              조건에 해당하는 데이터가 없습니다.
+            </div>
+          )}
         </TableBody>
       </Table>
       <div className="flex fixed bottom-4 left-0 w-full px-4">
