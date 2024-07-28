@@ -75,7 +75,7 @@ function FormElement<T extends FieldValues>({
               })}
             </div>
           </FormControl>
-          {message && <FormMessage>{message}</FormMessage>}
+          <FormMessage />
           {description && <FormDescription>{description}</FormDescription>}
         </FormItem>
       )}
