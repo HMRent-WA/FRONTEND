@@ -227,7 +227,7 @@ const INQCOLDDetail: React.FC = () => {
                 required
               >
                 <Input
-                  type="number"
+                  type="tel"
                   placeholder="주행거리를 입력해주세요."
                   className="h-10"
                 />
