@@ -38,17 +38,17 @@ import { LoadingModal } from '@/components/modal/loading-modal';
 import { FormMessage } from '@/components/ui/form';
 
 const CompQCSchema = z.object({
-  MILEAGE: z
-    .number()
-    .min(0, { message: '주행 거리는 0 이상의 정수만 입력할 수 있습니다.' }),
+  MILEAGE: z.string().refine((val) => !isNaN(Number(val)), {
+    message: '주행 거리는 0 이상의 정수만 입력할 수 있습니다.',
+  }),
   ENTRYLOCATION: z.string().nonempty('차량 입고 위치를 선택해 주세요.'),
   DETAILLOCATION: z.string().optional(),
-  KEYQUANT: z
-    .number()
-    .min(0, { message: '키 개수는 0 이상의 정수만 입력할 수 있습니다.' }),
-  KEYTOTAL: z
-    .number()
-    .min(0, { message: '총 키 개수는 0 이상의 정수만 입력할 수 있습니다.' }),
+  KEYQUANT: z.string().refine((val) => !isNaN(Number(val)), {
+    message: '키 개수는 0 이상의 정수만 입력할 수 있습니다.',
+  }),
+  KEYTOTAL: z.string().refine((val) => !isNaN(Number(val)), {
+    message: '총 키 개수는 0 이상의 정수만 입력할 수 있습니다.',
+  }),
   KEYLOCATION: z.string().nonempty('차 키의 보관 위치를 입력해 주세요.'),
   IMGLIST: z.any(),
 });
@@ -98,11 +98,11 @@ const CompQCDetail: React.FC = () => {
   const onCompQCFormSubmit = async (data: CompQCSchemaType) => {
     const formData = new FormData();
 
-    formData.append('MILEAGE', data.MILEAGE.toString());
+    formData.append('MILEAGE', data.MILEAGE);
     formData.append('ENTRYLOCATION', data.ENTRYLOCATION);
     formData.append('DETAILLOCATION', data.DETAILLOCATION || '');
-    formData.append('KEYQUANT', data.KEYQUANT.toString());
-    formData.append('KEYTOTAL', data.KEYTOTAL.toString());
+    formData.append('KEYQUANT', data.KEYQUANT);
+    formData.append('KEYTOTAL', data.KEYTOTAL);
     formData.append('KEYLOCATION', data.KEYLOCATION);
 
     selectedFiles.forEach((image) => {
@@ -161,23 +161,11 @@ const CompQCDetail: React.FC = () => {
                 required
                 description="숫자만 입력해주세요. ex) 31704"
               >
-                <Controller
-                  name="MILEAGE"
-                  control={compQCForm.control}
-                  render={({ field, fieldState }) => (
-                    <>
-                      <Input
-                        type="tel"
-                        placeholder="주행거리를 입력해주세요."
-                        className="h-10"
-                        value={field.value}
-                        onChange={(e) =>
-                          field.onChange(parseInt(e.target.value, 10))
-                        }
-                      />
-                      {fieldState.error && <FormMessage />}
-                    </>
-                  )}
+                <Input
+                  placeholder="주행거리를 입력해주세요."
+                  className="h-10"
+                  inputMode="numeric"
+                  pattern="[0-9]*"
                 />
               </FormElement>
               <FormElement
@@ -228,23 +216,11 @@ const CompQCDetail: React.FC = () => {
                   required
                   description="숫자만 입력해주세요."
                 >
-                  <Controller
-                    name="KEYQUANT"
-                    control={compQCForm.control}
-                    render={({ field, fieldState }) => (
-                      <>
-                        <Input
-                          type="tel"
-                          placeholder="보유 수량"
-                          className="h-10"
-                          value={field.value}
-                          onChange={(e) =>
-                            field.onChange(parseInt(e.target.value, 10))
-                          }
-                        />
-                        {fieldState.error && <FormMessage />}
-                      </>
-                    )}
+                  <Input
+                    placeholder="보유 수량"
+                    className="h-10"
+                    inputMode="numeric"
+                    pattern="[0-9]*"
                   />
                 </FormElement>
                 <FormElement
@@ -254,23 +230,11 @@ const CompQCDetail: React.FC = () => {
                   required
                   description="숫자만 입력해주세요."
                 >
-                  <Controller
-                    name="KEYTOTAL"
-                    control={compQCForm.control}
-                    render={({ field, fieldState }) => (
-                      <>
-                        <Input
-                          type="tel"
-                          placeholder="총 수량"
-                          className="h-10"
-                          value={field.value}
-                          onChange={(e) =>
-                            field.onChange(parseInt(e.target.value, 10))
-                          }
-                        />
-                        {fieldState.error && <FormMessage />}
-                      </>
-                    )}
+                  <Input
+                    placeholder="총 수량"
+                    className="h-10"
+                    inputMode="numeric"
+                    pattern="[0-9]*"
                   />
                 </FormElement>
               </div>

@@ -228,23 +228,11 @@ const INQCOLDDetail: React.FC = () => {
                 required
                 description="숫자만 입력해주세요. ex) 31704"
               >
-                <Controller
-                  name="MILEAGE"
-                  control={INQCOLDForm.control}
-                  render={({ field, fieldState }) => (
-                    <>
-                      <Input
-                        type="tel"
-                        placeholder="주행거리를 입력해주세요."
-                        className="h-10"
-                        value={field.value}
-                        onChange={(e) =>
-                          field.onChange(parseInt(e.target.value, 10))
-                        }
-                      />
-                      {fieldState.error && <FormMessage />}
-                    </>
-                  )}
+                <Input
+                  placeholder="주행거리를 입력해주세요."
+                  className="h-10"
+                  inputMode="numeric"
+                  pattern="[0-9]*"
                 />
               </FormElement>
               <FormElement
