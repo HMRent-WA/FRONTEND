@@ -35,6 +35,7 @@ import {
 } from '@/model/types';
 import LoadingPage from '@/components/loading-page';
 import { LoadingModal } from '@/components/modal/loading-modal';
+import { FormMessage } from '@/components/ui/form';
 
 const INQCOLDSchema = z.object({
   MILEAGE: z.string().refine((val) => !isNaN(Number(val)), {
@@ -225,11 +226,25 @@ const INQCOLDDetail: React.FC = () => {
                 name="MILEAGE"
                 label="주행 거리 (km)"
                 required
+                description="숫자만 입력해주세요. ex) 31704"
               >
-                <Input
-                  type="tel"
-                  placeholder="주행거리를 입력해주세요."
-                  className="h-10"
+                <Controller
+                  name="MILEAGE"
+                  control={INQCOLDForm.control}
+                  render={({ field, fieldState }) => (
+                    <>
+                      <Input
+                        type="tel"
+                        placeholder="주행거리를 입력해주세요."
+                        className="h-10"
+                        value={field.value}
+                        onChange={(e) =>
+                          field.onChange(parseInt(e.target.value, 10))
+                        }
+                      />
+                      {fieldState.error && <FormMessage />}
+                    </>
+                  )}
                 />
               </FormElement>
               <FormElement

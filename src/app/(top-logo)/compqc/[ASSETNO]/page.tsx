@@ -35,6 +35,7 @@ import {
 import { showErrorToast, showSuccessToast } from '@/lib/toast';
 import LoadingPage from '@/components/loading-page';
 import { LoadingModal } from '@/components/modal/loading-modal';
+import { FormMessage } from '@/components/ui/form';
 
 const CompQCSchema = z.object({
   MILEAGE: z
@@ -158,6 +159,7 @@ const CompQCDetail: React.FC = () => {
                 name="MILEAGE"
                 label="주행 거리 (km)"
                 required
+                description="숫자만 입력해주세요. ex) 31704"
               >
                 <Controller
                   name="MILEAGE"
@@ -173,11 +175,7 @@ const CompQCDetail: React.FC = () => {
                           field.onChange(parseInt(e.target.value, 10))
                         }
                       />
-                      {fieldState.error && (
-                        <p className="text-red-500 text-sm">
-                          {fieldState.error.message}
-                        </p>
-                      )}
+                      {fieldState.error && <FormMessage />}
                     </>
                   )}
                 />
@@ -210,11 +208,7 @@ const CompQCDetail: React.FC = () => {
                           </SelectGroup>
                         </SelectContent>
                       </Select>
-                      {fieldState.error && (
-                        <p className="text-red-500 text-sm">
-                          {fieldState.error.message}
-                        </p>
-                      )}
+                      {fieldState.error && <FormMessage />}
                     </>
                   )}
                 />
@@ -232,6 +226,7 @@ const CompQCDetail: React.FC = () => {
                   name="KEYQUANT"
                   label="차 키 보유 수량"
                   required
+                  description="숫자만 입력해주세요."
                 >
                   <Controller
                     name="KEYQUANT"
@@ -247,11 +242,7 @@ const CompQCDetail: React.FC = () => {
                             field.onChange(parseInt(e.target.value, 10))
                           }
                         />
-                        {fieldState.error && (
-                          <p className="text-red-500 text-sm">
-                            {fieldState.error.message}
-                          </p>
-                        )}
+                        {fieldState.error && <FormMessage />}
                       </>
                     )}
                   />
@@ -261,6 +252,7 @@ const CompQCDetail: React.FC = () => {
                   name="KEYTOTAL"
                   label="총 수량"
                   required
+                  description="숫자만 입력해주세요."
                 >
                   <Controller
                     name="KEYTOTAL"
@@ -276,11 +268,7 @@ const CompQCDetail: React.FC = () => {
                             field.onChange(parseInt(e.target.value, 10))
                           }
                         />
-                        {fieldState.error && (
-                          <p className="text-red-500 text-sm">
-                            {fieldState.error.message}
-                          </p>
-                        )}
+                        {fieldState.error && <FormMessage />}
                       </>
                     )}
                   />
