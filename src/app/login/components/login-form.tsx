@@ -142,7 +142,7 @@ const LoginForm = ({ className }: { className?: string }) => {
           </CardFooter>
         </form>
       </Form>
-      <LoadingModal open={form.formState.isSubmitting} />
+      {/* <LoadingModal open={form.formState.isSubmitting} /> */}
       {/* <LoadingModal open={} /> */}
     </Card>
   );
