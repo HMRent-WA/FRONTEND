@@ -128,43 +128,45 @@ const Retvlist: React.FC = () => {
           onChange={handleSearch}
         />
       </div>
-      <Table className="px-4 mb-24">
-        <TableHeader>
-          <TableRow className="bg-primary/35 hover:bg-primary/20">
-            <TableHead className="w-[4.375rem] text-center rounded-tl-lg px-1">
-              차량 번호
-            </TableHead>
-            <TableHead className="text-center px-1">모델</TableHead>
-            <TableHead className="text-center px-1">고객</TableHead>
-            <TableHead className="text-center px-1">회수사유</TableHead>
-            <TableHead className="w-[4.375rem] text-center rounded-tr-lg px-1">
-              진행상태
-            </TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {filteredData.map((data, idx) => (
-            <TableRow
-              key={data.ASSETNO + idx}
-              data-assetno={data.ASSETNO}
-              onClick={handleRowClick}
-              className={
-                data.ASSETNO === selectedASSETNO ? 'text-primary/80' : ''
-              }
-            >
-              <TableCell className="font-medium text-center px-1">
-                {data.CARNO}
-              </TableCell>
-              <TableCell className="text-center px-1">{data.MODEL}</TableCell>
-              <TableCell className="text-center px-1">{data.CNAME}</TableCell>
-              <TableCell className="text-center px-1">{data.RRSON}</TableCell>
-              <TableCell className="w-[4.375rem] text-center px-1">
-                {data.STATUS}
-              </TableCell>
+      <div className="px-4 w-full">
+        <Table className="px-4 mb-24">
+          <TableHeader>
+            <TableRow className="bg-primary/35 hover:bg-primary/20">
+              <TableHead className="w-[4.375rem] text-center rounded-tl-lg px-1">
+                차량 번호
+              </TableHead>
+              <TableHead className="text-center px-1">모델</TableHead>
+              <TableHead className="text-center px-1">고객</TableHead>
+              <TableHead className="text-center px-1">회수사유</TableHead>
+              <TableHead className="w-[4.375rem] text-center rounded-tr-lg px-1">
+                진행상태
+              </TableHead>
             </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+          </TableHeader>
+          <TableBody>
+            {filteredData.map((data, idx) => (
+              <TableRow
+                key={data.ASSETNO + idx}
+                data-assetno={data.ASSETNO}
+                onClick={handleRowClick}
+                className={
+                  data.ASSETNO === selectedASSETNO ? 'text-primary/80' : ''
+                }
+              >
+                <TableCell className="font-medium text-center px-1">
+                  {data.CARNO}
+                </TableCell>
+                <TableCell className="text-center px-1">{data.MODEL}</TableCell>
+                <TableCell className="text-center px-1">{data.CNAME}</TableCell>
+                <TableCell className="text-center px-1">{data.RRSON}</TableCell>
+                <TableCell className="w-[4.375rem] text-center px-1">
+                  {data.STATUS}
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </div>
       {(filteredData.length === 0 || !filteredData) && (
         <div className={'w-screen h-40 flex items-center justify-center'}>
           조건에 해당하는 데이터가 없습니다.
