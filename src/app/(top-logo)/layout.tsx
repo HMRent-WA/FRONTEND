@@ -28,11 +28,11 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
         console.log('auth -> ', data, data.message);
         if (data.message === 'FAIL') {
           showErrorToast('로그인 후 이용해주세요.');
-          // router.push('/login');
+          router.push('/login');
         }
       } catch (error) {
         showErrorToast('로그인 후 이용해주세요.');
-        // router.push('/login');
+        router.push('/login');
       } finally {
         setIsLoading(false);
       }
