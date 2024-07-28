@@ -37,19 +37,24 @@ import LoadingPage from '@/components/loading-page';
 import { LoadingModal } from '@/components/modal/loading-modal';
 
 const CompQCSchema = z.object({
-  MILEAGE: z.number({
-    message: '주행 거리는 0 이상의 정수만 입력할 수 있습니다.',
-  }),
+  MILEAGE: z.string().refine(
+    (val) => {
+      const parsed = Number(val);
+      return !isNaN(parsed) && parsed >= 0 && Number.isInteger(parsed);
+    },
+    {
+      message: '주행 거리는 0 이상의 정수만 입력할 수 있습니다.',
+    }
+  ),
   ENTRYLOCATION: z.string().nonempty('차량 입고 위치를 선택해 주세요.'),
   DETAILLOCATION: z.string().optional(),
-  KEYQUANT: z.number({
+  KEYQUANT: z.string().refine((val) => !isNaN(Number(val)), {
     message: '키 개수는 숫자만 입력할 수 있습니다.',
   }),
-  KEYTOTAL: z.number({
+  KEYTOTAL: z.string().refine((val) => !isNaN(Number(val)), {
     message: '총 키 개수는 숫자만 입력할 수 있습니다.',
   }),
   KEYLOCATION: z.string().nonempty('차 키의 보관 위치를 입력해 주세요.'),
-  // FIXME: any는 개선할 수 있으면 좋을 듯.
   IMGLIST: z.any(),
 });
 
@@ -103,11 +108,11 @@ const CompQCDetail: React.FC = () => {
   const onCompQCFormSubmit = async (data: CompQCSchemaType) => {
     const formData = new FormData();
 
-    formData.append('MILEAGE', data.MILEAGE.toString());
+    formData.append('MILEAGE', data.MILEAGE);
     formData.append('ENTRYLOCATION', data.ENTRYLOCATION);
     formData.append('DETAILLOCATION', data.DETAILLOCATION || '');
-    formData.append('KEYQUANT', data.KEYQUANT.toString());
-    formData.append('KEYTOTAL', data.KEYTOTAL.toString());
+    formData.append('KEYQUANT', data.KEYQUANT);
+    formData.append('KEYTOTAL', data.KEYTOTAL);
     formData.append('KEYLOCATION', data.KEYLOCATION);
 
     selectedFiles.forEach((image) => {

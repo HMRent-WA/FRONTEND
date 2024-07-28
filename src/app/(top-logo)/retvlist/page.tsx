@@ -19,7 +19,6 @@ import { DateRange } from 'react-day-picker';
 import { RetvDataResponse } from '@/model/types';
 import LoadingPage from '@/components/loading-page';
 import { handleResponse } from '@/model/types';
-import { date } from 'zod';
 
 const Retvlist: React.FC = () => {
   const router = useRouter();
