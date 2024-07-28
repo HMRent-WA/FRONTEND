@@ -37,23 +37,17 @@ import LoadingPage from '@/components/loading-page';
 import { LoadingModal } from '@/components/modal/loading-modal';
 
 const CompQCSchema = z.object({
-  MILEAGE: z.string().refine(
-    (val) => {
-      const parsed = Number(val);
-      return !isNaN(parsed) && parsed >= 0 && Number.isInteger(parsed);
-    },
-    {
-      message: '주행 거리는 0 이상의 정수만 입력할 수 있습니다.',
-    }
-  ),
+  MILEAGE: z
+    .number()
+    .min(0, { message: '주행 거리는 0 이상의 정수만 입력할 수 있습니다.' }),
   ENTRYLOCATION: z.string().nonempty('차량 입고 위치를 선택해 주세요.'),
   DETAILLOCATION: z.string().optional(),
-  KEYQUANT: z.string().refine((val) => !isNaN(Number(val)), {
-    message: '키 개수는 숫자만 입력할 수 있습니다.',
-  }),
-  KEYTOTAL: z.string().refine((val) => !isNaN(Number(val)), {
-    message: '총 키 개수는 숫자만 입력할 수 있습니다.',
-  }),
+  KEYQUANT: z
+    .number()
+    .min(0, { message: '키 개수는 0 이상의 정수만 입력할 수 있습니다.' }),
+  KEYTOTAL: z
+    .number()
+    .min(0, { message: '총 키 개수는 0 이상의 정수만 입력할 수 있습니다.' }),
   KEYLOCATION: z.string().nonempty('차 키의 보관 위치를 입력해 주세요.'),
   IMGLIST: z.any(),
 });
@@ -83,8 +77,6 @@ const CompQCDetail: React.FC = () => {
   if (error) return <p className="px-4">Error: {error.message}</p>;
   if (!fetchedData) return <p className="px-4">No data</p>;
 
-  console.log(fetchedData);
-
   const entryLocationList = fetchedData.reqCode[0].HR58;
   const apiData: COMPQCDataType[] = [];
 
@@ -97,33 +89,24 @@ const CompQCDetail: React.FC = () => {
   }
 
   const onFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    console.log('File change event triggered');
     if (e.target.files) {
-      console.log('Files selected: ', e.target.files);
       setSelectedFiles(Array.from(e.target.files));
-      console.log('Selected files: ', selectedFiles);
     }
   };
 
   const onCompQCFormSubmit = async (data: CompQCSchemaType) => {
     const formData = new FormData();
 
-    formData.append('MILEAGE', data.MILEAGE);
+    formData.append('MILEAGE', data.MILEAGE.toString());
     formData.append('ENTRYLOCATION', data.ENTRYLOCATION);
     formData.append('DETAILLOCATION', data.DETAILLOCATION || '');
-    formData.append('KEYQUANT', data.KEYQUANT);
-    formData.append('KEYTOTAL', data.KEYTOTAL);
+    formData.append('KEYQUANT', data.KEYQUANT.toString());
+    formData.append('KEYTOTAL', data.KEYTOTAL.toString());
     formData.append('KEYLOCATION', data.KEYLOCATION);
 
     selectedFiles.forEach((image) => {
       formData.append('IMGLIST', image);
     });
-
-    console.log(data);
-    console.log(data.IMGLIST);
-    console.log(typeof data.IMGLIST);
-
-    console.log('FormData IMGLIST: ', formData.getAll('IMGLIST'));
 
     try {
       const response = await fetch(
@@ -137,16 +120,12 @@ const CompQCDetail: React.FC = () => {
         throw new Error('Network response was not ok');
       }
 
-      console.log('Request completed');
       const result = await response.json();
-
-      console.log('Success:', result);
       showSuccessToast('완료되었습니다.');
 
       revalidate();
       router.push('/compqc');
     } catch (error) {
-      console.error('Fetch error:', error);
       showErrorToast('요청에 실패하였습니다.');
     }
   };
@@ -180,10 +159,27 @@ const CompQCDetail: React.FC = () => {
                 label="주행 거리 (km)"
                 required
               >
-                <Input
-                  type="number"
-                  placeholder="주행거리를 입력해주세요."
-                  className="h-10"
+                <Controller
+                  name="MILEAGE"
+                  control={compQCForm.control}
+                  render={({ field, fieldState }) => (
+                    <>
+                      <Input
+                        type="number"
+                        placeholder="주행거리를 입력해주세요."
+                        className="h-10"
+                        value={field.value}
+                        onChange={(e) =>
+                          field.onChange(parseInt(e.target.value, 10))
+                        }
+                      />
+                      {fieldState.error && (
+                        <p className="text-red-500 text-sm">
+                          {fieldState.error.message}
+                        </p>
+                      )}
+                    </>
+                  )}
                 />
               </FormElement>
               <FormElement
@@ -195,21 +191,31 @@ const CompQCDetail: React.FC = () => {
                 <Controller
                   name="ENTRYLOCATION"
                   control={compQCForm.control}
-                  render={({ field }) => (
-                    <Select onValueChange={field.onChange} value={field.value}>
-                      <SelectTrigger className="w-full">
-                        <SelectValue placeholder="차량 입고 위치를 선택해 주세요." />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectGroup>
-                          {entryLocationList.map((item) => (
-                            <SelectItem key={item} value={item}>
-                              {item}
-                            </SelectItem>
-                          ))}
-                        </SelectGroup>
-                      </SelectContent>
-                    </Select>
+                  render={({ field, fieldState }) => (
+                    <>
+                      <Select
+                        onValueChange={field.onChange}
+                        value={field.value}
+                      >
+                        <SelectTrigger className="w-full">
+                          <SelectValue placeholder="차량 입고 위치를 선택해 주세요." />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectGroup>
+                            {entryLocationList.map((item) => (
+                              <SelectItem key={item} value={item}>
+                                {item}
+                              </SelectItem>
+                            ))}
+                          </SelectGroup>
+                        </SelectContent>
+                      </Select>
+                      {fieldState.error && (
+                        <p className="text-red-500 text-sm">
+                          {fieldState.error.message}
+                        </p>
+                      )}
+                    </>
                   )}
                 />
               </FormElement>
@@ -227,10 +233,27 @@ const CompQCDetail: React.FC = () => {
                   label="차 키 보유 수량"
                   required
                 >
-                  <Input
-                    type="number"
-                    placeholder="보유 수량"
-                    className="h-10"
+                  <Controller
+                    name="KEYQUANT"
+                    control={compQCForm.control}
+                    render={({ field, fieldState }) => (
+                      <>
+                        <Input
+                          type="number"
+                          placeholder="보유 수량"
+                          className="h-10"
+                          value={field.value}
+                          onChange={(e) =>
+                            field.onChange(parseInt(e.target.value, 10))
+                          }
+                        />
+                        {fieldState.error && (
+                          <p className="text-red-500 text-sm">
+                            {fieldState.error.message}
+                          </p>
+                        )}
+                      </>
+                    )}
                   />
                 </FormElement>
                 <FormElement
@@ -239,7 +262,28 @@ const CompQCDetail: React.FC = () => {
                   label="총 수량"
                   required
                 >
-                  <Input type="number" placeholder="총 수량" className="h-10" />
+                  <Controller
+                    name="KEYTOTAL"
+                    control={compQCForm.control}
+                    render={({ field, fieldState }) => (
+                      <>
+                        <Input
+                          type="number"
+                          placeholder="총 수량"
+                          className="h-10"
+                          value={field.value}
+                          onChange={(e) =>
+                            field.onChange(parseInt(e.target.value, 10))
+                          }
+                        />
+                        {fieldState.error && (
+                          <p className="text-red-500 text-sm">
+                            {fieldState.error.message}
+                          </p>
+                        )}
+                      </>
+                    )}
+                  />
                 </FormElement>
               </div>
               <FormElement
