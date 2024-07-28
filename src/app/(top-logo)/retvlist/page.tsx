@@ -163,13 +163,13 @@ const Retvlist: React.FC = () => {
               </TableCell>
             </TableRow>
           ))}
-          {(filteredData.length === 0 || !filteredData) && (
-            <div className={'w-screen h-40 flex items-center text-center'}>
-              조건에 해당하는 데이터가 없습니다.
-            </div>
-          )}
         </TableBody>
       </Table>
+      {(filteredData.length === 0 || !filteredData) && (
+        <div className={'w-screen h-40 flex items-center text-center'}>
+          조건에 해당하는 데이터가 없습니다.
+        </div>
+      )}
       <div className="flex fixed bottom-4 left-0 w-full px-4">
         <Button className="w-full h-12 rounded-lgs" onClick={handleDetailClick}>
           상세 조회
