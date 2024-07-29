@@ -42,7 +42,11 @@ function useFetch<T>(
         const finalUrl = urlWithParams.toString();
         const fetchOptions: RequestInit = {
           method: options?.method || 'GET',
-          headers: options?.headers,
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${localStorage.getItem('accessToken') ? localStorage.getItem('accessToken') : ' '}`,
+            ...options?.headers,
+          },
           body: options?.body ? JSON.stringify(options.body) : undefined,
           credentials: 'include',
         };
