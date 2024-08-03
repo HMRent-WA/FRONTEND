@@ -45,8 +45,6 @@ const Retvlist: React.FC = () => {
   if (error) return <p className="px-4">Error: {error.message}</p>;
   if (!response) return <p className="px-4">No data</p>;
 
-  console.log(response);
-
   const retvdata: any[] = [];
   handleResponse(response, retvdata);
 
@@ -58,11 +56,14 @@ const Retvlist: React.FC = () => {
     setSelectedValue(value);
   };
 
-  console.log(retvdata);
+  console.log('전체 데이터 -> ', retvdata);
 
   const handleRowClick = (e: React.MouseEvent<HTMLTableRowElement>) => {
     const assetno = e.currentTarget.getAttribute('data-assetno');
-    const data = retvdata.find((data) => data.ASSETNO === assetno);
+    const rqdate = e.currentTarget.getAttribute('data-rqdate');
+    const data = retvdata.find(
+      (data) => data.ASSETNO === assetno && data.RQDATE === rqdate
+    );
     setSelectedASSETNO(data?.ASSETNO || '');
     setSelectedRQDATE(data?.RQDATE || '');
   };
@@ -81,6 +82,7 @@ const Retvlist: React.FC = () => {
     const year = dateString.substring(0, 4);
     const month = dateString.substring(4, 6);
     const day = dateString.substring(6, 8);
+
     return new Date(`${year}-${month}-${day}`);
   };
 
@@ -117,6 +119,8 @@ const Retvlist: React.FC = () => {
     if (!isWithinDateRange(data.RQDATE, dateRange)) return false;
     return true;
   });
+
+  console.log('필터된 데이터 -> ', filteredData);
 
   return (
     <article className="relative">
@@ -158,6 +162,7 @@ const Retvlist: React.FC = () => {
               <TableRow
                 key={data.ASSETNO + idx}
                 data-assetno={data.ASSETNO}
+                data-rqdate={data.RQDATE}
                 onClick={handleRowClick}
                 className={
                   data.ASSETNO === selectedASSETNO ? 'text-primary/80' : ''
