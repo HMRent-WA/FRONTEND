@@ -1,7 +1,7 @@
 'use client';
 
-import React, { useState } from 'react';
-import { z } from 'zod';
+import React, { useState, useEffect } from 'react';
+import { z, ZodSchema } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm, Controller } from 'react-hook-form';
 import FormElement from '@/components/form/form-element';
@@ -37,33 +37,35 @@ import LoadingPage from '@/components/loading-page';
 import { LoadingModal } from '@/components/modal/loading-modal';
 import { FormMessage } from '@/components/ui/form';
 
-const CompQCSchema = z.object({
+// 기본 스키마 정의
+const CompQCSchemaBase = z.object({
   MILEAGE: z.string().refine((val) => !isNaN(Number(val)), {
     message: '주행 거리는 0 이상의 정수만 입력할 수 있습니다.',
   }),
   ENTRYLOCATION: z.string().nonempty('차량 입고 위치를 선택해 주세요.'),
   DETAILLOCATION: z.string().optional(),
+  KEYLOCATION: z.string().nonempty('차 키의 보관 위치를 입력해 주세요.'),
+  IMGLIST: z.any(),
+});
+
+// 신차에 대한 추가 스키마 정의
+const CompQCSchemaNew = CompQCSchemaBase.extend({
   KEYQUANT: z.string().refine((val) => !isNaN(Number(val)), {
     message: '키 개수는 0 이상의 정수만 입력할 수 있습니다.',
   }),
   KEYTOTAL: z.string().refine((val) => !isNaN(Number(val)), {
     message: '총 키 개수는 0 이상의 정수만 입력할 수 있습니다.',
   }),
-  KEYLOCATION: z.string().nonempty('차 키의 보관 위치를 입력해 주세요.'),
-  IMGLIST: z.any(),
 });
 
-type CompQCSchemaType = z.infer<typeof CompQCSchema>;
+type CompQCSchemaType = z.infer<typeof CompQCSchemaBase> &
+  Partial<z.infer<typeof CompQCSchemaNew>>;
 
 const CompQCDetail: React.FC = () => {
   const params = useParams();
   const router = useRouter();
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
-
-  const compQCForm = useForm<CompQCSchemaType>({
-    resolver: zodResolver(CompQCSchema),
-    mode: 'onChange',
-  });
+  const [schema, setSchema] = useState<ZodSchema>(CompQCSchemaBase);
 
   const {
     data: fetchedData,
@@ -73,6 +75,27 @@ const CompQCDetail: React.FC = () => {
   } = useFetch<COMPQCDataResponse>(
     `${process.env.NEXT_PUBLIC_API_URL}/CompQC/D`
   );
+
+  // GUBUN 값에 따라 스키마를 동적으로 변경
+  useEffect(() => {
+    if (fetchedData) {
+      const apiData: COMPQCDataType[] = [];
+      handleResponse(fetchedData, apiData);
+      const selectedData = apiData.find(
+        (data) => data.ASSETNO === params.ASSETNO
+      );
+      if (selectedData && selectedData.GUBUN === '신차') {
+        setSchema(CompQCSchemaNew);
+      } else {
+        setSchema(CompQCSchemaBase);
+      }
+    }
+  }, [fetchedData, params.ASSETNO]);
+
+  const compQCForm = useForm<CompQCSchemaType>({
+    resolver: zodResolver(schema),
+    mode: 'onChange',
+  });
 
   if (loading) return <LoadingPage />;
   if (error) return <p className="px-4">Error: {error.message}</p>;
@@ -101,8 +124,8 @@ const CompQCDetail: React.FC = () => {
     formData.append('MILEAGE', data.MILEAGE);
     formData.append('ENTRYLOCATION', data.ENTRYLOCATION);
     formData.append('DETAILLOCATION', data.DETAILLOCATION || '');
-    formData.append('KEYQUANT', data.KEYQUANT);
-    formData.append('KEYTOTAL', data.KEYTOTAL);
+    formData.append('KEYQUANT', data.KEYQUANT || '');
+    formData.append('KEYTOTAL', data.KEYTOTAL || '');
     formData.append('KEYLOCATION', data.KEYLOCATION);
 
     selectedFiles.forEach((image) => {
@@ -208,36 +231,38 @@ const CompQCDetail: React.FC = () => {
               >
                 <Input placeholder="" className="h-10" />
               </FormElement>
-              <div className="w-full flex gap-4">
-                <FormElement
-                  formControl={compQCForm.control}
-                  name="KEYQUANT"
-                  label="차 키 보유 수량"
-                  required
-                  description="숫자만 입력해주세요."
-                >
-                  <Input
-                    placeholder="보유 수량"
-                    className="h-10"
-                    inputMode="numeric"
-                    pattern="[0-9]*"
-                  />
-                </FormElement>
-                <FormElement
-                  formControl={compQCForm.control}
-                  name="KEYTOTAL"
-                  label="총 수량"
-                  required
-                  description="숫자만 입력해주세요."
-                >
-                  <Input
-                    placeholder="총 수량"
-                    className="h-10"
-                    inputMode="numeric"
-                    pattern="[0-9]*"
-                  />
-                </FormElement>
-              </div>
+              {selectedData.GUBUN === '신차' && (
+                <div className="w-full flex gap-4">
+                  <FormElement
+                    formControl={compQCForm.control}
+                    name="KEYQUANT"
+                    label="차 키 보유 수량"
+                    required
+                    description="숫자만 입력해주세요."
+                  >
+                    <Input
+                      placeholder="보유 수량"
+                      className="h-10"
+                      inputMode="numeric"
+                      pattern="[0-9]*"
+                    />
+                  </FormElement>
+                  <FormElement
+                    formControl={compQCForm.control}
+                    name="KEYTOTAL"
+                    label="총 수량"
+                    required
+                    description="숫자만 입력해주세요."
+                  >
+                    <Input
+                      placeholder="총 수량"
+                      className="h-10"
+                      inputMode="numeric"
+                      pattern="[0-9]*"
+                    />
+                  </FormElement>
+                </div>
+              )}
               <FormElement
                 formControl={compQCForm.control}
                 name="KEYLOCATION"
