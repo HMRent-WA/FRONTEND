@@ -15,6 +15,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover';
+import { useRetvDateRange } from '@/providers/retv-date-range-provider';
 
 interface DatePickerWithRangeProps
   extends Omit<React.HTMLAttributes<HTMLDivElement>, 'onChange'> {
@@ -25,13 +26,10 @@ export function DatePickerWithRange({
   className,
   onChange,
 }: DatePickerWithRangeProps) {
-  const [date, setDate] = React.useState<DateRange | undefined>({
-    from: new Date(),
-    to: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
-  });
+  const { retvDateRange, setRetvDateRange } = useRetvDateRange(); // 컨텍스트 값 사용
 
   const handleDateChange = (date: DateRange | undefined) => {
-    setDate(date);
+    setRetvDateRange(date);
     onChange(date);
   };
 
@@ -44,20 +42,22 @@ export function DatePickerWithRange({
             variant={'outline'}
             className={cn(
               'w-full justify-start text-left font-normal',
-              !date && 'text-muted-foreground'
+              !retvDateRange && 'text-muted-foreground'
             )}
           >
             <CalendarIcon className="mr-2 h-4 w-4" />
             <span className="pl-2 pr-4">요청 일자</span>
-            {date?.from ? (
-              date.to ? (
+            {retvDateRange?.from ? (
+              retvDateRange.to ? (
                 <div className="w-full flex justify-around items-center">
-                  <span>{format(date.from, 'PPP', { locale: ko })}</span>
+                  <span>
+                    {format(retvDateRange.from, 'PPP', { locale: ko })}
+                  </span>
                   <span>-</span>
-                  <span>{format(date.to, 'PPP', { locale: ko })}</span>
+                  <span>{format(retvDateRange.to, 'PPP', { locale: ko })}</span>
                 </div>
               ) : (
-                format(date.from, 'PPP', { locale: ko })
+                format(retvDateRange.from, 'PPP', { locale: ko })
               )
             ) : (
               <span className="pl-2">날짜 선택</span>
@@ -68,8 +68,8 @@ export function DatePickerWithRange({
           <Calendar
             initialFocus
             mode="range"
-            defaultMonth={date?.from}
-            selected={date}
+            defaultMonth={retvDateRange?.from}
+            selected={retvDateRange}
             onSelect={handleDateChange}
             numberOfMonths={1}
             locale={dayPickerKo}

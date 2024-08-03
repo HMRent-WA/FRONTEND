@@ -15,22 +15,20 @@ import { RadioGroupButton } from '@/components/button/radio-group-button';
 import { useRouter } from 'next/navigation';
 import { DatePickerWithRange } from '@/components/date-picker-with-range';
 import useFetch from '@/hooks/use-fetch';
-import { DateRange } from 'react-day-picker'; // DateRange 타입을 가져옴
+import { DateRange } from 'react-day-picker';
 import { RetvDataResponse } from '@/model/types';
 import LoadingPage from '@/components/loading-page';
 import { handleResponse } from '@/model/types';
+import { useRetvDateRange } from '@/providers/retv-date-range-provider';
 
 const Retvlist: React.FC = () => {
   const router = useRouter();
+  const { retvDateRange, setRetvDateRange } = useRetvDateRange(); // 컨텍스트 값 사용
 
   const [search, setSearch] = useState('');
   const [selectedValue, setSelectedValue] = useState('전체');
   const [selectedASSETNO, setSelectedASSETNO] = useState<string>('');
   const [selectedRQDATE, setSelectedRQDATE] = useState<string>('');
-  const [dateRange, setDateRange] = useState<DateRange | undefined>({
-    from: new Date(),
-    to: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
-  });
 
   const {
     data: response,
@@ -56,7 +54,7 @@ const Retvlist: React.FC = () => {
     setSelectedValue(value);
   };
 
-  // console.log('전체 데이터 -> ', retvdata);
+  // console.log('retvlist -> ', retvdata);
 
   const handleRowClick = (e: React.MouseEvent<HTMLTableRowElement>) => {
     const assetno = e.currentTarget.getAttribute('data-assetno');
@@ -74,15 +72,10 @@ const Retvlist: React.FC = () => {
     }
   };
 
-  const handleDateChange = (range: DateRange | undefined) => {
-    setDateRange(range);
-  };
-
   const parseDate = (dateString: string): Date => {
     const year = dateString.substring(0, 4);
     const month = dateString.substring(4, 6);
     const day = dateString.substring(6, 8);
-
     return new Date(`${year}-${month}-${day}`);
   };
 
@@ -116,7 +109,7 @@ const Retvlist: React.FC = () => {
   const filteredData = retvdata.filter((data) => {
     if (search && !data.CARNO.includes(search)) return false;
     if (selectedValue !== '전체' && data.STATUS !== selectedValue) return false;
-    if (!isWithinDateRange(data.RQDATE, dateRange)) return false;
+    if (!isWithinDateRange(data.RQDATE, retvDateRange)) return false; // 컨텍스트 값 사용
     return true;
   });
 
@@ -134,7 +127,8 @@ const Retvlist: React.FC = () => {
           selectedValue={selectedValue}
           buttonClassName="font-medium"
         />
-        <DatePickerWithRange onChange={handleDateChange} />
+        <DatePickerWithRange onChange={setRetvDateRange} className="" />{' '}
+        {/* 컨텍스트 값 사용 */}
         <Input
           placeholder="차량번호로 검색하기"
           name="search"
