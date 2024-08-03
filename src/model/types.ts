@@ -43,7 +43,13 @@ export type RetvDataType = {
   RRSON: string;
   RRSONDTL: string;
   STATUS: string;
-  RTLMTHD?: string;
+  RTLMTHD: string;
+  MIDTERMDAT: string;
+  RETRIEVLOC: string;
+  TRANSPCOMP: string;
+  TRANSPCOST: string;
+  BIGO: string;
+  SEQNO: string;
 };
 
 // 제네릭 응답 타입 정의

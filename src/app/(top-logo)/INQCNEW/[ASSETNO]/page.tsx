@@ -166,6 +166,9 @@ const INQCNEWDetail: React.FC = () => {
         {
           method: 'POST',
           body: formData,
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+          },
         }
       );
 
@@ -180,7 +183,7 @@ const INQCNEWDetail: React.FC = () => {
       showSuccessToast('완료되었습니다.');
 
       revalidate();
-      router.push('/INQCNEW');
+      router.replace('/INQCNEW');
     } catch (error) {
       console.error('Fetch error:', error);
       showErrorToast('요청에 실패하였습니다.');

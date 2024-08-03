@@ -49,7 +49,7 @@ const Resvlist: React.FC = () => {
 
   console.log(response);
 
-  const resvlistData: any[] = [];
+  const resvlistData: ResvlistDataType[] = [];
 
   handleResponse(response, resvlistData);
 

@@ -138,6 +138,9 @@ const CompQCDetail: React.FC = () => {
         {
           method: 'POST',
           body: formData,
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+          },
         }
       );
       if (!response.ok) {
@@ -148,7 +151,7 @@ const CompQCDetail: React.FC = () => {
       showSuccessToast('완료되었습니다.');
 
       revalidate();
-      router.push('/compqc');
+      router.replace('/compqc');
     } catch (error) {
       showErrorToast('요청에 실패하였습니다.');
     }

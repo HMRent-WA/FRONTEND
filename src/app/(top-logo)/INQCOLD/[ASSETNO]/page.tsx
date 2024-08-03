@@ -35,7 +35,6 @@ import {
 } from '@/model/types';
 import LoadingPage from '@/components/loading-page';
 import { LoadingModal } from '@/components/modal/loading-modal';
-import { FormMessage } from '@/components/ui/form';
 
 const INQCOLDSchema = z.object({
   MILEAGE: z.string().refine((val) => !isNaN(Number(val)), {
@@ -165,6 +164,9 @@ const INQCOLDDetail: React.FC = () => {
         {
           method: 'POST',
           body: formData,
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+          },
         }
       );
 
@@ -179,7 +181,7 @@ const INQCOLDDetail: React.FC = () => {
       showSuccessToast('완료되었습니다.');
 
       revalidate();
-      router.push('/INQCOLD');
+      router.replace('/INQCOLD');
     } catch (error) {
       console.error('Fetch error:', error);
       showErrorToast('요청에 실패하였습니다.');
