@@ -27,9 +27,9 @@ const Retvlist: React.FC = () => {
   const [selectedValue, setSelectedValue] = useState('전체');
   const [selectedASSETNO, setSelectedASSETNO] = useState<string>('');
   const [selectedRQDATE, setSelectedRQDATE] = useState<string>('');
-  const [dateRange, setDateRange] = useState<DateRange | undefined>({
+  const [dateRange, setDateRange] = useState({
     from: new Date(),
-    to: new Date(),
+    to: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
   });
 
   const {
@@ -97,6 +97,9 @@ const Retvlist: React.FC = () => {
     console.log('date -> ', date);
     console.log('from -> ', fromDate);
     console.log('to -> ', toDate);
+    console.log('str from -> ', datePickerRange.from.toDateString());
+    console.log('str to -> ', datePickerRange.to.toDateString());
+
     return date >= fromDate && date <= toDate;
   };
 
