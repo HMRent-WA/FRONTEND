@@ -44,7 +44,7 @@ const RetvlistDetail: React.FC = () => {
     return <p className="px-4">해당 데이터가 없습니다.</p>;
   }
 
-  console.log(selectedData);
+  // console.log(selectedData);
 
   // ASSETNO: 'AST2020060043';
   // CARNO: '01호2685';

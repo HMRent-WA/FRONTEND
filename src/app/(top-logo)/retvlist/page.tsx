@@ -56,7 +56,7 @@ const Retvlist: React.FC = () => {
     setSelectedValue(value);
   };
 
-  console.log('전체 데이터 -> ', retvdata);
+  // console.log('전체 데이터 -> ', retvdata);
 
   const handleRowClick = (e: React.MouseEvent<HTMLTableRowElement>) => {
     const assetno = e.currentTarget.getAttribute('data-assetno');
@@ -120,7 +120,7 @@ const Retvlist: React.FC = () => {
     return true;
   });
 
-  console.log('필터된 데이터 -> ', filteredData);
+  // console.log('필터된 데이터 -> ', filteredData);
 
   return (
     <article className="relative">
