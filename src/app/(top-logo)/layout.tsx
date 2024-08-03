@@ -1,11 +1,10 @@
 'use client';
 
 import React, { useEffect } from 'react';
-import Image from 'next/image';
-import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { showErrorToast } from '@/lib/toast';
 import LoadingPage from '@/components/loading-page';
+import { Header } from '@/components/header';
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
   const router = useRouter();
@@ -46,18 +45,9 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
   }
 
   return (
-    <div className="w-full h-full">
-      <header className="flex justify-center">
-        <Link href="/">
-          <Image
-            src="/assets/png/logo.png"
-            alt="logo"
-            width={200}
-            height={200}
-          />
-        </Link>
-      </header>
-      <section className="">{children}</section>
+    <div className="w-full h-full relative">
+      <Header />
+      <section className="mt-[3.75rem]">{children}</section>
     </div>
   );
 };
