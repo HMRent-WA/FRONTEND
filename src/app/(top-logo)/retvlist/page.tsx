@@ -77,22 +77,26 @@ const Retvlist: React.FC = () => {
     setDateRange(range);
   };
 
-  const parseDate = (dateString: string): Date => {
-    const year = dateString.substring(0, 4);
-    const month = dateString.substring(4, 6);
-    const day = dateString.substring(6, 8);
-    console.log(new Date(`${year}-${month}-${day}`));
-    return new Date(`${year}-${month}-${day}`);
-  };
+  // const parseDate = (dateString: string): Date => {
+  //   const year = dateString.substring(0, 4);
+  //   const month = dateString.substring(4, 6);
+  //   const day = dateString.substring(6, 8);
+  //   console.log(new Date(`${year}-${month}-${day}`));
+  //   return new Date(`${year}-${month}-${day}`);
+  // };
 
   const isWithinDateRange = (
     dateString: string,
     datePickerRange: DateRange | undefined
   ) => {
-    const date = parseDate(dateString).toDateString(); // 날짜 문자열로 변환하여 연월일만 비교
+    // const date = parseDate(dateString).toDateString(); // 날짜 문자열로 변환하여 연월일만 비교
+    const date = Number(dateString); // 날짜 문자열로 변환하여 연월일만 비교
     if (!datePickerRange?.from || !datePickerRange?.to) return true;
-    const fromDate = datePickerRange.from.toDateString();
-    const toDate = datePickerRange.to.toDateString();
+    const fromDate = Number(datePickerRange.from.toDateString());
+    const toDate = Number(datePickerRange.to.toDateString());
+    console.log('date -> ', date);
+    console.log('from -> ', fromDate);
+    console.log('to -> ', toDate);
     return date >= fromDate && date <= toDate;
   };
 
