@@ -27,7 +27,7 @@ export function DatePickerWithRange({
 }: DatePickerWithRangeProps) {
   const [date, setDate] = React.useState<DateRange | undefined>({
     from: new Date(),
-    to: new Date(),
+    to: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
   });
 
   const handleDateChange = (date: DateRange | undefined) => {
