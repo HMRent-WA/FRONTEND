@@ -15,7 +15,7 @@ import { RadioGroupButton } from '@/components/button/radio-group-button';
 import { useRouter } from 'next/navigation';
 import { DatePickerWithRange } from '@/components/date-picker-with-range';
 import useFetch from '@/hooks/use-fetch';
-import { DateRange } from 'react-day-picker';
+import { DateRange } from 'react-day-picker'; // DateRange 타입을 가져옴
 import { RetvDataResponse } from '@/model/types';
 import LoadingPage from '@/components/loading-page';
 import { handleResponse } from '@/model/types';
@@ -27,7 +27,7 @@ const Retvlist: React.FC = () => {
   const [selectedValue, setSelectedValue] = useState('전체');
   const [selectedASSETNO, setSelectedASSETNO] = useState<string>('');
   const [selectedRQDATE, setSelectedRQDATE] = useState<string>('');
-  const [dateRange, setDateRange] = useState({
+  const [dateRange, setDateRange] = useState<DateRange | undefined>({
     from: new Date(),
     to: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
   });
@@ -77,30 +77,38 @@ const Retvlist: React.FC = () => {
     setDateRange(range);
   };
 
-  // const parseDate = (dateString: string): Date => {
-  //   const year = dateString.substring(0, 4);
-  //   const month = dateString.substring(4, 6);
-  //   const day = dateString.substring(6, 8);
-  //   console.log(new Date(`${year}-${month}-${day}`));
-  //   return new Date(`${year}-${month}-${day}`);
-  // };
+  const parseDate = (dateString: string): Date => {
+    const year = dateString.substring(0, 4);
+    const month = dateString.substring(4, 6);
+    const day = dateString.substring(6, 8);
+    return new Date(`${year}-${month}-${day}`);
+  };
 
   const isWithinDateRange = (
     dateString: string,
     datePickerRange: DateRange | undefined
   ) => {
-    // const date = parseDate(dateString).toDateString(); // 날짜 문자열로 변환하여 연월일만 비교
-    const date = Number(dateString); // 날짜 문자열로 변환하여 연월일만 비교
+    const date = parseDate(dateString);
     if (!datePickerRange?.from || !datePickerRange?.to) return true;
-    const fromDate = Number(datePickerRange.from.toDateString());
-    const toDate = Number(datePickerRange.to.toDateString());
-    console.log('date -> ', date);
-    console.log('from -> ', fromDate);
-    console.log('to -> ', toDate);
-    console.log('str from -> ', datePickerRange.from.toDateString());
-    console.log('str to -> ', datePickerRange.to.toDateString());
 
-    return date >= fromDate && date <= toDate;
+    // 연월일만 비교하기 위해 시간을 제외한 새로운 날짜 객체 생성
+    const fromDate = new Date(
+      datePickerRange.from.getFullYear(),
+      datePickerRange.from.getMonth(),
+      datePickerRange.from.getDate()
+    );
+    const toDate = new Date(
+      datePickerRange.to.getFullYear(),
+      datePickerRange.to.getMonth(),
+      datePickerRange.to.getDate()
+    );
+    const compareDate = new Date(
+      date.getFullYear(),
+      date.getMonth(),
+      date.getDate()
+    );
+
+    return compareDate >= fromDate && compareDate <= toDate;
   };
 
   const filteredData = retvdata.filter((data) => {
@@ -109,10 +117,6 @@ const Retvlist: React.FC = () => {
     if (!isWithinDateRange(data.RQDATE, dateRange)) return false;
     return true;
   });
-
-  console.log('필터한 데이터 -> ', filteredData);
-  console.log('dateRange -> ', dateRange);
-  console.log('dateRange -> ', dateRange);
 
   return (
     <article className="relative">
