@@ -1,8 +1,15 @@
 // 각각의 데이터 타입 정의
 export type COMPQCDataType = {
   ASSETNO: string;
-  GUBUN: '신차' | '재렌트';
   CARNO: string;
+  CHADAENO: string;
+  DETAILLOCATION: string;
+  ENTRYLOCATION: string;
+  GUBUN: '신차' | '재렌트';
+  KEYLOCATION: string;
+  KEYQUANT: number;
+  KEYTOTAL: number;
+  MILEAGE: number;
   MODEL: string;
   STATUS: '상품화' | 'D' | string;
 };
