@@ -102,7 +102,11 @@ const CompQC: React.FC = () => {
             <TableHead className="text-center rounded-tl-lg px-1 pl-2">
               구분
             </TableHead>
-            <TableHead className="text-center px-1">차량번호</TableHead>
+            <TableHead className="text-center px-1">
+              차량번호
+              <br />
+              차대번호
+            </TableHead>
             <TableHead className="text-center px-1">모델</TableHead>
             <TableHead className="text-center rounded-tr-lg px-1 pr-2">
               상태
@@ -122,7 +126,11 @@ const CompQC: React.FC = () => {
               <TableCell className="font-medium text-center px-1 pl-2">
                 {data.GUBUN}
               </TableCell>
-              <TableCell className="text-center px-1">{data.CARNO}</TableCell>
+              <TableCell className="text-center px-1">
+                {data.CARNO}
+                <br />
+                {data.CHADAENO}
+              </TableCell>
               <TableCell className="text-center px-1">{data.MODEL}</TableCell>
               <TableCell className="text-center px-1 pr-2">
                 {data.STATUS}
