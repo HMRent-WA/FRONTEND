@@ -159,9 +159,9 @@ const Retvlist: React.FC = () => {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {filteredData.map((data, idx) => (
+            {filteredData.map((data) => (
               <TableRow
-                key={data.ASSETNO + idx}
+                key={data.ASSETNO + data.RQDATE}
                 data-assetno={data.ASSETNO}
                 data-rqdate={data.RQDATE}
                 onClick={handleRowClick}
