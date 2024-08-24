@@ -77,6 +77,8 @@ const CompQC: React.FC = () => {
     );
   });
 
+  console.log('COMPQC 필터 데이터', filteredData);
+
   return (
     <article className="px-4 relative">
       <h1 className="text-center font-medium text-xl my-8 text-[#1B1B1B]/90">
@@ -114,9 +116,10 @@ const CompQC: React.FC = () => {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {filteredData.map((data) => (
+          {filteredData.map((data, index) => (
             <TableRow
-              key={data.ASSETNO}
+              // key={data.ASSETNO}
+              key={index}
               data-assetno={data.ASSETNO}
               onClick={handleRowClick}
               className={
