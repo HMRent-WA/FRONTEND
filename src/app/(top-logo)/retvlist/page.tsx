@@ -62,8 +62,15 @@ const Retvlist: React.FC = () => {
     const data = retvdata.find(
       (data) => data.ASSETNO === assetno && data.RQDATE === rqdate
     );
-    setSelectedASSETNO(data?.ASSETNO || '');
-    setSelectedRQDATE(data?.RQDATE || '');
+
+    if (!data) return;
+
+    if (selectedASSETNO === data.ASSETNO && selectedRQDATE === data.RQDATE) {
+      router.push(`/retvlist/${data.ASSETNO}/${data.RQDATE}`);
+    } else {
+      setSelectedASSETNO(data.ASSETNO);
+      setSelectedRQDATE(data.RQDATE);
+    }
   };
 
   const handleDetailClick = (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -181,7 +188,7 @@ const Retvlist: React.FC = () => {
           조건에 해당하는 데이터가 없습니다.
         </div>
       )}
-      <div className="flex fixed bottom-4 left-0 w-full px-4">
+      <div className="flex fixed bottom-4 left-0 w-full px-4 bg-white z-10">
         <Button className="w-full h-12 rounded-lgs" onClick={handleDetailClick}>
           상세 조회
         </Button>

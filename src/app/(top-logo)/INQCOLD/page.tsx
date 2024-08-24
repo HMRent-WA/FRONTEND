@@ -51,7 +51,11 @@ const INQCOLD: React.FC = () => {
   const handleRowClick = (e: React.MouseEvent<HTMLTableRowElement>) => {
     const assetno = e.currentTarget.getAttribute('data-assetno');
     const data = apiData.find((data) => data.ASSETNO === assetno);
-    setSelectedASSETNO(data?.ASSETNO || '');
+    if (data) {
+      selectedASSETNO === data.ASSETNO
+        ? router.push(`/INQCOLD/${data.ASSETNO}`)
+        : setSelectedASSETNO(data.ASSETNO);
+    }
   };
 
   const handleDetailClick = (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -110,7 +114,7 @@ const INQCOLD: React.FC = () => {
           ))}
         </TableBody>
       </Table>
-      <div className="flex fixed bottom-4 left-0 w-full px-4">
+      <div className="flex fixed bottom-4 left-0 w-full px-4 bg-white z-10">
         <Button
           className="w-full h-12 rounded-lg"
           onClick={handleDetailClick}
