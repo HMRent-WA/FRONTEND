@@ -73,7 +73,7 @@ const CompQC: React.FC = () => {
   const filteredData = apiData.filter((datum) => {
     return (
       (selectedValue === '전체' || datum.GUBUN === selectedValue) &&
-      datum.CARNO.includes(search)
+      (datum.CARNO.includes(search) || datum.CHADAENO.includes(search))
     );
   });
 
@@ -84,7 +84,7 @@ const CompQC: React.FC = () => {
       </h1>
       <div className="flex flex-col my-4 gap-4">
         <Input
-          placeholder="차량번호로 검색하기"
+          placeholder="차량번호 / 차대번호로 검색하기"
           name="search"
           value={search}
           onChange={handleSearch}
