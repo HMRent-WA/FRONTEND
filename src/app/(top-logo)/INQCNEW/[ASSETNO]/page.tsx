@@ -38,9 +38,9 @@ import LoadingPage from '@/components/loading-page';
 import { LoadingModal } from '@/components/modal/loading-modal';
 
 const INQCNEWSchema = z.object({
-  // MILEAGE: z.string().refine((val) => !isNaN(Number(val)), {
-  //   message: '주행 거리는 숫자만 입력할 수 있습니다.',
-  // }),
+  MILEAGE: z.string().refine((val) => !isNaN(Number(val)), {
+    message: '주행 거리는 숫자만 입력할 수 있습니다.',
+  }),
   DEPARTLOCATION: z.string().nonempty('차량 출고 위치를 선택해 주세요.'),
   ENTRYLOCATION: z.string().nonempty('차량 입고 위치를 선택해 주세요.'),
   DETAILLOCATION: z.string().optional(),
@@ -145,7 +145,7 @@ const INQCNEWDetail: React.FC = () => {
     const formData = new FormData();
 
     formData.append('ASSETNO', params.ASSETNO.toString());
-    // formData.append('MILEAGE', data.MILEAGE);
+    formData.append('MILEAGE', data.MILEAGE);
     formData.append('DEPARTLOCATION', data.DEPARTLOCATION);
     formData.append('ENTRYLOCATION', data.ENTRYLOCATION);
     formData.append('DETAILLOCATION', data.DETAILLOCATION || '');
@@ -221,14 +221,14 @@ const INQCNEWDetail: React.FC = () => {
               </div>
             </div>
             <div className="w-full flex flex-col gap-4 mt-6">
-              {/* <FormElement
+              <FormElement
                 formControl={INQCNEWForm.control}
                 name="MILEAGE"
                 label="주행 거리 (km)"
                 required
               >
                 <Input placeholder="" className="h-10" />
-              </FormElement> */}
+              </FormElement>
               <FormElement
                 formControl={INQCNEWForm.control}
                 name="DEPARTLOCATION"
