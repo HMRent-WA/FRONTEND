@@ -311,7 +311,7 @@ const INQCNEWDetail: React.FC = () => {
               )}
             </div>
           </CardContent>
-          <CardFooter className="fixed bottom-0 left-0 w-full p-4">
+          <CardFooter className="fixed bottom-0 left-0 w-full p-4 z-10 bg-white">
             <Button
               className="w-full h-12 rounded-lg"
               type="submit"

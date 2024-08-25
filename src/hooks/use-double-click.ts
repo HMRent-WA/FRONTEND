@@ -165,7 +165,7 @@
 //           ))}
 //         </TableBody>
 //       </Table>
-//       <div className="flex fixed bottom-4 left-0 w-full px-4 bg-white z-10">
+//       <div className="flex fixed bottom-0 left-0 w-full p-4 bg-white z-10">
 //         <Button
 //           className="w-full h-12 rounded-lg"
 //           onClick={handleDetailClick}
