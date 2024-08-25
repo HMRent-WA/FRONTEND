@@ -113,12 +113,15 @@ const Retvlist: React.FC = () => {
     return compareDate >= fromDate && compareDate <= toDate;
   };
 
-  const filteredData = retvdata.filter((data) => {
-    if (search && !data.CARNO.includes(search)) return false;
-    if (selectedValue !== '전체' && data.STATUS !== selectedValue) return false;
-    if (!isWithinDateRange(data.RQDATE, retvDateRange)) return false; // 컨텍스트 값 사용
-    return true;
-  });
+  const filteredData = retvdata
+    .filter((data) => {
+      if (search && !data.CARNO.includes(search)) return false;
+      if (selectedValue !== '전체' && data.STATUS !== selectedValue)
+        return false;
+      if (!isWithinDateRange(data.RQDATE, retvDateRange)) return false; // 컨텍스트 값 사용
+      return true;
+    })
+    .sort((a, b) => a.RQDATE.localeCompare(b.RQDATE));
 
   // console.log('필터된 데이터 -> ', filteredData);
 
