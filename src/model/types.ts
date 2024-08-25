@@ -14,6 +14,14 @@ export type COMPQCDataType = {
   STATUS: '상품화' | 'D' | string;
 };
 
+export type LOCSETDataType = {
+  ASSETNO: string;
+  CARNO: string;
+  GUBUN: '신차' | '재렌트';
+  MODEL: string;
+  STATUS: '정비완료' | string;
+};
+
 export type INQCNEWDataType = {
   COLOR: string;
   ASSETNO: string;
@@ -70,6 +78,7 @@ export type BaseResponseType<T> = {
 
 // 제네릭 응답 타입 정의
 export type COMPQCDataResponse = BaseResponseType<COMPQCDataType>;
+export type LOCSETDataResponse = BaseResponseType<LOCSETDataType>;
 export type INQCNEWDataResponse = BaseResponseType<INQCNEWDataType>;
 export type INQCOLDDataResponse = BaseResponseType<INQCOLDDataType>;
 export type ResvlistDataResponse = BaseResponseType<ResvlistDataType>;
@@ -77,6 +86,7 @@ export type RetvDataResponse = BaseResponseType<RetvDataType>;
 
 export type AllResponses =
   | COMPQCDataResponse
+  | LOCSETDataResponse
   | INQCNEWDataResponse
   | INQCOLDDataResponse
   | ResvlistDataResponse
