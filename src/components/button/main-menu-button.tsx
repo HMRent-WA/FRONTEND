@@ -1,7 +1,9 @@
+'use client';
+
 import React from 'react';
 import { Button, ButtonProps } from '../ui/button';
 import { cn } from '@/lib/utils';
-import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 type MainMenuButtonProps = ButtonProps & {
   href: string;
@@ -9,15 +11,22 @@ type MainMenuButtonProps = ButtonProps & {
 
 const MainMenuButton: React.FC<MainMenuButtonProps> = (props) => {
   const { className, href, children, ...rest } = props;
+  const router = useRouter();
 
   const mainMenuButtonVariants = 'w-full h-24 rounded-2xl text-xl font-medium';
 
+  const handleClick = () => {
+    router.push(href);
+  };
+
   return (
-    <Link href={href} className="w-full">
-      <Button className={cn(mainMenuButtonVariants, className)} {...rest}>
-        {children}
-      </Button>
-    </Link>
+    <Button
+      className={cn(mainMenuButtonVariants, className)}
+      onClick={handleClick}
+      {...rest}
+    >
+      {children}
+    </Button>
   );
 };
 

@@ -20,12 +20,20 @@ export default function Home() {
             </MainMenuButton>
           </div>
         </div>
-        <MainMenuButton
-          className="bg-orange-400 hover:bg-orange-400/80"
-          href={'/compqc'}
-        >
-          상품화 완료 QC
-        </MainMenuButton>
+        <div className="grid grid-cols-4 gap-3">
+          <MainMenuButton
+            className="col-span-3 bg-orange-400 hover:bg-orange-400/80"
+            href={'/compqc'}
+          >
+            상품화 완료 QC
+          </MainMenuButton>
+          <MainMenuButton
+            className="bg-orange-400 hover:bg-orange-400/80"
+            href={'/LOCSET'}
+          >
+            위치변경
+          </MainMenuButton>
+        </div>
         <MainMenuButton className="" href={'/retvlist'}>
           회수 대상 리스트
         </MainMenuButton>

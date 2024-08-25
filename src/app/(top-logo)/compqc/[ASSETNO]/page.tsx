@@ -175,6 +175,10 @@ const CompQCDetail: React.FC = () => {
                 <p>{selectedData.CARNO}</p>
               </div>
               <div className="flex items-center justify-between h-10">
+                <Label className="font-semibold">차대 번호</Label>
+                <p>{selectedData.CHADAENO}</p>
+              </div>
+              <div className="flex items-center justify-between h-10">
                 <Label className="font-semibold">모델명</Label>
                 <p>{selectedData.MODEL}</p>
               </div>
@@ -192,6 +196,7 @@ const CompQCDetail: React.FC = () => {
                   className="h-10"
                   inputMode="numeric"
                   pattern="[0-9]*"
+                  defaultValue={selectedData.MILEAGE}
                 />
               </FormElement>
               <FormElement
@@ -248,6 +253,7 @@ const CompQCDetail: React.FC = () => {
                       className="h-10"
                       inputMode="numeric"
                       pattern="[0-9]*"
+                      defaultValue={selectedData.KEYQUANT}
                     />
                   </FormElement>
                   <FormElement
@@ -262,6 +268,7 @@ const CompQCDetail: React.FC = () => {
                       className="h-10"
                       inputMode="numeric"
                       pattern="[0-9]*"
+                      defaultValue={selectedData.KEYTOTAL}
                     />
                   </FormElement>
                 </div>
@@ -272,7 +279,11 @@ const CompQCDetail: React.FC = () => {
                 label="차 키 보관 위치"
                 required
               >
-                <Input placeholder="차 키의 보관 위치" className="h-10" />
+                <Input
+                  placeholder="차 키의 보관 위치"
+                  className="h-10"
+                  defaultValue={selectedData.KEYLOCATION}
+                />
               </FormElement>
               <FormElement
                 formControl={compQCForm.control}
