@@ -148,12 +148,17 @@ const Retvlist: React.FC = () => {
           <TableHeader>
             <TableRow className="bg-primary/35 hover:bg-primary/20">
               <TableHead className="w-[4.375rem] text-center rounded-tl-lg px-1">
-                차량 번호
+                요청 일시
               </TableHead>
-              <TableHead className="text-center px-1">모델</TableHead>
-              <TableHead className="text-center px-1">고객</TableHead>
-              <TableHead className="text-center px-1">회수사유</TableHead>
+              <TableHead className="text-center px-1">차량 번호</TableHead>
+              <TableHead className="text-center px-1">
+                고객
+                <br />
+                모델
+              </TableHead>
               <TableHead className="w-[4.375rem] text-center rounded-tr-lg px-1">
+                회수사유
+                <br />
                 진행상태
               </TableHead>
             </TableRow>
@@ -170,12 +175,17 @@ const Retvlist: React.FC = () => {
                 }
               >
                 <TableCell className="font-medium text-center px-1">
-                  {data.CARNO}
+                  {data.RQDATE}
                 </TableCell>
-                <TableCell className="text-center px-1">{data.MODEL}</TableCell>
-                <TableCell className="text-center px-1">{data.CNAME}</TableCell>
-                <TableCell className="text-center px-1">{data.RRSON}</TableCell>
+                <TableCell className="text-center px-1">{data.CARNO}</TableCell>
+                <TableCell className="text-center px-1">
+                  {data.CNAME}
+                  <br />
+                  {data.MODEL}
+                </TableCell>
                 <TableCell className="w-[4.375rem] text-center px-1">
+                  {data.RRSON}
+                  <br />
                   {data.STATUS}
                 </TableCell>
               </TableRow>
@@ -188,8 +198,8 @@ const Retvlist: React.FC = () => {
           조건에 해당하는 데이터가 없습니다.
         </div>
       )}
-      <div className="flex fixed bottom-4 left-0 w-full px-4 bg-white z-10">
-        <Button className="w-full h-12 rounded-lgs" onClick={handleDetailClick}>
+      <div className="flex fixed bottom-0 left-0 w-full p-4 bg-white z-10">
+        <Button className="w-full h-12 rounded-lg" onClick={handleDetailClick}>
           상세 조회
         </Button>
       </div>
