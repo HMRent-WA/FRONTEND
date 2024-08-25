@@ -121,6 +121,8 @@ const CompQCDetail: React.FC = () => {
   const onCompQCFormSubmit = async (data: CompQCSchemaType) => {
     const formData = new FormData();
 
+    formData.append('CHADAENO', selectedData.CHADAENO);
+
     formData.append('MILEAGE', data.MILEAGE);
     formData.append('ENTRYLOCATION', data.ENTRYLOCATION);
     formData.append('DETAILLOCATION', data.DETAILLOCATION || '');
