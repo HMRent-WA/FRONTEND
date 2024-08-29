@@ -117,19 +117,20 @@ const CompQCDetail: React.FC = () => {
   const onFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
       const files = Array.from(e.target.files);
-      const promises = files.map((file) =>
-        new Promise<File>((resolve, reject) => {
-          new Compressor(file, {
-            quality: 0.8, // 이미지 품질 설정
-            maxWidth: 800, // 최대 너비 설정
-            success(result) {
-              resolve(result as File);
-            },
-            error(err) {
-              reject(err);
-            },
-          });
-        })
+      const promises = files.map(
+        (file) =>
+          new Promise<File>((resolve, reject) => {
+            new Compressor(file, {
+              quality: 0.8, // 이미지 품질 설정
+              maxWidth: 800, // 최대 너비 설정
+              success(result) {
+                resolve(result as File);
+              },
+              error(err) {
+                reject(err);
+              },
+            });
+          })
       );
       Promise.all(promises).then(setResizedImages).catch(console.error);
     }
