@@ -157,7 +157,7 @@ const CompQCDetail: React.FC = () => {
   const onCompQCFormSubmit = async (data: CompQCSchemaType) => {
     // 리사이징이 완료된 이미지가 없는 경우 함수 실행 중지
     if (resizedImages.length === 0) {
-      showErrorToast('이미지 리사이징이 완료되지 않았습니다.');
+      showErrorToast('이미지 처리중입니다. 잠시만 기다려주세요');
       return;
     }
 
