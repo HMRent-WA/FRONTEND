@@ -117,19 +117,20 @@ const CompQCDetail: React.FC = () => {
   const onFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
       const files = Array.from(e.target.files);
-      const promises = files.map((file) =>
-        new Promise<File>((resolve, reject) => {
-          new Compressor(file, {
-            quality: 0.8, // 이미지 품질 설정
-            maxWidth: 800, // 최대 너비 설정
-            success(result) {
-              resolve(result as File);
-            },
-            error(err) {
-              reject(err);
-            },
-          });
-        })
+      const promises = files.map(
+        (file) =>
+          new Promise<File>((resolve, reject) => {
+            new Compressor(file, {
+              quality: 0.8, // 이미지 품질 설정
+              maxWidth: 800, // 최대 너비 설정
+              success(result) {
+                resolve(result as File);
+              },
+              error(err) {
+                reject(err);
+              },
+            });
+          })
       );
   
       // 리사이징이 완료될 때까지 대기
