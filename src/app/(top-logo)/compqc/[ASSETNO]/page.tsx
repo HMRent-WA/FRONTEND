@@ -36,6 +36,7 @@ import { showErrorToast, showSuccessToast } from '@/lib/toast';
 import LoadingPage from '@/components/loading-page';
 import { LoadingModal } from '@/components/modal/loading-modal';
 import { FormMessage } from '@/components/ui/form';
+import Compressor from 'compressorjs';
 
 // 기본 스키마 정의
 const CompQCSchemaBase = z.object({
@@ -65,6 +66,7 @@ const CompQCDetail: React.FC = () => {
   const params = useParams();
   const router = useRouter();
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
+  const [resizedImages, setResizedImages] = useState<File[]>([]);
   const [schema, setSchema] = useState<ZodSchema>(CompQCSchemaBase);
 
   const {
@@ -114,7 +116,22 @@ const CompQCDetail: React.FC = () => {
 
   const onFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
-      setSelectedFiles(Array.from(e.target.files));
+      const files = Array.from(e.target.files);
+      const promises = files.map((file) =>
+        new Promise<File>((resolve, reject) => {
+          new Compressor(file, {
+            quality: 0.8, // 이미지 품질 설정
+            maxWidth: 800, // 최대 너비 설정
+            success(result) {
+              resolve(result as File);
+            },
+            error(err) {
+              reject(err);
+            },
+          });
+        })
+      );
+      Promise.all(promises).then(setResizedImages).catch(console.error);
     }
   };
 
@@ -130,7 +147,7 @@ const CompQCDetail: React.FC = () => {
     formData.append('KEYTOTAL', data.KEYTOTAL || '');
     formData.append('KEYLOCATION', data.KEYLOCATION);
 
-    selectedFiles.forEach((image) => {
+    resizedImages.forEach((image) => {
       formData.append('IMGLIST', image);
     });
 

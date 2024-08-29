@@ -23,6 +23,7 @@
     "browser-image-compression": "^2.0.2",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
+    "compressorjs": "^1.2.1",
     "date-fns": "^3.6.0",
     "dayjs": "^1.11.12",
     "lodash": "^4.17.21",
