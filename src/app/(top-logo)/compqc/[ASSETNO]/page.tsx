@@ -114,7 +114,7 @@ const CompQCDetail: React.FC = () => {
     return <p className="px-4">해당 데이터가 없습니다.</p>;
   }
 
-  const onFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const onFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
       const files = Array.from(e.target.files);
       const promises = files.map((file) =>
@@ -131,26 +131,33 @@ const CompQCDetail: React.FC = () => {
           });
         })
       );
-      Promise.all(promises).then(setResizedImages).catch(console.error);
+  
+      // 리사이징이 완료될 때까지 대기
+      const resizedImages = await Promise.all(promises);
+      setResizedImages(resizedImages);
     }
   };
-
+  
   const onCompQCFormSubmit = async (data: CompQCSchemaType) => {
+    // 리사이징이 완료된 이미지가 없는 경우 함수 실행 중지
+    if (resizedImages.length === 0) {
+      showErrorToast('이미지 리사이징이 완료되지 않았습니다.');
+      return;
+    }
+  
     const formData = new FormData();
-
-    // formData.append('CHADAENO', selectedData.CHADAENO);
-
+  
     formData.append('MILEAGE', data.MILEAGE);
     formData.append('ENTRYLOCATION', data.ENTRYLOCATION);
     formData.append('DETAILLOCATION', data.DETAILLOCATION || '');
     formData.append('KEYQUANT', data.KEYQUANT || '');
     formData.append('KEYTOTAL', data.KEYTOTAL || '');
     formData.append('KEYLOCATION', data.KEYLOCATION);
-
+  
     resizedImages.forEach((image) => {
       formData.append('IMGLIST', image);
     });
-
+  
     try {
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_API_URL}/CompQC/${params.ASSETNO}`,
@@ -165,16 +172,17 @@ const CompQCDetail: React.FC = () => {
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
-
+  
       const result = await response.json();
       showSuccessToast('완료되었습니다.');
-
+  
       revalidate();
       router.replace('/compqc');
     } catch (error) {
       showErrorToast('요청에 실패하였습니다.');
     }
   };
+  
 
   return (
     <div className="px-4 flex justify-center items-center">
