@@ -117,27 +117,42 @@ const CompQCDetail: React.FC = () => {
   const onFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
       const files = Array.from(e.target.files);
-      const promises = files.map(
-        (file) =>
-          new Promise<File>((resolve, reject) => {
-            new Compressor(file, {
-              quality: 0.8, // 이미지 품질 설정
-              maxWidth: 800, // 최대 너비 설정
-              success(result) {
-                resolve(result as File);
-              },
-              error(err) {
-                reject(err);
-              },
-            });
-          })
+      const promises = files.map((file) =>
+        new Promise<File>((resolve, reject) => {
+          new Compressor(file, {
+            quality: 0.8, // 이미지 품질 설정
+            maxWidth: 800, // 최대 너비 설정
+            success(result) {
+              // 원본 파일의 확장자를 추출 (기본값을 'jpg'로 설정)
+              const extension = file.name.split('.').pop() || 'jpg';
+  
+              // 새로운 파일 이름 생성
+              const baseName = file.name.substring(0, file.name.lastIndexOf('.')) || file.name;
+              const newName = `${baseName}.${extension}`;
+  
+              // 새로운 파일 객체 생성
+              const renamedFile = new File([result], newName, {
+                type: result.type,
+                lastModified: Date.now(),
+              });
+  
+              resolve(renamedFile);
+            },
+            error(err) {
+              reject(err);
+            },
+          });
+        })
       );
-
+  
       // 리사이징이 완료될 때까지 대기
       const resizedImages = await Promise.all(promises);
       setResizedImages(resizedImages);
     }
   };
+  
+  
+  
 
   const onCompQCFormSubmit = async (data: CompQCSchemaType) => {
     // 리사이징이 완료된 이미지가 없는 경우 함수 실행 중지
