@@ -72,7 +72,8 @@ const Resvlist: React.FC = () => {
   };
 
   const filteredData = resvlistData.filter((data) => {
-    return data.CARNO.includes(search);
+    const searchLower = search.toLowerCase();
+    return data.CARNO.toLowerCase().includes(searchLower);
   });
 
   const handleClick = async () => {

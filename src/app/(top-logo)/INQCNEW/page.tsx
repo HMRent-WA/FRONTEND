@@ -65,7 +65,8 @@ const INQCNEW: React.FC = () => {
   };
 
   const filteredData = apiData.filter((datum) => {
-    return datum.VIDNO.includes(search);
+    const searchLower = search.toLowerCase();
+    return datum.VIDNO.toLowerCase().includes(searchLower);
   });
 
   console.log(filteredData);

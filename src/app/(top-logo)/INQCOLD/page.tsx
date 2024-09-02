@@ -65,7 +65,8 @@ const INQCOLD: React.FC = () => {
   };
 
   const filteredData = apiData.filter((datum) => {
-    return datum.CARNO.includes(search);
+    const searchLower = search.toLowerCase();
+    return datum.CARNO.toLowerCase().includes(searchLower);
   });
 
   console.log(filteredData);

@@ -69,9 +69,10 @@ const LOCSETPage: React.FC = () => {
   };
 
   const filteredData = apiData.filter((datum) => {
+    const searchLower = search.toLowerCase();
     return (
       (selectedValue === '전체' || datum.GUBUN === selectedValue) &&
-      datum.CARNO.includes(search)
+      datum.CARNO.toLowerCase().includes(searchLower)
     );
   });
 

@@ -71,9 +71,11 @@ const CompQC: React.FC = () => {
   };
 
   const filteredData = apiData.filter((datum) => {
+    const searchLower = search.toLowerCase();
     return (
       (selectedValue === '전체' || datum.GUBUN === selectedValue) &&
-      (datum.CARNO.includes(search) || datum.CHADAENO.includes(search))
+      (datum.CARNO.toLowerCase().includes(searchLower) ||
+        datum.CHADAENO.toLowerCase().includes(searchLower))
     );
   });
 

@@ -115,7 +115,10 @@ const Retvlist: React.FC = () => {
 
   const filteredData = retvdata
     .filter((data) => {
-      if (search && !data.CARNO.includes(search)) return false;
+      const searchLower = search.toLowerCase();
+
+      if (search && !data.CARNO.toLowerCase().includes(searchLower))
+        return false;
       if (selectedValue !== '전체' && data.STATUS !== selectedValue)
         return false;
       if (!isWithinDateRange(data.RQDATE, retvDateRange)) return false; // 컨텍스트 값 사용
