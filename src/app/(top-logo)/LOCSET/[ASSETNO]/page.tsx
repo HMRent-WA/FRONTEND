@@ -45,7 +45,7 @@ const LOCSETSchemaBase = z.object({
   ENTRYLOCATION: z.string().nonempty('차량 입고 위치를 선택해 주세요.'),
   DETAILLOCATION: z.string().optional(),
   KEYLOCATION: z.string().nonempty('차 키의 보관 위치를 입력해 주세요.'),
-  IMGLIST: z.any(),
+  // IMGLIST: z.any(),
 });
 
 // 신차에 대한 추가 스키마 정의
@@ -64,7 +64,7 @@ type LOCSETSchemaType = z.infer<typeof LOCSETSchemaBase> &
 const LOCSETDetail: React.FC = () => {
   const params = useParams();
   const router = useRouter();
-  const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
+  // const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
   const [schema, setSchema] = useState<ZodSchema>(LOCSETSchemaBase);
 
   const {
@@ -110,11 +110,11 @@ const LOCSETDetail: React.FC = () => {
     return <p className="px-4">해당 데이터가 없습니다.</p>;
   }
 
-  const onFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files) {
-      setSelectedFiles(Array.from(e.target.files));
-    }
-  };
+  // const onFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   if (e.target.files) {
+  //     setSelectedFiles(Array.from(e.target.files));
+  //   }
+  // };
 
   const onLOCSETFormSubmit = async (data: LOCSETSchemaType) => {
     const formData = new FormData();
@@ -126,9 +126,9 @@ const LOCSETDetail: React.FC = () => {
     formData.append('KEYTOTAL', data.KEYTOTAL || '');
     formData.append('KEYLOCATION', data.KEYLOCATION);
 
-    selectedFiles.forEach((image) => {
-      formData.append('IMGLIST', image);
-    });
+    // selectedFiles.forEach((image) => {
+    //   formData.append('IMGLIST', image);
+    // });
 
     try {
       const response = await fetch(
@@ -279,7 +279,7 @@ const LOCSETDetail: React.FC = () => {
                   defaultValue={selectedData.KEYLOCATION}
                 />
               </FormElement> */}
-              <FormElement
+              {/* <FormElement
                 formControl={lOCSETForm.control}
                 name="IMGLIST"
                 label="차량 사진"
@@ -296,7 +296,7 @@ const LOCSETDetail: React.FC = () => {
                     ))}
                   </ul>
                 </div>
-              )}
+              )} */}
             </div>
           </CardContent>
           <CardFooter className="fixed bottom-0 left-0 w-full p-4 z-10 bg-white">

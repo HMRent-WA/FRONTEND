@@ -51,7 +51,7 @@ type INQCOLDSchemaType = z.infer<typeof INQCOLDSchema>;
 const INQCOLDDetail: React.FC = () => {
   const params = useParams();
   const router = useRouter();
-  const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
+  const [resizedImages, setResizedImages] = useState<File[]>([]);
 
   const INQCOLDForm = useForm<INQCOLDSchemaType>({
     resolver: zodResolver(INQCOLDSchema),
@@ -135,17 +135,59 @@ const INQCOLDDetail: React.FC = () => {
   // DETAILLOCATION (optional)
   // IMGLIST : string[]
 
-  const onFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    console.log('File change event triggered');
+  let imageUploadLoading: boolean = false;
+
+  const onFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    imageUploadLoading = true;
+
     if (e.target.files) {
-      console.log('Files selected: ', e.target.files);
-      setSelectedFiles(Array.from(e.target.files));
-      console.log('Selected files: ', selectedFiles);
+      const files = Array.from(e.target.files);
+      const promises = files.map(
+        (file) =>
+          new Promise<File>((resolve, reject) => {
+            new Compressor(file, {
+              quality: 0.8, // 이미지 품질 설정
+              maxWidth: 800, // 최대 너비 설정
+              success(result) {
+                // 원본 파일의 확장자를 추출 (기본값을 'jpg'로 설정)
+                const extension = file.name.split('.').pop() || 'jpg';
+
+                // 새로운 파일 이름 생성
+                const baseName =
+                  file.name.substring(0, file.name.lastIndexOf('.')) ||
+                  file.name;
+                const newName = `${baseName}.${extension}`;
+
+                // 새로운 파일 객체 생성
+                const renamedFile = new File([result], newName, {
+                  type: result.type,
+                  lastModified: Date.now(),
+                });
+
+                resolve(renamedFile);
+              },
+              error(err) {
+                reject(err);
+                showErrorToast('이미지 처리 중 오류가 발생했습니다.');
+              },
+            });
+          })
+      );
+
+      // 리사이징이 완료될 때까지 대기
+      const resizedImages = await Promise.all(promises);
+      setResizedImages(resizedImages);
+      imageUploadLoading = false;
     }
   };
 
   // FIXME: POST 요청 예시
   const onINQCOLDFormSubmit = async (data: INQCOLDSchemaType) => {
+    if (imageUploadLoading) {
+      showErrorToast('이미지 처리중입니다. 잠시만 기다려주세요');
+      return;
+    }
+
     const formData = new FormData();
 
     formData.append('ASSETNO', params.ASSETNO.toString());
@@ -154,7 +196,7 @@ const INQCOLDDetail: React.FC = () => {
     formData.append('ENTRYLOCATION', data.ENTRYLOCATION);
     formData.append('DETAILLOCATION', data.DETAILLOCATION || '');
 
-    selectedFiles.forEach((image) => {
+    resizedImages.forEach((image) => {
       formData.append('IMGLIST', image);
     });
 
@@ -225,6 +267,15 @@ const INQCOLDDetail: React.FC = () => {
             <div className="w-full flex flex-col gap-4 mt-6">
               <FormElement
                 formControl={INQCOLDForm.control}
+                name="IMGLIST"
+                label="차량 사진"
+                required
+                onChange={onFileChange}
+              >
+                <Input type="file" multiple />
+              </FormElement>
+              <FormElement
+                formControl={INQCOLDForm.control}
                 name="MILEAGE"
                 label="주행 거리 (km)"
                 required
@@ -271,20 +322,11 @@ const INQCOLDDetail: React.FC = () => {
               >
                 <Input placeholder="" className="h-10" />
               </FormElement>
-              <FormElement
-                formControl={INQCOLDForm.control}
-                name="IMGLIST"
-                label="차량 사진"
-                required
-                onChange={onFileChange}
-              >
-                <Input type="file" multiple />
-              </FormElement>
-              {selectedFiles.length > 0 && (
+              {resizedImages.length > 0 && (
                 <div className="mt-4">
                   <Label className="font-semibold">업로드된 이미지:</Label>
                   <ul className="list-disc list-inside">
-                    {selectedFiles.map((file, index) => (
+                    {resizedImages.map((file, index) => (
                       <li key={index}>{file.name}</li>
                     ))}
                   </ul>
@@ -298,11 +340,12 @@ const INQCOLDDetail: React.FC = () => {
               type="submit"
               disabled={
                 !INQCOLDForm.formState.isValid ||
-                !selectedFiles.length ||
-                INQCOLDForm.formState.isSubmitting
+                !resizedImages.length ||
+                INQCOLDForm.formState.isSubmitting ||
+                imageUploadLoading
               }
             >
-              입력 완료
+              {imageUploadLoading ? '이미지 업로드 중입니다.' : '입력 완료'}
             </Button>
           </CardFooter>
         </FormWrapper>
