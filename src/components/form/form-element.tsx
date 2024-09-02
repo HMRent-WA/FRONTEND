@@ -8,7 +8,13 @@ import {
   FormItem,
   FormMessage,
 } from '@/components/ui/form';
-import { Control, FieldPath, FieldValues } from 'react-hook-form';
+import {
+  Control,
+  FieldPath,
+  FieldValues,
+  Path,
+  PathValue,
+} from 'react-hook-form';
 import { Label } from '../ui/label';
 
 const required = {
@@ -28,6 +34,7 @@ interface FormElementProps<T extends FieldValues> {
   message?: string;
   description?: string;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  defaultValue?: PathValue<T, Path<T>>;
 }
 
 function FormElement<T extends FieldValues>({
@@ -38,6 +45,8 @@ function FormElement<T extends FieldValues>({
   children,
   description,
   onChange,
+  defaultValue,
+  ...rest
 }: FormElementProps<T>) {
   const isRequired = useCallback(() => {
     if (required === 'none') return null;
@@ -57,6 +66,8 @@ function FormElement<T extends FieldValues>({
     <FormField
       control={formControl}
       name={name}
+      defaultValue={defaultValue}
+      {...rest}
       render={({ field }) => (
         <FormItem>
           <div className={'flex items-center'}>

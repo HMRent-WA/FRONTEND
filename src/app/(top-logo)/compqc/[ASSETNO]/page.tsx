@@ -246,13 +246,13 @@ const CompQCDetail: React.FC = () => {
                 label="주행 거리 (km)"
                 required
                 description="숫자만 입력해주세요. ex) 31704"
+                defaultValue={selectedData.MILEAGE}
               >
                 <Input
                   placeholder="주행거리를 입력해주세요."
                   className="h-10"
                   inputMode="numeric"
                   pattern="[0-9]*"
-                  defaultValue={selectedData.MILEAGE}
                 />
               </FormElement>
               <FormElement
@@ -303,13 +303,13 @@ const CompQCDetail: React.FC = () => {
                     label="차 키 보유 수량"
                     required
                     description="숫자만 입력해주세요."
+                    defaultValue={selectedData.KEYQUANT}
                   >
                     <Input
                       placeholder="보유 수량"
                       className="h-10"
                       inputMode="numeric"
                       pattern="[0-9]*"
-                      defaultValue={selectedData.KEYQUANT}
                     />
                   </FormElement>
                   <FormElement
@@ -318,13 +318,13 @@ const CompQCDetail: React.FC = () => {
                     label="총 수량"
                     required
                     description="숫자만 입력해주세요."
+                    defaultValue={selectedData.KEYTOTAL}
                   >
                     <Input
                       placeholder="총 수량"
                       className="h-10"
                       inputMode="numeric"
                       pattern="[0-9]*"
-                      defaultValue={selectedData.KEYTOTAL}
                     />
                   </FormElement>
                 </div>
@@ -334,12 +334,9 @@ const CompQCDetail: React.FC = () => {
                 name="KEYLOCATION"
                 label="차 키 보관 위치"
                 required
+                defaultValue={selectedData.KEYLOCATION}
               >
-                <Input
-                  placeholder="차 키의 보관 위치"
-                  className="h-10"
-                  defaultValue={selectedData.KEYLOCATION}
-                />
+                <Input placeholder="차 키의 보관 위치" className="h-10" />
               </FormElement>
               {resizedImages.length > 0 && (
                 <div className="mt-4">
