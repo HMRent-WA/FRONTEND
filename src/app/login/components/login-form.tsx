@@ -44,7 +44,7 @@ const LoginForm = ({ className }: { className?: string }) => {
       form.setValue('password', localStorage.getItem('hmrPw') || '');
     }
     form.trigger();
-  }, []);
+  }, [form]);
 
   const onSubmit: SubmitHandler<LoginData> = async (data: LoginData) => {
     try {

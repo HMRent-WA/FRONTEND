@@ -60,21 +60,21 @@ const LOCSETDetail: React.FC = () => {
     mode: 'onChange',
   });
 
-  useEffect(() => {
-    if (fetchedData) {
-      const apiData: LOCSETDataType[] = [];
-      handleResponse(fetchedData, apiData);
-      const selectedData = apiData.find(
-        (data) => data.ASSETNO === params.ASSETNO
-      );
-      if (selectedData) {
-        lOCSETForm.reset({
-          ENTRYLOCATION: selectedData.ENTRYLOCATION,
-          DETAILLOCATION: selectedData.DETAILLOCATION,
-        });
-      }
-    }
-  }, [fetchedData, params.ASSETNO, lOCSETForm]);
+  // useEffect(() => {
+  //   if (fetchedData) {
+  //     const apiData: LOCSETDataType[] = [];
+  //     handleResponse(fetchedData, apiData);
+  //     const selectedData = apiData.find(
+  //       (data) => data.ASSETNO === params.ASSETNO
+  //     );
+  //     if (selectedData) {
+  //       lOCSETForm.reset({
+  //         ENTRYLOCATION: selectedData.ENTRYLOCATION,
+  //         DETAILLOCATION: selectedData.DETAILLOCATION,
+  //       });
+  //     }
+  //   }
+  // }, [fetchedData, params.ASSETNO, lOCSETForm]);
 
   if (loading) return <LoadingPage />;
   if (error) return <p className="px-4">Error: {error.message}</p>;
