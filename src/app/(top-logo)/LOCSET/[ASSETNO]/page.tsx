@@ -128,7 +128,7 @@ const LOCSETDetail: React.FC = () => {
     <div className="px-4 flex justify-center items-center">
       <Card className="w-full rounded-xl border-slate-200 border-2 mb-24">
         <CardHeader>
-          <CardTitle>위치 변경 입력 (공사 중)</CardTitle>
+          <CardTitle>위치 변경 입력</CardTitle>
           <CardDescription>
             <span className="ml-0.5 text-[#F31515] text-sm font-medium">*</span>
             {' 표시된 곳은 반드시 입력해 주셔야 합니다.'}

@@ -24,6 +24,31 @@ export type LOCSETDataType = {
   ENTRYLOCATION: string;
 };
 
+export type GPSCHKDataType = {
+  ASSETNO: string;
+  SEQNO: string;
+  REQOUTDT: string;
+  REQOUTTM: string;
+  CARNO: string;
+  CARKND: string;
+  LSTRCVDAT: string;
+  IGNCTRLCHK: string;
+  FULCTRLCHK: string;
+  CARCHKDAT: string;
+  BIGO: string;
+};
+// "ASSETNO" (자산번호) : "AST2024010101",
+// "SEQNO" (탁송순번) : "11",
+// "REQOUTDT" (출고희망일자) : "YYYYMMDD",
+// "REQOUTTM" (출고희망시간) : "24",
+// "CARNO" (차량번호) : "111하1111",
+// "CARKND" (차종) : "베뉴",
+// "LSTRCVDAT" (최종수신일) : "2024/08/29 00:21:19",
+// "IGNCTRLCHK" (시동제어점검) : "T/F",
+// "FULCTRLCHK" (점검완료여부) : "T/F",
+// "CARCHKDAT" (점검일자) : "YYYYMMDD",
+// "BIGO" (비고) : "비고"
+
 export type INQCNEWDataType = {
   COLOR: string;
   ASSETNO: string;
@@ -81,6 +106,7 @@ export type BaseResponseType<T> = {
 // 제네릭 응답 타입 정의
 export type COMPQCDataResponse = BaseResponseType<COMPQCDataType>;
 export type LOCSETDataResponse = BaseResponseType<LOCSETDataType>;
+export type GPSCHKDataResponse = BaseResponseType<GPSCHKDataType>;
 export type INQCNEWDataResponse = BaseResponseType<INQCNEWDataType>;
 export type INQCOLDDataResponse = BaseResponseType<INQCOLDDataType>;
 export type ResvlistDataResponse = BaseResponseType<ResvlistDataType>;
@@ -89,6 +115,7 @@ export type RetvDataResponse = BaseResponseType<RetvDataType>;
 export type AllResponses =
   | COMPQCDataResponse
   | LOCSETDataResponse
+  | GPSCHKDataResponse
   | INQCNEWDataResponse
   | INQCOLDDataResponse
   | ResvlistDataResponse

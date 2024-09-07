@@ -22,7 +22,7 @@ export default function Home() {
         </div>
         <div className="grid grid-cols-4 gap-3">
           <MainMenuButton
-            className="col-span-3 bg-orange-400 hover:bg-orange-400/80"
+            className="col-span-2 bg-orange-400 hover:bg-orange-400/80"
             href={'/compqc'}
           >
             상품화 완료 QC
@@ -32,6 +32,12 @@ export default function Home() {
             href={'/LOCSET'}
           >
             위치변경
+          </MainMenuButton>
+          <MainMenuButton
+            className="bg-orange-400 hover:bg-orange-400/80"
+            href={'/GPSCHK'}
+          >
+            GPS점검
           </MainMenuButton>
         </div>
         <MainMenuButton className="" href={'/retvlist'}>
