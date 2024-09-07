@@ -19,7 +19,7 @@ import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { showErrorToast, showSuccessToast } from '@/lib/toast';
 import { useEffect } from 'react';
-import { LoadingModal } from '@/components/modal/loading-modal';
+// import { LoadingModal } from '@/components/modal/loading-modal';
 
 const loginSchema = z.object({
   id: z.string().trim().min(1),
@@ -144,7 +144,6 @@ const LoginForm = ({ className }: { className?: string }) => {
         </form>
       </Form>
       {/* <LoadingModal open={form.formState.isSubmitting} /> */}
-      {/* <LoadingModal open={} /> */}
     </Card>
   );
 };

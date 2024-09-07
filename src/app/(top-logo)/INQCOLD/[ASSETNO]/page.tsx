@@ -35,6 +35,7 @@ import {
 } from '@/model/types';
 import LoadingPage from '@/components/loading-page';
 import { LoadingModal } from '@/components/modal/loading-modal';
+import Compressor from 'compressorjs';
 
 const INQCOLDSchema = z.object({
   MILEAGE: z.string().refine((val) => !isNaN(Number(val)), {

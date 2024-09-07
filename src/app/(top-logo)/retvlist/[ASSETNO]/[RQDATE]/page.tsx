@@ -24,6 +24,7 @@ import { useForm } from 'react-hook-form';
 import FormWrapper from '@/components/form/form-wrapper';
 import { Button } from '@/components/ui/button';
 import { LoadingModal } from '@/components/modal/loading-modal';
+import Compressor from 'compressorjs';
 
 const RETVDetailSchema = z.object({
   // FIXME: any는 개선할 수 있으면 좋을 듯.
