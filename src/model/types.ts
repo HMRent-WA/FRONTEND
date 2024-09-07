@@ -20,6 +20,8 @@ export type LOCSETDataType = {
   GUBUN: '신차' | '재렌트';
   MODEL: string;
   STATUS: '정비완료' | string;
+  DETAILLOCATION: string;
+  ENTRYLOCATION: string;
 };
 
 export type INQCNEWDataType = {

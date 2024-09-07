@@ -1,7 +1,7 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
-import { z, ZodSchema } from 'zod';
+import React, { useEffect } from 'react';
+import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm, Controller } from 'react-hook-form';
 import FormElement from '@/components/form/form-element';
@@ -37,35 +37,16 @@ import LoadingPage from '@/components/loading-page';
 import { LoadingModal } from '@/components/modal/loading-modal';
 import { FormMessage } from '@/components/ui/form';
 
-// 기본 스키마 정의
-const LOCSETSchemaBase = z.object({
-  MILEAGE: z.string().refine((val) => !isNaN(Number(val)), {
-    message: '주행 거리는 0 이상의 정수만 입력할 수 있습니다.',
-  }),
+const LOCSETSchema = z.object({
   ENTRYLOCATION: z.string().nonempty('차량 입고 위치를 선택해 주세요.'),
   DETAILLOCATION: z.string().optional(),
-  KEYLOCATION: z.string().nonempty('차 키의 보관 위치를 입력해 주세요.'),
-  // IMGLIST: z.any(),
 });
 
-// 신차에 대한 추가 스키마 정의
-const LOCSETSchemaNew = LOCSETSchemaBase.extend({
-  KEYQUANT: z.string().refine((val) => !isNaN(Number(val)), {
-    message: '키 개수는 0 이상의 정수만 입력할 수 있습니다.',
-  }),
-  KEYTOTAL: z.string().refine((val) => !isNaN(Number(val)), {
-    message: '총 키 개수는 0 이상의 정수만 입력할 수 있습니다.',
-  }),
-});
-
-type LOCSETSchemaType = z.infer<typeof LOCSETSchemaBase> &
-  Partial<z.infer<typeof LOCSETSchemaNew>>;
+type LOCSETSchemaType = z.infer<typeof LOCSETSchema>;
 
 const LOCSETDetail: React.FC = () => {
   const params = useParams();
   const router = useRouter();
-  // const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
-  const [schema, setSchema] = useState<ZodSchema>(LOCSETSchemaBase);
 
   const {
     data: fetchedData,
@@ -74,7 +55,11 @@ const LOCSETDetail: React.FC = () => {
     revalidate,
   } = useFetch<LOCSETDataResponse>(`${process.env.NEXT_PUBLIC_API_URL}/LOCSET`);
 
-  // GUBUN 값에 따라 스키마를 동적으로 변경
+  const lOCSETForm = useForm<LOCSETSchemaType>({
+    resolver: zodResolver(LOCSETSchema),
+    mode: 'onChange',
+  });
+
   useEffect(() => {
     if (fetchedData) {
       const apiData: LOCSETDataType[] = [];
@@ -82,18 +67,14 @@ const LOCSETDetail: React.FC = () => {
       const selectedData = apiData.find(
         (data) => data.ASSETNO === params.ASSETNO
       );
-      if (selectedData && selectedData.GUBUN === '신차') {
-        setSchema(LOCSETSchemaNew);
-      } else {
-        setSchema(LOCSETSchemaBase);
+      if (selectedData) {
+        lOCSETForm.reset({
+          ENTRYLOCATION: selectedData.ENTRYLOCATION,
+          DETAILLOCATION: selectedData.DETAILLOCATION,
+        });
       }
     }
-  }, [fetchedData, params.ASSETNO]);
-
-  const lOCSETForm = useForm<LOCSETSchemaType>({
-    resolver: zodResolver(schema),
-    mode: 'onChange',
-  });
+  }, [fetchedData, params.ASSETNO, lOCSETForm]);
 
   if (loading) return <LoadingPage />;
   if (error) return <p className="px-4">Error: {error.message}</p>;
@@ -106,29 +87,17 @@ const LOCSETDetail: React.FC = () => {
 
   const selectedData = apiData.find((data) => data.ASSETNO === params.ASSETNO);
 
+  console.log(selectedData);
+
   if (!selectedData || !entryLocationList) {
     return <p className="px-4">해당 데이터가 없습니다.</p>;
   }
 
-  // const onFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-  //   if (e.target.files) {
-  //     setSelectedFiles(Array.from(e.target.files));
-  //   }
-  // };
-
   const onLOCSETFormSubmit = async (data: LOCSETSchemaType) => {
     const formData = new FormData();
 
-    formData.append('MILEAGE', data.MILEAGE);
     formData.append('ENTRYLOCATION', data.ENTRYLOCATION);
     formData.append('DETAILLOCATION', data.DETAILLOCATION || '');
-    formData.append('KEYQUANT', data.KEYQUANT || '');
-    formData.append('KEYTOTAL', data.KEYTOTAL || '');
-    formData.append('KEYLOCATION', data.KEYLOCATION);
-
-    // selectedFiles.forEach((image) => {
-    //   formData.append('IMGLIST', image);
-    // });
 
     try {
       const response = await fetch(
@@ -169,6 +138,10 @@ const LOCSETDetail: React.FC = () => {
           <CardContent>
             <div className="flex flex-col gap-4">
               <div className="flex items-center justify-between h-10">
+                <Label className="font-semibold">자산 번호</Label>
+                <p>{selectedData.ASSETNO}</p>
+              </div>
+              <div className="flex items-center justify-between h-10">
                 <Label className="font-semibold">차량 번호</Label>
                 <p>{selectedData.CARNO}</p>
               </div>
@@ -178,21 +151,6 @@ const LOCSETDetail: React.FC = () => {
               </div>
             </div>
             <div className="w-full flex flex-col gap-4 mt-6">
-              {/* <FormElement
-                formControl={lOCSETForm.control}
-                name="MILEAGE"
-                label="주행 거리 (km)"
-                required
-                description="숫자만 입력해주세요. ex) 31704"
-              >
-                <Input
-                  placeholder="주행거리를 입력해주세요."
-                  className="h-10"
-                  inputMode="numeric"
-                  pattern="[0-9]*"
-                  defaultValue={selectedData.MILEAGE}
-                />
-              </FormElement> */}
               <FormElement
                 formControl={lOCSETForm.control}
                 name="ENTRYLOCATION"
@@ -233,70 +191,6 @@ const LOCSETDetail: React.FC = () => {
               >
                 <Input placeholder="" className="h-10" />
               </FormElement>
-              {selectedData.GUBUN === '신차' && (
-                <div className="w-full flex gap-4">
-                  {/* <FormElement
-                    formControl={lOCSETForm.control}
-                    name="KEYQUANT"
-                    label="차 키 보유 수량"
-                    required
-                    description="숫자만 입력해주세요."
-                  >
-                    <Input
-                      placeholder="보유 수량"
-                      className="h-10"
-                      inputMode="numeric"
-                      pattern="[0-9]*"
-                      defaultValue={selectedData.KEYQUANT}
-                    />
-                  </FormElement> */}
-                  {/* <FormElement
-                    formControl={lOCSETForm.control}
-                    name="KEYTOTAL"
-                    label="총 수량"
-                    required
-                    description="숫자만 입력해주세요."
-                  >
-                    <Input
-                      placeholder="총 수량"
-                      className="h-10"
-                      inputMode="numeric"
-                      pattern="[0-9]*"
-                      defaultValue={selectedData.KEYTOTAL}
-                    />
-                  </FormElement> */}
-                </div>
-              )}
-              {/* <FormElement
-                formControl={lOCSETForm.control}
-                name="KEYLOCATION"
-                label="차 키 보관 위치"
-                required
-              >
-                <Input
-                  placeholder="차 키의 보관 위치"
-                  className="h-10"
-                  defaultValue={selectedData.KEYLOCATION}
-                />
-              </FormElement> */}
-              {/* <FormElement
-                formControl={lOCSETForm.control}
-                name="IMGLIST"
-                label="차량 사진"
-                onChange={onFileChange}
-              >
-                <Input type="file" multiple />
-              </FormElement>
-              {selectedFiles.length > 0 && (
-                <div className="mt-4">
-                  <Label className="font-semibold">업로드된 이미지:</Label>
-                  <ul className="list-disc list-inside">
-                    {selectedFiles.map((file, index) => (
-                      <li key={index}>{file.name}</li>
-                    ))}
-                  </ul>
-                </div>
-              )} */}
             </div>
           </CardContent>
           <CardFooter className="fixed bottom-0 left-0 w-full p-4 z-10 bg-white">
