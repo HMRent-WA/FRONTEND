@@ -86,8 +86,22 @@ const CompQCDetail: React.FC = () => {
         (data) => data.ASSETNO === params.ASSETNO
       );
       if (selectedData && selectedData.GUBUN === '신차') {
+        compQCForm.reset({
+          MILEAGE: selectedData.MILEAGE.toString() || '',
+          ENTRYLOCATION: selectedData.ENTRYLOCATION || '',
+          DETAILLOCATION: selectedData.DETAILLOCATION || '',
+          KEYQUANT: selectedData.KEYQUANT.toString() || '',
+          KEYTOTAL: selectedData.KEYTOTAL.toString() || '',
+          KEYLOCATION: selectedData.KEYLOCATION || '',
+        });
         setSchema(CompQCSchemaNew);
-      } else {
+      } else if (selectedData) {
+        compQCForm.reset({
+          MILEAGE: selectedData.MILEAGE.toString() || '',
+          ENTRYLOCATION: selectedData.ENTRYLOCATION || '',
+          DETAILLOCATION: selectedData.DETAILLOCATION || '',
+          KEYLOCATION: selectedData.KEYLOCATION || '',
+        });
         setSchema(CompQCSchemaBase);
       }
     }
@@ -97,6 +111,11 @@ const CompQCDetail: React.FC = () => {
     resolver: zodResolver(schema),
     mode: 'onChange',
   });
+
+  useEffect(() => {
+    compQCForm.trigger();
+    console.log('체크 -> ', compQCForm.watch('MILEAGE'));
+  }, [compQCForm]);
 
   if (loading) return <LoadingPage />;
   if (error) return <p className="px-4">Error: {error.message}</p>;
@@ -246,7 +265,6 @@ const CompQCDetail: React.FC = () => {
                 label="주행 거리 (km)"
                 required
                 description="숫자만 입력해주세요. ex) 31704"
-                defaultValue={selectedData.MILEAGE}
               >
                 <Input
                   placeholder="주행거리를 입력해주세요."
@@ -283,7 +301,6 @@ const CompQCDetail: React.FC = () => {
                           </SelectGroup>
                         </SelectContent>
                       </Select>
-                      {fieldState.error && <FormMessage />}
                     </>
                   )}
                 />
@@ -303,7 +320,6 @@ const CompQCDetail: React.FC = () => {
                     label="차 키 보유 수량"
                     required
                     description="숫자만 입력해주세요."
-                    defaultValue={selectedData.KEYQUANT}
                   >
                     <Input
                       placeholder="보유 수량"
@@ -318,7 +334,6 @@ const CompQCDetail: React.FC = () => {
                     label="총 수량"
                     required
                     description="숫자만 입력해주세요."
-                    defaultValue={selectedData.KEYTOTAL}
                   >
                     <Input
                       placeholder="총 수량"
@@ -334,7 +349,6 @@ const CompQCDetail: React.FC = () => {
                 name="KEYLOCATION"
                 label="차 키 보관 위치"
                 required
-                defaultValue={selectedData.KEYLOCATION}
               >
                 <Input placeholder="차 키의 보관 위치" className="h-10" />
               </FormElement>
