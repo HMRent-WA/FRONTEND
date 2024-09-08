@@ -3,7 +3,7 @@ import './globals.css';
 import { Inter as FontSans } from 'next/font/google';
 import { cn } from '@/lib/utils';
 import { Toaster } from '@/components/ui/toaster';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+// import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 const fontSans = FontSans({
   subsets: ['latin'],
@@ -15,7 +15,7 @@ export const metadata: Metadata = {
   description: '하모니 렌트카',
 };
 
-const queryClient = new QueryClient();
+// const queryClient = new QueryClient();
 
 export default function RootLayout({
   children,
@@ -31,9 +31,9 @@ export default function RootLayout({
         )}
       >
         <main className={'w-screen h-full flex justify-center'}>
-          <QueryClientProvider client={queryClient}>
-            {children}
-          </QueryClientProvider>
+          {/* <QueryClientProvider client={queryClient}> */}
+          {children}
+          {/* </QueryClientProvider> */}
         </main>
         <Toaster />
       </body>
