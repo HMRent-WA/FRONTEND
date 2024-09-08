@@ -32,8 +32,8 @@ export type GPSCHKDataType = {
   CARNO: string;
   CARKND: string;
   LSTRCVDAT: string;
-  IGNCTRLCHK: string;
-  FULCTRLCHK: string;
+  IGNCTRLCHK: 'T' | 'F';
+  FULCTRLCHK: 'T' | 'F';
   CARCHKDAT: string;
   BIGO: string;
 };
@@ -48,6 +48,17 @@ export type GPSCHKDataType = {
 // "FULCTRLCHK" (점검완료여부) : "T/F",
 // "CARCHKDAT" (점검일자) : "YYYYMMDD",
 // "BIGO" (비고) : "비고"
+
+// /CARNO (차량번호): 가장 중요한 식별 정보로, 첫 번째로 배치하여 사용자가 쉽게 차량을 식별할 수 있도록 합니다.
+// /REQOUTDT (출고희망일자): 차량 출고와 관련된 중요한 정보이므로 두 번째로 배치합니다.
+// /REQOUTTM (출고희망시간): 출고 시간을 보여주는 정보로, 출고 희망일자 바로 옆에 배치하면 좋습니다.
+// /CARKND (차종): 차량의 종류를 나타내는 정보로, 네 번째로 배치합니다.
+// SEQNO (탁송순번): 출고 또는 탁송의 순번으로, 중간 정도에 배치하여 출고 관련 정보를 보충합니다.
+// IGNCTRLCHK (시동제어점검): 차량의 시동제어 점검 여부는 안전과 직결된 중요한 정보이므로 그 다음 순위로 배치합니다.
+// FULCTRLCHK (점검완료여부): 점검이 완료되었는지 확인할 수 있는 정보로, 시동제어 점검 다음에 배치합니다.
+// /LSTRCVDAT (최종수신일): 데이터의 최신성을 확인할 수 있는 정보로, 이후 배치합니다.
+// /CARCHKDAT (점검일자): 점검이 이루어진 날짜로, 최종 수신일 이후에 배치합니다.
+// BIGO (비고): 기타 메모나 주석은 가장 마지막에 배치합니다.
 
 export type INQCNEWDataType = {
   COLOR: string;
