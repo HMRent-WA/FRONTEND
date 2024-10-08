@@ -202,7 +202,7 @@ const LOCSETDetail: React.FC = () => {
                 lOCSETForm.formState.isSubmitting
               }
             >
-              상품화 완료 (QC)
+              위치 변경
             </Button>
           </CardFooter>
         </FormWrapper>
